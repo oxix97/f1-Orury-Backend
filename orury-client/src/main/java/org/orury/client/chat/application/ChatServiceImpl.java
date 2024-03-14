@@ -1,8 +1,8 @@
-package org.orury.client.crew.application;
+package org.orury.client.chat.application;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.orury.domain.chat.ChatDto;
+import org.orury.domain.chat.domain.dto.ChatDto;
 import org.orury.domain.crew.domain.dto.CrewDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

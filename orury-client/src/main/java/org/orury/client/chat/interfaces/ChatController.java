@@ -1,9 +1,9 @@
-package org.orury.client.crew.interfaces;
+package org.orury.client.chat.interfaces;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.orury.client.chat.application.ChatFacade;
-import org.orury.domain.chat.ChatDto;
+import org.orury.domain.chat.domain.dto.ChatDto;
 import org.orury.domain.user.domain.dto.UserPrincipal;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;

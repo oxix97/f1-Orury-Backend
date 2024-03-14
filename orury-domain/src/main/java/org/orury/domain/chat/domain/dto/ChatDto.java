@@ -1,4 +1,6 @@
-package org.orury.domain.chat;
+package org.orury.domain.chat.domain.dto;
+
+import org.orury.domain.chat.domain.entity.Chat;
 
 import java.time.LocalDateTime;
 

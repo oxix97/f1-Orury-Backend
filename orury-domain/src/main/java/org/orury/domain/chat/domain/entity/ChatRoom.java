@@ -1,4 +1,4 @@
-package org.orury.domain.chat;
+package org.orury.domain.chat.domain.entity;
 
 public class ChatRoom {
     private Long id;

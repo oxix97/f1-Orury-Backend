@@ -1,4 +1,4 @@
-package org.orury.domain.chat;
+package org.orury.domain.chat.domain.entity;
 
 import jakarta.persistence.Convert;
 import jakarta.persistence.GeneratedValue;

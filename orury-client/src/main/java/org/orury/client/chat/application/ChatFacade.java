@@ -2,9 +2,8 @@ package org.orury.client.chat.application;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.orury.client.crew.application.ChatService;
-import org.orury.domain.chat.ChatDto;
-import org.orury.domain.chat.ChatRoom;
+import org.orury.domain.chat.domain.dto.ChatDto;
+import org.orury.domain.chat.domain.entity.ChatRoom;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
