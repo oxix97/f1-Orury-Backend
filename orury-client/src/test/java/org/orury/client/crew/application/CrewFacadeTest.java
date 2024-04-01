@@ -323,4 +323,26 @@ class CrewFacadeTest extends FacadeTest {
         then(crewService).should(times(1))
                 .expelMember(any(), anyLong(), anyLong());
     }
+
+    @DisplayName("크루id, 유저id를 받아, 크루원 목록을 반환한다.")
+    @Test
+    void should_GetCrewMembers() {
+        // given
+        Long crewId = 3L;
+        Long userId = 23L;
+        CrewDto crewDto = createCrewDto(crewId).build().get();
+        given(crewService.getCrewDtoById(anyLong()))
+                .willReturn(crewDto);
+        given(crewService.getUserDtosByCrew(anyLong(), anyLong()))
+                .willReturn(mock(List.class));
+
+        // when
+        crewFacade.getCrewMembers(crewId, userId);
+
+        // then
+        then(crewService).should(times(1))
+                .getCrewDtoById(anyLong());
+        then(crewService).should(times(1))
+                .getUserDtosByCrew(anyLong(), anyLong());
+    }
 }

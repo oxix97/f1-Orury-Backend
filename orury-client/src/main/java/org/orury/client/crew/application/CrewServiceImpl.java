@@ -200,6 +200,13 @@ public class CrewServiceImpl implements CrewService {
         removeMember(crewDto.id(), memberId);
     }
 
+    @Override
+    public List<UserDto> getUserDtosByCrew(Long crewId, Long userId) {
+        crewPolicy.validateCrewMember(crewId, userId);
+        return crewMemberReader.getMembersByCrewId(crewId)
+                .stream().map(UserDto::from).toList();
+    }
+
     private void removeMember(Long crewId, Long memberId) {
         crewPolicy.validateCrewMember(crewId, memberId);
 

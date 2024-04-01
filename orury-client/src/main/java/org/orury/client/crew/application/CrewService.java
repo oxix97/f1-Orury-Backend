@@ -41,4 +41,6 @@ public interface CrewService {
     void leaveCrew(CrewDto crewDto, Long userId);
 
     void expelMember(CrewDto crewDto, Long memberId, Long userId);
+
+    List<UserDto> getUserDtosByCrew(Long crewId, Long userId);
 }

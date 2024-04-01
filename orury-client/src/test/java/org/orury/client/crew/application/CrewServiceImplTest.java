@@ -14,6 +14,7 @@ import org.orury.domain.crew.domain.entity.Crew;
 import org.orury.domain.crew.domain.entity.CrewMember;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.user.domain.dto.UserDto;
+import org.orury.domain.user.domain.entity.User;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
@@ -460,5 +461,30 @@ class CrewServiceImplTest extends ServiceTest {
         then(meetingMemberStore).shouldHaveNoInteractions();
         then(meetingStore).shouldHaveNoInteractions();
         then(crewMemberStore).shouldHaveNoInteractions();
+    }
+
+    @DisplayName("[getUserDtosByCrew] 크루에 속한 유저들을 가져온다.")
+    @Test
+    void should_GetUserDtosByCrew() {
+        // given
+        Long crewId = 726L;
+        Long userId = 326L;
+        List<User> members = List.of(
+                createUser(1L).build().get(),
+                createUser(2L).build().get(),
+                createUser(3L).build().get()
+        );
+        given(crewMemberReader.getMembersByCrewId(crewId))
+                .willReturn(members);
+
+        // when
+        List<UserDto> userDtos = crewService.getUserDtosByCrew(crewId, userId);
+
+        // then
+        assertEquals(members.size(), userDtos.size());
+        then(crewPolicy).should(only())
+                .validateCrewMember(anyLong(), anyLong());
+        then(crewMemberReader).should(only())
+                .getMembersByCrewId(anyLong());
     }
 }

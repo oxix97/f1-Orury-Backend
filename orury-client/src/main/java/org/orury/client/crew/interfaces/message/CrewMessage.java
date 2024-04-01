@@ -6,6 +6,7 @@ import lombok.Getter;
 public enum CrewMessage {
     CREW_CREATED("크루가 생성됐습니다."),
     CREWS_READ("크루 목록을 조회했습니다."),
+    CREW_MEMBERS_READ("크루멤버 목록을 조회했습니다."),
     CREW_READ("크루를 조회했습니다."),
     CREW_INFO_UPDATED("크루 정보가 변경됐습니다."),
     CREW_IMAGE_UPDATED("크루 이미지가 변경되었습니다."),

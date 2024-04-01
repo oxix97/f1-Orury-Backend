@@ -3,6 +3,7 @@ package org.orury.client.crew.application;
 import lombok.RequiredArgsConstructor;
 import org.orury.client.crew.interfaces.message.CrewMessage;
 import org.orury.client.crew.interfaces.request.CrewRequest;
+import org.orury.client.crew.interfaces.response.CrewMembersResponse;
 import org.orury.client.crew.interfaces.response.CrewResponse;
 import org.orury.client.crew.interfaces.response.CrewsResponse;
 import org.orury.client.user.application.UserService;
@@ -106,5 +107,13 @@ public class CrewFacade {
             List<String> userImages = crewService.getUserImagesByCrew(crewDto, MAXIMUM_OF_CREW_LIST_THUMBNAILS);
             return CrewsResponse.of(crewDto, userImages);
         });
+    }
+
+    public List<CrewMembersResponse> getCrewMembers(Long crewId, Long userId) {
+        CrewDto crewDto = crewService.getCrewDtoById(crewId);
+        List<UserDto> userDtos = crewService.getUserDtosByCrew(crewId, userId);
+        return userDtos.stream()
+                .map(userDto -> CrewMembersResponse.of(userDto, userId, crewDto.userDto().id()))
+                .toList();
     }
 }

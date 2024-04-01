@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.orury.client.crew.application.CrewFacade;
 import org.orury.client.crew.interfaces.message.CrewMessage;
 import org.orury.client.crew.interfaces.request.CrewRequest;
+import org.orury.client.crew.interfaces.response.CrewMembersResponse;
 import org.orury.client.crew.interfaces.response.CrewResponse;
 import org.orury.client.crew.interfaces.response.CrewsResponse;
 import org.orury.domain.base.converter.ApiResponse;
@@ -15,6 +16,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -166,5 +169,12 @@ public class CrewController {
         crewFacade.expelMember(crewId, memberId, userPrincipal.id());
 
         return ApiResponse.of(CrewMessage.MEMBER_EXPELLED.getMessage());
+    }
+
+    @Operation(summary = "크루멤버 목록 조회", description = "크루id에 따른 크루멤버 목록을 조회한다.")
+    @GetMapping("{crewId}/members")
+    public ApiResponse getCrewMembers(@PathVariable Long crewId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        List<CrewMembersResponse> response = crewFacade.getCrewMembers(crewId, userPrincipal.id());
+        return ApiResponse.of(CrewMessage.CREW_MEMBERS_READ.getMessage(), response);
     }
 }
