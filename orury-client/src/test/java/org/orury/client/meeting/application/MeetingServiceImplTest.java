@@ -10,6 +10,7 @@ import org.orury.domain.MeetingDomainFixture;
 import org.orury.domain.meeting.domain.dto.MeetingDto;
 import org.orury.domain.meeting.domain.entity.Meeting;
 import org.orury.domain.meeting.domain.entity.MeetingMember;
+import org.orury.domain.user.domain.entity.User;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -662,17 +663,15 @@ class MeetingServiceImplTest extends ServiceTest {
         Long userId = 1248L;
         Long meetingId = 54L;
         MeetingDto meetingDto = createMeetingDto(meetingId).build().get();
-        List<MeetingMember> meetingMembers = List.of(
-                createMeetingMember(meetingId, 4L).build().get(),
-                createMeetingMember(meetingId, 14L).build().get(),
-                createMeetingMember(meetingId, 24L).build().get()
+        List<User> meetingMembers = List.of(
+                createUser(4L).build().get(),
+                createUser(14L).build().get(),
+                createUser(24L).build().get()
         );
         given(crewMemberReader.existsByCrewIdAndUserId(anyLong(), anyLong()))
                 .willReturn(true);
         given(meetingMemberReader.getMeetingMembersByMeetingId(anyLong()))
                 .willReturn(meetingMembers);
-        given(userReader.getUserById(anyLong()))
-                .willReturn(createUser(4L).build().get(), createUser(14L).build().get(), createUser(24L).build().get());
 
         // when
         meetingService.getUserDtosByMeeting(meetingDto, userId);
@@ -682,8 +681,6 @@ class MeetingServiceImplTest extends ServiceTest {
                 .existsByCrewIdAndUserId(anyLong(), anyLong());
         then(meetingMemberReader).should(only())
                 .getMeetingMembersByMeetingId(anyLong());
-        then(userReader).should(times(meetingMembers.size()))
-                .getUserById(anyLong());
     }
 
     private MeetingDomainFixture.TestMeetingDto.TestMeetingDtoBuilder createFullMeetingDto(Long meetingId) {

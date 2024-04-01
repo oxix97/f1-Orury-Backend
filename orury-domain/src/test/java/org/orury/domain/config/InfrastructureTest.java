@@ -191,7 +191,7 @@ public abstract class InfrastructureTest {
         //meeting
         meetingReader = new MeetingReaderImpl(meetingRepository);
         meetingStore = new MeetingStoreImpl(meetingRepository);
-        meetingMemberReader = new MeetingMemberReaderImpl(meetingMemberRepository);
+        meetingMemberReader = new MeetingMemberReaderImpl(meetingMemberRepository, userRepository);
         meetingMemberStore = new MeetingMemberStoreImpl(meetingMemberRepository, meetingRepository);
         //notice
         noticeReader = new NoticeReaderImpl(noticeRepository);

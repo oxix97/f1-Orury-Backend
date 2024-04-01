@@ -131,8 +131,8 @@ public class MeetingServiceImpl implements MeetingService {
     @Transactional(readOnly = true)
     public List<UserDto> getUserDtosByMeeting(MeetingDto meetingDto, Long userId) {
         validateCrewMember(meetingDto.crewDto().id(), userId);
-        List<MeetingMember> meetingMembers = meetingMemberReader.getMeetingMembersByMeetingId(meetingDto.id());
-        return convertMeetingMembersToUserDtos(meetingMembers);
+        return meetingMemberReader.getMeetingMembersByMeetingId(meetingDto.id())
+                .stream().map(UserDto::from).toList();
     }
 
     private void validateMeetingCreator(Long meetingCreatorId, Long userId) {
@@ -166,13 +166,6 @@ public class MeetingServiceImpl implements MeetingService {
         return meetings.stream().map(meeting -> {
             boolean isParticipated = meetingMemberReader.existsByMeetingIdAndUserId(meeting.getId(), userId);
             return MeetingDto.from(meeting, isParticipated);
-        }).toList();
-    }
-
-    private List<UserDto> convertMeetingMembersToUserDtos(List<MeetingMember> meetingMembers) {
-        return meetingMembers.stream().map(meetingMember -> {
-            User user = userReader.getUserById(meetingMember.getMeetingMemberPK().getUserId());
-            return UserDto.from(user);
         }).toList();
     }
 }
