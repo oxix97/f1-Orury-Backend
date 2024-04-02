@@ -1,6 +1,8 @@
 # f1-Orury-Backend
 당신만의 클라이밍 커뮤니티 [Orury](https://orury.com/)
 
+[발표자료](https://docs.google.com/presentation/d/1pN0_QTcl_wQ7y_Ic1nmBu3eMqxchR97XpcNEdT_ZaKU/edit?usp=sharing)
+
 ## 👥 Contributors
 
 <table>
@@ -85,6 +87,5 @@
 - 브랜치 전략
 - 코드 리뷰
 - API Docs (노션, swagger)
-
 
 
