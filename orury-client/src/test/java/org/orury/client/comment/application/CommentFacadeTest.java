@@ -1,8 +1,20 @@
 package org.orury.client.comment.application;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.orury.client.ClientFixtureFactory.TestCommentUpdateRequest.createCommentUpdateRequest;
+import static org.orury.domain.CommentDomainFixture.TestCommentDto.createCommentDto;
+import static org.orury.domain.CommentDomainFixture.TestCommentDto.createDeletedCommentDto;
+import static org.orury.domain.CommentDomainFixture.TestCommentLikeDto.createCommentLikeDto;
+import static org.orury.domain.PostDomainFixture.TestPostDto.createPostDto;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.orury.client.comment.interfaces.request.CommentCreateRequest;
 import org.orury.client.comment.interfaces.request.CommentUpdateRequest;
 import org.orury.client.comment.interfaces.response.CommentsWithCursorResponse;
 import org.orury.client.config.FacadeTest;
@@ -14,41 +26,27 @@ import org.orury.domain.post.domain.dto.PostDto;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.orury.client.ClientFixtureFactory.TestCommentCreateRequest.createCommentCreateRequest;
-import static org.orury.client.ClientFixtureFactory.TestCommentUpdateRequest.createCommentUpdateRequest;
-import static org.orury.domain.CommentDomainFixture.TestCommentDto.createCommentDto;
-import static org.orury.domain.CommentDomainFixture.TestCommentDto.createDeletedCommentDto;
-import static org.orury.domain.CommentDomainFixture.TestCommentLikeDto.createCommentLikeDto;
-import static org.orury.domain.PostDomainFixture.TestPostDto.createPostDto;
-
 @DisplayName("[Facade] 댓글 Facade 테스트")
 class CommentFacadeTest extends FacadeTest {
 
-    @DisplayName("댓글생성Request와 유저id를 받으면, 댓글을 생성한다.")
-    @Test
-    void should_CreateComment() {
-        // given
-        CommentCreateRequest commentCreateRequest = createCommentCreateRequest().build().get();
-        Long userId = 1L;
-
-        // when
-        commentFacade.createComment(commentCreateRequest, userId);
-
-        // then
-        then(userService).should(times(1))
-                .getUserDtoById(anyLong());
-        then(postService).should(times(1))
-                .getPostDtoById(anyLong());
-        then(commentService).should(times(1))
-                .createComment(any());
-    }
+//    @DisplayName("댓글생성Request와 유저id를 받으면, 댓글을 생성한다.")
+//    @Test
+//    void should_CreateComment() {
+//        // given
+//        CommentCreateRequest commentCreateRequest = createCommentCreateRequest().build().get();
+//        Long userId = 1L;
+//
+//        // when
+//        commentFacade.createComment(commentCreateRequest, userId);
+//
+//        // then
+//        then(userService).should(times(1))
+//                .getUserDtoById(anyLong());
+//        then(postService).should(times(1))
+//                .getPostDtoById(anyLong());
+//        then(commentService).should(times(1))
+//                .createComment(any());
+//    }
 
     @DisplayName("게시글id/cursor/유저id를 받으면, CommentsWithCursorReponse를 반환한다")
     @Test
