@@ -17,4 +17,6 @@ public interface CrewMemberRepository extends JpaRepository<CrewMember, CrewMemb
     int countByCrewMemberPK_UserId(Long userId);
 
     List<CrewMember> findByCrewMemberPK_CrewIdAndCrewMemberPK_UserIdNot(Long crewId, Long crewCreatorId, PageRequest pageRequest);
+
+    CrewMember getCrewMemberByCrewMemberPK_CrewIdAndCrewMemberPK_UserId(Long crewId, Long userId);
 }

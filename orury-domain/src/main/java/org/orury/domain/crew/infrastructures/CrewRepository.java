@@ -11,6 +11,8 @@ import java.util.List;
 
 public interface CrewRepository extends JpaRepository<Crew, Long> {
 
+    Crew getCrewById(Long crewId);
+
     Page<Crew> findByOrderByMemberCountDesc(Pageable pageable);
 
     Page<Crew> findByOrderByCreatedAtDesc(Pageable pageable);

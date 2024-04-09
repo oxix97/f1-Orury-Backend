@@ -3,8 +3,6 @@ package org.orury.domain.crew.infrastructures;
 import lombok.RequiredArgsConstructor;
 import org.orury.domain.crew.domain.CrewReader;
 import org.orury.domain.crew.domain.entity.Crew;
-import org.orury.domain.crew.domain.entity.CrewMember;
-import org.orury.domain.crew.domain.entity.CrewMemberPK;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -17,6 +15,7 @@ import java.util.Optional;
 public class CrewReaderImpl implements CrewReader {
     private final CrewRepository crewRepository;
     private final CrewMemberRepository crewMemberRepository;
+    private final CrewApplicationRepository crewApplicationRepository;
 
     @Override
     public Optional<Crew> findById(Long crewId) {
@@ -34,14 +33,18 @@ public class CrewReaderImpl implements CrewReader {
     }
 
     @Override
-    public Page<Crew> getCrewsByUserId(Long userId, Pageable pageable) {
-        List<CrewMember> crewMembers = crewMemberRepository.findByCrewMemberPK_UserId(userId);
-
-        List<Long> crewIds = crewMembers.stream()
-                .map(CrewMember::getCrewMemberPK)
-                .map(CrewMemberPK::getCrewId)
+    public List<Crew> getJoinedCrewsByUserId(Long userId) {
+        return crewMemberRepository.findByCrewMemberPK_UserId(userId).stream()
+                .map(crewMember -> crewMember.getCrewMemberPK().getCrewId())
+                .map(crewRepository::getCrewById)
                 .toList();
+    }
 
-        return crewRepository.findAllByIdIn(crewIds, pageable);
+    @Override
+    public List<Crew> getAppliedCrewsByUserId(Long userId) {
+        return crewApplicationRepository.findByCrewApplicationPK_UserId(userId).stream()
+                .map(crewApplication -> crewApplication.getCrewApplicationPK().getCrewId())
+                .map(crewRepository::getCrewById)
+                .toList();
     }
 }
