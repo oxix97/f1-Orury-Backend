@@ -15,6 +15,7 @@ import org.orury.domain.crew.domain.entity.CrewMember;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.orury.domain.user.domain.entity.User;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
@@ -29,6 +30,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 import static org.orury.domain.CrewDomainFixture.TestCrew.createCrew;
+import static org.orury.domain.CrewDomainFixture.TestCrewApplication.createCrewApplication;
 import static org.orury.domain.CrewDomainFixture.TestCrewDto.createCrewDto;
 import static org.orury.domain.CrewDomainFixture.TestCrewMember.createCrewMember;
 import static org.orury.domain.UserDomainFixture.TestUser.createUser;
@@ -115,8 +117,15 @@ class CrewServiceImplTest extends ServiceTest {
     void should_GetCrewDtosByRank() {
         // given
         Pageable pageable = mock(Pageable.class);
+        Page<Crew> crews = new PageImpl<>(List.of(
+                createCrew(852L).build().get(),
+                createCrew(159L).build().get(),
+                createCrew(261L).build().get()
+        ));
         given(crewReader.getCrewsByRank(pageable))
-                .willReturn(mock(PageImpl.class));
+                .willReturn(crews);
+        given(crewTagReader.getTagsByCrewId(anyLong()))
+                .willReturn(mock(List.class));
 
         // when
         crewService.getCrewDtosByRank(pageable);
@@ -124,6 +133,8 @@ class CrewServiceImplTest extends ServiceTest {
         // then
         then(crewReader).should(only())
                 .getCrewsByRank(any());
+        then(crewTagReader).should(times(crews.getSize()))
+                .getTagsByCrewId(anyLong());
     }
 
     @DisplayName("[getCrewDtosByRecommend] 페이지와 추천에 따른 크루 목록을 가져온다.")
@@ -131,8 +142,15 @@ class CrewServiceImplTest extends ServiceTest {
     void should_GetCrewDtosByRecommend() {
         // given
         Pageable pageable = mock(Pageable.class);
+        Page<Crew> crews = new PageImpl<>(List.of(
+                createCrew(852L).build().get(),
+                createCrew(159L).build().get(),
+                createCrew(261L).build().get()
+        ));
         given(crewReader.getCrewsByRecommend(pageable))
-                .willReturn(mock(PageImpl.class));
+                .willReturn(crews);
+        given(crewTagReader.getTagsByCrewId(anyLong()))
+                .willReturn(mock(List.class));
 
         // when
         crewService.getCrewDtosByRecommend(pageable);
@@ -140,23 +158,58 @@ class CrewServiceImplTest extends ServiceTest {
         // then
         then(crewReader).should(only())
                 .getCrewsByRecommend(any());
+        then(crewTagReader).should(times(crews.getSize()))
+                .getTagsByCrewId(anyLong());
     }
 
-    @DisplayName("[getCrewDtosByUserId] 페이지와 유저 아이디에 따른 크루 목록을 가져온다.")
+    @DisplayName("[getJoinedCrewDtos] 유저 아이디에 따른 가입된 크루 목록을 가져온다.")
     @Test
-    void should_GetCrewDtosByUserId() {
+    void should_GetJoinedCrewDtos() {
         // given
-        Long userId = 1L;
-        Pageable pageable = mock(Pageable.class);
-        given(crewReader.getCrewsByUserId(userId, pageable))
-                .willReturn(mock(PageImpl.class));
+        Long userId = 2771L;
+        List<Crew> crews = List.of(
+                createCrew(2354L).build().get(),
+                createCrew(1325L).build().get(),
+                createCrew(2246L).build().get()
+        );
+        given(crewReader.getJoinedCrewsByUserId(userId))
+                .willReturn(crews);
+        given(crewTagReader.getTagsByCrewId(anyLong()))
+                .willReturn(mock(List.class));
 
         // when
-        crewService.getCrewDtosByUserId(userId, pageable);
+        crewService.getJoinedCrewDtos(userId);
 
         // then
         then(crewReader).should(only())
-                .getCrewsByUserId(anyLong(), any());
+                .getJoinedCrewsByUserId(anyLong());
+        then(crewTagReader).should(times(crews.size()))
+                .getTagsByCrewId(anyLong());
+    }
+
+    @DisplayName("[getAppliedCrewDtos] 유저 아이디에 따른 가입신청한 크루 목록을 가져온다.")
+    @Test
+    void should_GetAppliedCrewDtos() {
+        // given
+        Long userId = 259L;
+        List<Crew> crews = List.of(
+                createCrew(28416L).build().get(),
+                createCrew(620L).build().get(),
+                createCrew(738L).build().get()
+        );
+        given(crewReader.getAppliedCrewsByUserId(userId))
+                .willReturn(crews);
+        given(crewTagReader.getTagsByCrewId(anyLong()))
+                .willReturn(mock(List.class));
+
+        // when
+        crewService.getAppliedCrewDtos(userId);
+
+        // then
+        then(crewReader).should(only())
+                .getAppliedCrewsByUserId(anyLong());
+        then(crewTagReader).should(times(crews.size()))
+                .getTagsByCrewId(anyLong());
     }
 
     @DisplayName("[getUserImagesByCrew] 크루에 따른 유저이미지를 크루장을 가장 처음으로 설정하여 Maximum만큼 가져온다.")
@@ -461,6 +514,40 @@ class CrewServiceImplTest extends ServiceTest {
         then(meetingMemberStore).shouldHaveNoInteractions();
         then(meetingStore).shouldHaveNoInteractions();
         then(crewMemberStore).shouldHaveNoInteractions();
+    }
+
+    @DisplayName("[getJoinedAt] 크루 가입일을 가져온다.")
+    @Test
+    void should_GetJoinedAt() {
+        // given
+        Long crewId = 1L;
+        Long userId = 2L;
+        given(crewMemberReader.getCrewMemberByCrewIdAndUserId(crewId, userId))
+                .willReturn(createCrewMember(crewId, userId).build().get());
+
+        // when
+        crewService.getJoinedAt(crewId, userId);
+
+        // then
+        then(crewMemberReader).should(only())
+                .getCrewMemberByCrewIdAndUserId(anyLong(), anyLong());
+    }
+
+    @DisplayName("[getAppliedAt] 크루 가입신청일을 가져온다.")
+    @Test
+    void should_GetAppliedAt() {
+        // given
+        Long crewId = 1L;
+        Long userId = 2L;
+        given(crewApplicationReader.getCrewApplicationByCrewIdAndUserId(crewId, userId))
+                .willReturn(createCrewApplication(crewId, userId).build().get());
+
+        // when
+        crewService.getAppliedAt(crewId, userId);
+
+        // then
+        then(crewApplicationReader).should(only())
+                .getCrewApplicationByCrewIdAndUserId(anyLong(), anyLong());
     }
 
     @DisplayName("[getUserDtosByCrew] 크루에 속한 유저들을 가져온다.")
