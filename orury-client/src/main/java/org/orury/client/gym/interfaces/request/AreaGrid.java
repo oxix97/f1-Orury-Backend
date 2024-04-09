@@ -17,6 +17,10 @@ public record AreaGrid(
         gridMap.put("right", rightLongitude);
         return gridMap;
     }
+
+    public static AreaGrid of(double bottomLatitude, double topLatitude, double leftLongitude, double rightLongitude) {
+        return new AreaGrid(bottomLatitude, topLatitude, leftLongitude, rightLongitude);
+    }
 }
 
 // TODO: 프론트에서 double로 값을 요청하지 못하거나 연산이 더 든다면, String으로 받아 아래 코드로 대체합니다.
