@@ -4,6 +4,7 @@ import org.orury.domain.crew.domain.entity.Crew;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface CrewReader {
@@ -13,5 +14,7 @@ public interface CrewReader {
 
     Page<Crew> getCrewsByRecommend(Pageable pageable);
 
-    Page<Crew> getCrewsByUserId(Long userId, Pageable pageable);
+    List<Crew> getJoinedCrewsByUserId(Long userId);
+
+    List<Crew> getAppliedCrewsByUserId(Long userId);
 }

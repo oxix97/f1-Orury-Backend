@@ -13,4 +13,6 @@ public interface CrewMemberReader {
     List<User> getMembersByCrewId(Long crewId);
 
     List<CrewMember> getOtherCrewMembersByCrewIdMaximum(Long crewId, Long crewCreatorId, int maximum);
+
+    CrewMember getCrewMemberByCrewIdAndUserId(Long crewId, Long userId);
 }
