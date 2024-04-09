@@ -1,13 +1,13 @@
 package org.orury.client.crew.application;
 
-import static org.orury.domain.global.constants.NumberConstants.CREW_PAGINATION_SIZE;
-
+import lombok.RequiredArgsConstructor;
+import org.orury.client.crew.interfaces.message.CrewMessage;
 import org.orury.client.crew.interfaces.request.CrewRequest;
+import org.orury.client.crew.interfaces.response.CrewMembersResponse;
 import org.orury.client.crew.interfaces.response.CrewResponse;
 import org.orury.client.crew.interfaces.response.CrewsResponse;
 import org.orury.client.user.application.UserService;
 import org.orury.domain.crew.domain.dto.CrewDto;
-import org.orury.domain.crew.domain.entity.CrewMemberPK;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-import lombok.RequiredArgsConstructor;
+import static org.orury.domain.global.constants.NumberConstants.*;
 
 @Component
 @RequiredArgsConstructor
@@ -50,11 +50,9 @@ public class CrewFacade {
 
     public CrewResponse getCrewByCrewId(Long userId, Long crewId) {
         CrewDto crewDto = crewService.getCrewDtoById(crewId);
-        CrewMemberPK crewMemberPK = CrewMemberPK.of(userId, crewId);
-
-        boolean isApply = crewService.existCrewMember(crewMemberPK);
-
-        return CrewResponse.of(crewDto, isApply);
+        boolean isMember = crewService.existCrewMember(crewId, userId);
+        List<String> userImages = crewService.getUserImagesByCrew(crewDto, MAXIMUM_OF_CREW_DETAIL_THUMBNAILS);
+        return CrewResponse.of(crewDto, isMember, userImages);
     }
 
     public void updateCrewInfo(Long crewId, CrewRequest request, Long userId) {
@@ -73,10 +71,10 @@ public class CrewFacade {
         crewService.deleteCrew(crewDto, userId);
     }
 
-    public void applyCrew(Long crewId, Long userId, String answer) {
+    public CrewMessage applyCrew(Long crewId, Long userId, String answer) {
         CrewDto crewDto = crewService.getCrewDtoById(crewId);
         UserDto userDto = userService.getUserDtoById(userId);
-        crewService.applyCrew(crewDto, userDto, answer);
+        return crewService.applyCrew(crewDto, userDto, answer);
     }
 
     public void withdrawApplication(Long crewId, Long userId) {
@@ -106,8 +104,16 @@ public class CrewFacade {
 
     private Page<CrewsResponse> convertCrewDtosToCrewsResponses(Page<CrewDto> crewDtos) {
         return crewDtos.map(crewDto -> {
-            List<String> userImages = crewService.getUserImagesByCrew(crewDto);
+            List<String> userImages = crewService.getUserImagesByCrew(crewDto, MAXIMUM_OF_CREW_LIST_THUMBNAILS);
             return CrewsResponse.of(crewDto, userImages);
         });
+    }
+
+    public List<CrewMembersResponse> getCrewMembers(Long crewId, Long userId) {
+        CrewDto crewDto = crewService.getCrewDtoById(crewId);
+        List<UserDto> userDtos = crewService.getUserDtosByCrew(crewId, userId);
+        return userDtos.stream()
+                .map(userDto -> CrewMembersResponse.of(userDto, userId, crewDto.userDto().id()))
+                .toList();
     }
 }

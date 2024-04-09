@@ -1,6 +1,7 @@
 package org.orury.domain.meeting.domain;
 
 import org.orury.domain.meeting.domain.entity.MeetingMember;
+import org.orury.domain.user.domain.entity.User;
 
 import java.util.List;
 
@@ -9,5 +10,5 @@ public interface MeetingMemberReader {
 
     List<MeetingMember> getOtherMeetingMembersByMeetingIdMaximum(Long meetingId, Long meetingCreatorId, int maximum);
 
-    List<MeetingMember> getMeetingMembersByMeetingId(Long meetingId);
+    List<User> getMeetingMembersByMeetingId(Long meetingId);
 }

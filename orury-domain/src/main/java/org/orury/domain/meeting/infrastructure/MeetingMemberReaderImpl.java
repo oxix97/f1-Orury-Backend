@@ -3,6 +3,9 @@ package org.orury.domain.meeting.infrastructure;
 import lombok.RequiredArgsConstructor;
 import org.orury.domain.meeting.domain.MeetingMemberReader;
 import org.orury.domain.meeting.domain.entity.MeetingMember;
+import org.orury.domain.meeting.domain.entity.MeetingMemberPK;
+import org.orury.domain.user.domain.entity.User;
+import org.orury.domain.user.infrastucture.UserRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 
@@ -12,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MeetingMemberReaderImpl implements MeetingMemberReader {
     private final MeetingMemberRepository meetingMemberRepository;
+    private final UserRepository userRepository;
 
     @Override
     public boolean existsByMeetingIdAndUserId(Long meetingId, Long userId) {
@@ -24,7 +28,12 @@ public class MeetingMemberReaderImpl implements MeetingMemberReader {
     }
 
     @Override
-    public List<MeetingMember> getMeetingMembersByMeetingId(Long meetingId) {
-        return meetingMemberRepository.findByMeetingMemberPK_MeetingId(meetingId);
+    public List<User> getMeetingMembersByMeetingId(Long meetingId) {
+        return meetingMemberRepository.findByMeetingMemberPK_MeetingId(meetingId)
+                .stream()
+                .map(MeetingMember::getMeetingMemberPK)
+                .map(MeetingMemberPK::getUserId)
+                .map(userRepository::findUserById)
+                .toList();
     }
 }
