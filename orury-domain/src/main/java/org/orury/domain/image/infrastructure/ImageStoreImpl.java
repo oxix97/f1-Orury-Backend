@@ -5,6 +5,7 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.lang3.StringUtils;
 import org.orury.common.error.code.FileExceptionCode;
 import org.orury.common.error.exception.FileException;
@@ -40,17 +41,18 @@ public class ImageStoreImpl implements ImageStore {
 
     @Override
     public List<String> upload(S3Folder domain, List<MultipartFile> files) {
-        // TODO 프론트 null check 로직 추가되면 return값 null로 바꿔야함
+        // fixme 게시판만 일괄 적용
+        if (S3Folder.POST.equals(domain) && ImageUtil.filesValidation(files)) return null;
         if (ImageUtil.filesValidation(files)) return List.of();
 
         var fileNames = ImageUtil.createFileName(files.size());
 
-        /**
-         * 비동기 처리 : 파일 변환 & 이미지 업로드
-         */
         asyncTaskExecutor.submit(() -> {
             var tempFiles = files.stream().map(this::convert).toList();
             upload(domain, tempFiles, fileNames);
+            tempFiles.forEach(this::thumbnailConvert);
+            upload(S3Folder.THUMBNAIL, tempFiles, fileNames);
+            tempFiles.forEach(this::removeFile);
         });
 
         return fileNames;
@@ -74,13 +76,21 @@ public class ImageStoreImpl implements ImageStore {
         return file;
     }
 
+    private void thumbnailConvert(File file) {
+        try {
+            Thumbnails.of(file)
+                    .size(96, 128)
+                    .toFile(file);
+        } catch (IOException e) {
+            throw new FileException(FileExceptionCode.FILE_NOT_FOUND);
+        }
+    }
+
     private void upload(S3Folder domain, List<File> files, List<String> fileNames) {
         for (int idx = 0; idx < files.size(); idx++) {
             // S3에 파일들을 업로드
             amazonS3.putObject(new PutObjectRequest(bucket + domain.getName(), fileNames.get(idx), files.get(idx))
                     .withCannedAcl(CannedAccessControlList.PublicRead));
-            //임시 파일 삭제
-            removeFile(files.get(idx));
         }
     }
 

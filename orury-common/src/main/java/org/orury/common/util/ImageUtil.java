@@ -25,8 +25,9 @@ public class ImageUtil {
         return names;
     }
 
-    public static String createFileName() {
-        return UUID.randomUUID().toString().substring(0, 15);
+    public static String domainToThumbnail(List<String> image, S3Folder domain) {
+        if (imagesValidation(image)) return null;
+        return image.get(0).replace(domain.getName(), S3Folder.THUMBNAIL.getName());
     }
 
     public static String splitUrlToImage(String url) {

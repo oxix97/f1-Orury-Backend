@@ -1,10 +1,11 @@
 package org.orury.client.post.interfaces.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.orury.common.util.ImageUtil;
+import org.orury.common.util.S3Folder;
 import org.orury.domain.post.domain.dto.PostDto;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 public record PostsResponse(
         Long id,
@@ -32,7 +33,7 @@ public record PostsResponse(
                 postDto.viewCount(),
                 postDto.commentCount(),
                 postDto.likeCount(),
-                (Objects.isNull(postDto.images()) || postDto.images().isEmpty()) ? null : postDto.images().get(0),
+                ImageUtil.domainToThumbnail(postDto.images(), S3Folder.POST),
                 postDto.category(),
                 postDto.userDto().id(),
                 postDto.userDto().nickname(),

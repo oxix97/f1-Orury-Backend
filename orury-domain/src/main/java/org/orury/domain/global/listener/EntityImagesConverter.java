@@ -22,8 +22,10 @@ public abstract class EntityImagesConverter implements AttributeConverter<List<S
 
     @Override
     public String convertToDatabaseColumn(List<String> attribute) {
-        // TODO
-        // 프론트 null check 로직 추가되면 return값 null로 바꿔야함
+        // fixme 게시판만 일괄 적용
+
+        if (domainName().equals(S3Folder.POST) && attribute == null) return null;
+        // TODO 프론트 null check 로직 추가되면 return값 null로 바꿔야함
         if (ImageUtil.imagesValidation(attribute)) return "[]";
         try {
             var images = attribute.stream().map(ImageUtil::splitUrlToImage).toArray();
@@ -35,8 +37,10 @@ public abstract class EntityImagesConverter implements AttributeConverter<List<S
 
     @Override
     public List<String> convertToEntityAttribute(String dbData) {
-        // TODO
-        // 프론트 null check 로직 추가되면 return값 null로 바꿔야함
+        // fixme 게시판만 일괄 적용
+        if (domainName().equals(S3Folder.POST) && StringUtils.isBlank(dbData)) return null;
+
+        // TODO 프론트 null check 로직 추가되면 return값 null로 바꿔야함
         if (StringUtils.isBlank(dbData)) return List.of();
         var imageReader = BeanUtils.getBean(ImageReader.class);
         try {
