@@ -8,7 +8,8 @@ public enum S3Folder {
     REVIEW("review"),
     USER("user"),
     GYM("gym"),
-    CREW("crew");
+    CREW("crew"),
+    THUMBNAIL("thumbnail");
 
     private final String name;
 
