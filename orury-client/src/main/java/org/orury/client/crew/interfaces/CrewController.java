@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.orury.client.crew.application.CrewFacade;
 import org.orury.client.crew.interfaces.message.CrewMessage;
 import org.orury.client.crew.interfaces.request.CrewRequest;
+import org.orury.client.crew.interfaces.response.CrewMembersResponse;
 import org.orury.client.crew.interfaces.response.CrewResponse;
 import org.orury.client.crew.interfaces.response.CrewsResponse;
 import org.orury.domain.base.converter.ApiResponse;
@@ -15,6 +16,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -59,8 +62,7 @@ public class CrewController {
         return ApiResponse.of(CrewMessage.CREWS_READ.getMessage(), pageResponse);
     }
 
-    @Operation(summary = "크루 상세 조회", description = "크루를 상세 조회한다. 크루 가입 여부에 따라 가입o-> 크루 일정 조회/ 가입x-> 크루 소개글, 크루 가입 버튼이 뜬다." +
-            "가입 여부에 따른 API 호출은 어디에서 할지 프론트와 상의해야함.")
+    @Operation(summary = "크루 상세 조회", description = "크루를 상세 조회한다.")
     @GetMapping("/{crewId}")
     public ApiResponse getCrewByCrewId(@PathVariable Long crewId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         CrewResponse response = crewFacade.getCrewByCrewId(userPrincipal.id(), crewId);
@@ -106,9 +108,9 @@ public class CrewController {
             @PathVariable Long crewId,
             @RequestBody(required = false) String answer,
             @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        crewFacade.applyCrew(crewId, userPrincipal.id(), answer);
+        CrewMessage result = crewFacade.applyCrew(crewId, userPrincipal.id(), answer);
 
-        return ApiResponse.of(CrewMessage.CREW_APPLIED.getMessage());
+        return ApiResponse.of(result.getMessage());
     }
 
     @Operation(summary = "크루신청 철회", description = "크루 가입신청을 철회한다.")
@@ -167,5 +169,12 @@ public class CrewController {
         crewFacade.expelMember(crewId, memberId, userPrincipal.id());
 
         return ApiResponse.of(CrewMessage.MEMBER_EXPELLED.getMessage());
+    }
+
+    @Operation(summary = "크루멤버 목록 조회", description = "크루id에 따른 크루멤버 목록을 조회한다.")
+    @GetMapping("{crewId}/members")
+    public ApiResponse getCrewMembers(@PathVariable Long crewId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        List<CrewMembersResponse> response = crewFacade.getCrewMembers(crewId, userPrincipal.id());
+        return ApiResponse.of(CrewMessage.CREW_MEMBERS_READ.getMessage(), response);
     }
 }
