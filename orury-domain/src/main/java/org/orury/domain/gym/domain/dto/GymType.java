@@ -15,9 +15,9 @@ public enum GymType {
 
     @JsonCreator
     public static GymType getEnumFromValue(String value) {
-        for (GymType gypType : GymType.values()) {
-            if (gypType.name().equals(value)) {
-                return gypType;
+        for (GymType gymType : GymType.values()) {
+            if (gymType.name().equals(value)) {
+                return gymType;
             }
         }
         return null;
