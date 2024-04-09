@@ -44,14 +44,14 @@ public class GymController {
     public ApiResponse getGymsByLocation(
             @RequestParam float latitude,
             @RequestParam float longitude,
-            @RequestParam("bottom_latitude") double bottom_latitude,
-            @RequestParam("top_latitude") double top_latitude,
-            @RequestParam("left_longitude") double left_longitude,
-            @RequestParam("right_longitude") double right_longitude,
+            @RequestParam("bottom_latitude") double bottomLatitude,
+            @RequestParam("top_latitude") double topLatitude,
+            @RequestParam("left_longitude") double leftLongitude,
+            @RequestParam("right_longitude") double rightLongitude,
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
         var gymsResponse = gymFacade.getGymDtosByAreaGridOrderByDistanceAsc(
-                AreaGrid.of(bottom_latitude, top_latitude, left_longitude, right_longitude),
+                AreaGrid.of(bottomLatitude, topLatitude, leftLongitude, rightLongitude),
                 latitude,
                 longitude,
                 userPrincipal.id()
