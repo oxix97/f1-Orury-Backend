@@ -5,7 +5,6 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.lang3.StringUtils;
 import org.orury.common.error.code.FileExceptionCode;
 import org.orury.common.error.exception.FileException;
@@ -22,6 +21,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.IntStream;
 
 @Slf4j
 @Component
@@ -41,19 +41,16 @@ public class ImageStoreImpl implements ImageStore {
 
     @Override
     public List<String> upload(S3Folder domain, List<MultipartFile> files) {
-        // fixme 게시판만 일괄 적용
-        if (S3Folder.POST.equals(domain) && ImageUtil.filesValidation(files)) return null;
-        if (ImageUtil.filesValidation(files)) return List.of();
+        if (ImageUtil.filesValidation(files)) return null;
 
         var fileNames = ImageUtil.createFileName(files.size());
-
-        asyncTaskExecutor.submit(() -> {
-            var tempFiles = files.stream().map(this::convert).toList();
-            upload(domain, tempFiles, fileNames);
-            tempFiles.forEach(this::thumbnailConvert);
-            upload(S3Folder.THUMBNAIL, tempFiles, fileNames);
-            tempFiles.forEach(this::removeFile);
-        });
+        IntStream.range(0, files.size())
+                .forEach(idx -> asyncTaskExecutor.submit(() -> {
+                    var tempFile = convert(files.get(idx));
+                    amazonS3.putObject(new PutObjectRequest(bucket + domain.getName(), fileNames.get(idx), tempFile)
+                            .withCannedAcl(CannedAccessControlList.PublicRead));
+                    removeFile(tempFile);
+                }));
 
         return fileNames;
     }
@@ -65,7 +62,6 @@ public class ImageStoreImpl implements ImageStore {
     }
 
     private File convert(MultipartFile multipartFile) {
-        // MultipartFile을 File로 변환합니다.
         File file = new File(System.getProperty("user.dir") + "/" + multipartFile.getOriginalFilename());
 
         try (FileOutputStream fos = new FileOutputStream(file)) {
@@ -76,26 +72,7 @@ public class ImageStoreImpl implements ImageStore {
         return file;
     }
 
-    private void thumbnailConvert(File file) {
-        try {
-            Thumbnails.of(file)
-                    .size(96, 128)
-                    .toFile(file);
-        } catch (IOException e) {
-            throw new FileException(FileExceptionCode.FILE_NOT_FOUND);
-        }
-    }
-
-    private void upload(S3Folder domain, List<File> files, List<String> fileNames) {
-        for (int idx = 0; idx < files.size(); idx++) {
-            // S3에 파일들을 업로드
-            amazonS3.putObject(new PutObjectRequest(bucket + domain.getName(), fileNames.get(idx), files.get(idx))
-                    .withCannedAcl(CannedAccessControlList.PublicRead));
-        }
-    }
-
     private void removeFile(File file) {
-        // 임시 파일을 삭제합니다.
         if (file.delete()) return;
         throw new FileException(FileExceptionCode.FILE_DELETE_ERROR);
     }
