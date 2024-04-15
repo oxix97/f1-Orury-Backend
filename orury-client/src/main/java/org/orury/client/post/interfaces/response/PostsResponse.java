@@ -2,7 +2,6 @@ package org.orury.client.post.interfaces.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.orury.common.util.ImageUtil;
-import org.orury.common.util.S3Folder;
 import org.orury.domain.post.domain.dto.PostDto;
 
 import java.time.LocalDateTime;
@@ -33,7 +32,7 @@ public record PostsResponse(
                 postDto.viewCount(),
                 postDto.commentCount(),
                 postDto.likeCount(),
-                ImageUtil.domainToThumbnail(postDto.images(), S3Folder.POST),
+                ImageUtil.imagesToThumbnail(postDto.images()),
                 postDto.category(),
                 postDto.userDto().id(),
                 postDto.userDto().nickname(),
