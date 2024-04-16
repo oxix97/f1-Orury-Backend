@@ -11,7 +11,7 @@ import org.orury.domain.crew.domain.dto.CrewGender;
 import org.orury.domain.crew.domain.dto.CrewStatus;
 import org.orury.domain.global.domain.Region;
 import org.orury.domain.global.validation.EnumValue;
-import org.orury.domain.global.validation.ValidRegions;
+import org.orury.domain.global.validation.EnumValues;
 import org.orury.domain.user.domain.dto.UserDto;
 
 import java.util.List;
@@ -24,7 +24,7 @@ public record CrewRequest(
         int capacity,
 
         @Size(min = 1, max = 3, message = "활동 지역은 최소 1개, 최대 3개까지만 추가할 수 있습니다.")
-        @ValidRegions
+        @EnumValues(enumClass = Region.class, message = "유효하지 않은 지역이 포함되어 있습니다.")
         List<Region> regions,
 
         @NotEmpty(message = "크루 소개는 필수 입력사항입니다.")

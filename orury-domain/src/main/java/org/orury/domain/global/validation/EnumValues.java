@@ -8,13 +8,15 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target({ElementType.FIELD})
+@Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = RegionValidator.class)
-public @interface ValidRegions {
-    String message() default "활동 지역은 정확한 값을 입력해 주세요.";
+@Constraint(validatedBy = EnumsValidator.class)
+public @interface EnumValues {
+    String message() default "유효하지 않은 값이 포함되어 있습니다.";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
+
+    Class<? extends Enum<?>> enumClass();
 }
