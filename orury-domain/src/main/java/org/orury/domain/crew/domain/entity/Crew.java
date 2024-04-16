@@ -9,7 +9,6 @@ import org.orury.domain.crew.domain.dto.CrewGender;
 import org.orury.domain.crew.domain.dto.CrewGenderConverter;
 import org.orury.domain.crew.domain.dto.CrewStatus;
 import org.orury.domain.crew.domain.dto.CrewStatusConverter;
-import org.orury.domain.global.domain.Region;
 import org.orury.domain.global.domain.RegionConverter;
 import org.orury.domain.global.listener.CrewImageConverter;
 import org.orury.domain.user.domain.entity.User;
@@ -39,8 +38,8 @@ public class Crew extends AuditingField {
     private int capacity;
 
     @Convert(converter = RegionConverter.class)
-    @Column(name = "region", nullable = false)
-    private List<Region> regions;
+    @Column(name = "regions", nullable = false)
+    private List<String> regions;
 
     @Column(name = "description", nullable = true)
     private String description;
@@ -83,7 +82,7 @@ public class Crew extends AuditingField {
             String name,
             int memberCount,
             int capacity,
-            List<Region> regions,
+            List<String> regions,
             String description,
             String icon,
             CrewStatus status,
@@ -121,7 +120,7 @@ public class Crew extends AuditingField {
             String name,
             int memberCount,
             int capacity,
-            List<Region> regions,
+            List<String> regions,
             String description,
             String icon,
             CrewStatus status,

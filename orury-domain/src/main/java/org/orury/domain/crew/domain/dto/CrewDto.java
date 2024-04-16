@@ -6,6 +6,7 @@ import org.orury.domain.user.domain.dto.UserDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * DTO for {@link Crew}
@@ -78,7 +79,9 @@ public record CrewDto(
                 entity.getName(),
                 entity.getMemberCount(),
                 entity.getCapacity(),
-                entity.getRegions(),
+                entity.getRegions().stream()
+                        .map(Region::valueOf)
+                        .collect(Collectors.toList()),
                 entity.getDescription(),
                 entity.getIcon(),
                 entity.getStatus(),
@@ -101,7 +104,9 @@ public record CrewDto(
                 entity.getName(),
                 entity.getMemberCount(),
                 entity.getCapacity(),
-                entity.getRegions(),
+                entity.getRegions().stream()
+                        .map(Region::valueOf)
+                        .collect(Collectors.toList()),
                 entity.getDescription(),
                 entity.getIcon(),
                 entity.getStatus(),
@@ -124,7 +129,9 @@ public record CrewDto(
                 name,
                 memberCount,
                 capacity,
-                regions,
+                this.regions.stream()
+                        .map(Enum::name)
+                        .collect(Collectors.toList()),
                 description,
                 icon,
                 status,
@@ -146,7 +153,9 @@ public record CrewDto(
                 name,
                 memberCount,
                 capacity,
-                regions,
+                this.regions.stream()
+                        .map(Enum::name)
+                        .collect(Collectors.toList()),
                 description,
                 icon,
                 status,
