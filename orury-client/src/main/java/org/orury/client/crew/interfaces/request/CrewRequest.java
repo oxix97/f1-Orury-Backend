@@ -11,6 +11,7 @@ import org.orury.domain.crew.domain.dto.CrewGender;
 import org.orury.domain.crew.domain.dto.CrewStatus;
 import org.orury.domain.global.domain.Region;
 import org.orury.domain.global.validation.EnumValue;
+import org.orury.domain.global.validation.ValidRegions;
 import org.orury.domain.user.domain.dto.UserDto;
 
 import java.util.List;
@@ -22,8 +23,9 @@ public record CrewRequest(
         @Min(value = 3, message = "크루 최소인원은 3명입니다.") @Max(value = 100, message = "크루 최대인원은 100명입니다.")
         int capacity,
 
-        @EnumValue(enumClass = Region.class, message = "지역은 서울의 구 중 하나여야 합니다.")
-        Region region,
+        @Size(min = 1, max = 3, message = "활동 지역은 최소 1개, 최대 3개까지만 추가할 수 있습니다.")
+        @ValidRegions
+        List<Region> regions,
 
         @NotEmpty(message = "크루 소개는 필수 입력사항입니다.")
         String description,
@@ -53,7 +55,7 @@ public record CrewRequest(
     public static CrewRequest of(
             String name,
             int capacity,
-            Region region,
+            List<Region> regions,
             String description,
             int minAge,
             int maxAge,
@@ -66,7 +68,7 @@ public record CrewRequest(
         return new CrewRequest(
                 name,
                 capacity,
-                region,
+                regions,
                 description,
                 minAge,
                 maxAge,
@@ -84,7 +86,7 @@ public record CrewRequest(
                 name,
                 0,
                 capacity,
-                region,
+                regions,
                 description,
                 Strings.EMPTY,
                 CrewStatus.ACTIVATED,
@@ -107,7 +109,7 @@ public record CrewRequest(
                 name,
                 crewDto.memberCount(),
                 capacity,
-                region,
+                regions,
                 description,
                 crewDto.icon(),
                 crewDto.status(),
