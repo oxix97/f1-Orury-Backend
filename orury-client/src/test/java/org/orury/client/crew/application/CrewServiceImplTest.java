@@ -478,7 +478,7 @@ class CrewServiceImplTest extends ServiceTest {
                 .willReturn(members);
 
         // when
-        List<UserDto> userDtos = crewService.getUserDtosByCrew(crewId, userId);
+        List<UserDto> userDtos = crewService.getMembersByCrew(crewId, userId);
 
         // then
         assertEquals(members.size(), userDtos.size());
@@ -486,5 +486,30 @@ class CrewServiceImplTest extends ServiceTest {
                 .validateCrewMember(anyLong(), anyLong());
         then(crewMemberReader).should(only())
                 .getMembersByCrewId(anyLong());
+    }
+
+    @DisplayName("[getApplicantsByCrew] 크루에 가입신청한 유저들을 가져온다.")
+    @Test
+    void should_GetApplicantsByCrew() {
+        // given
+        Long crewId = 726L;
+        Long userId = 326L;
+        List<User> applicants = List.of(
+                createUser(1L).build().get(),
+                createUser(2L).build().get(),
+                createUser(3L).build().get()
+        );
+        given(crewApplicationReader.getApplicantsByCrewId(crewId))
+                .willReturn(applicants);
+
+        // when
+        List<UserDto> userDtos = crewService.getApplicantsByCrew(crewId, userId);
+
+        // then
+        assertEquals(applicants.size(), userDtos.size());
+        then(crewPolicy).should(only())
+                .validateCrewCreator(anyLong(), anyLong());
+        then(crewApplicationReader).should(only())
+                .getApplicantsByCrewId(anyLong());
     }
 }

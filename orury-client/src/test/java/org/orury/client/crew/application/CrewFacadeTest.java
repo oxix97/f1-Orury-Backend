@@ -333,7 +333,7 @@ class CrewFacadeTest extends FacadeTest {
         CrewDto crewDto = createCrewDto(crewId).build().get();
         given(crewService.getCrewDtoById(anyLong()))
                 .willReturn(crewDto);
-        given(crewService.getUserDtosByCrew(anyLong(), anyLong()))
+        given(crewService.getMembersByCrew(anyLong(), anyLong()))
                 .willReturn(mock(List.class));
 
         // when
@@ -343,6 +343,23 @@ class CrewFacadeTest extends FacadeTest {
         then(crewService).should(times(1))
                 .getCrewDtoById(anyLong());
         then(crewService).should(times(1))
-                .getUserDtosByCrew(anyLong(), anyLong());
+                .getMembersByCrew(anyLong(), anyLong());
+    }
+
+    @DisplayName("크루id, 유저id를 받아, 크루신청자 목록을 반환한다.")
+    @Test
+    void should_GetCrewApplicants() {
+        // given
+        Long crewId = 3L;
+        Long userId = 23L;
+        given(crewService.getApplicantsByCrew(anyLong(), anyLong()))
+                .willReturn(mock(List.class));
+
+        // when
+        crewFacade.getCrewApplicants(crewId, userId);
+
+        // then
+        then(crewService).should(only())
+                .getApplicantsByCrew(anyLong(), anyLong());
     }
 }
