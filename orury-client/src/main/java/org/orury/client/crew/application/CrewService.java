@@ -42,5 +42,7 @@ public interface CrewService {
 
     void expelMember(CrewDto crewDto, Long memberId, Long userId);
 
-    List<UserDto> getUserDtosByCrew(Long crewId, Long userId);
+    List<UserDto> getMembersByCrew(Long crewId, Long userId);
+
+    List<UserDto> getApplicantsByCrew(Long crewId, Long userId);
 }

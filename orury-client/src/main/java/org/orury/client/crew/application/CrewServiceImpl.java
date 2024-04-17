@@ -40,6 +40,7 @@ public class CrewServiceImpl implements CrewService {
     private final CrewTagStore crewTagStore;
     private final CrewMemberReader crewMemberReader;
     private final CrewMemberStore crewMemberStore;
+    private final CrewApplicationReader crewApplicationReader;
     private final CrewApplicationStore crewApplicationStore;
     private final MeetingStore meetingStore;
     private final MeetingMemberStore meetingMemberStore;
@@ -201,9 +202,18 @@ public class CrewServiceImpl implements CrewService {
     }
 
     @Override
-    public List<UserDto> getUserDtosByCrew(Long crewId, Long userId) {
+    @Transactional(readOnly = true)
+    public List<UserDto> getMembersByCrew(Long crewId, Long userId) {
         crewPolicy.validateCrewMember(crewId, userId);
         return crewMemberReader.getMembersByCrewId(crewId)
+                .stream().map(UserDto::from).toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<UserDto> getApplicantsByCrew(Long crewId, Long userId) {
+        crewPolicy.validateCrewCreator(crewId, userId);
+        return crewApplicationReader.getApplicantsByCrewId(crewId)
                 .stream().map(UserDto::from).toList();
     }
 
