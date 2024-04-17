@@ -8,9 +8,11 @@ import org.orury.client.config.ServiceTest;
 import org.orury.common.error.code.CrewErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.common.util.S3Folder;
+import org.orury.domain.crew.domain.dto.CrewApplicationDto;
 import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.crew.domain.dto.CrewGender;
 import org.orury.domain.crew.domain.entity.Crew;
+import org.orury.domain.crew.domain.entity.CrewApplication;
 import org.orury.domain.crew.domain.entity.CrewMember;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.user.domain.dto.UserDto;
@@ -29,6 +31,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 import static org.orury.domain.CrewDomainFixture.TestCrew.createCrew;
+import static org.orury.domain.CrewDomainFixture.TestCrewApplication.createCrewApplication;
 import static org.orury.domain.CrewDomainFixture.TestCrewDto.createCrewDto;
 import static org.orury.domain.CrewDomainFixture.TestCrewMember.createCrewMember;
 import static org.orury.domain.UserDomainFixture.TestUser.createUser;
@@ -494,22 +497,30 @@ class CrewServiceImplTest extends ServiceTest {
         // given
         Long crewId = 726L;
         Long userId = 326L;
-        List<User> applicants = List.of(
-                createUser(1L).build().get(),
-                createUser(2L).build().get(),
-                createUser(3L).build().get()
+        List<CrewApplication> applicants = List.of(
+                createCrewApplication(crewId, 111L).build().get(),
+                createCrewApplication(crewId, 222L).build().get(),
+                createCrewApplication(crewId, 333L).build().get()
         );
         given(crewApplicationReader.getApplicantsByCrewId(crewId))
                 .willReturn(applicants);
+        given(userReader.getUserById(anyLong()))
+                .willReturn(
+                        createUser(111L).build().get(),
+                        createUser(222L).build().get(),
+                        createUser(333L).build().get()
+                );
 
         // when
-        List<UserDto> userDtos = crewService.getApplicantsByCrew(crewId, userId);
+        List<CrewApplicationDto> applicationDtos = crewService.getApplicantsByCrew(crewId, userId);
 
         // then
-        assertEquals(applicants.size(), userDtos.size());
+        assertEquals(applicants.size(), applicationDtos.size());
         then(crewPolicy).should(only())
                 .validateCrewCreator(anyLong(), anyLong());
         then(crewApplicationReader).should(only())
                 .getApplicantsByCrewId(anyLong());
+        then(userReader).should(times(applicants.size()))
+                .getUserById(anyLong());
     }
 }
