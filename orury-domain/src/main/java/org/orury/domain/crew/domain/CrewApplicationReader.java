@@ -1,7 +1,6 @@
 package org.orury.domain.crew.domain;
 
 import org.orury.domain.crew.domain.entity.CrewApplication;
-import org.orury.domain.user.domain.entity.User;
 
 import java.util.List;
 
@@ -12,5 +11,5 @@ public interface CrewApplicationReader {
 
     int countByUserId(Long userId);
 
-    List<User> getApplicantsByCrewId(Long crewId);
+    List<CrewApplication> getApplicantsByCrewId(Long crewId);
 }

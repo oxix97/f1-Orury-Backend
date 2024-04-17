@@ -3,7 +3,6 @@ package org.orury.domain.crew.infrastructures;
 import lombok.RequiredArgsConstructor;
 import org.orury.domain.crew.domain.CrewApplicationReader;
 import org.orury.domain.crew.domain.entity.CrewApplication;
-import org.orury.domain.user.domain.entity.User;
 import org.orury.domain.user.infrastucture.UserRepository;
 import org.springframework.stereotype.Repository;
 
@@ -31,11 +30,7 @@ public class CrewApplicationReaderImpl implements CrewApplicationReader {
     }
 
     @Override
-    public List<User> getApplicantsByCrewId(Long crewId) {
-        List<CrewApplication> crewApplications = crewApplicationRepository.findByCrewApplicationPK_CrewId(crewId);
-        return crewApplications.stream()
-                .map(crewApplication -> crewApplication.getCrewApplicationPK().getUserId())
-                .map(userRepository::findUserById)
-                .toList();
+    public List<CrewApplication> getApplicantsByCrewId(Long crewId) {
+        return crewApplicationRepository.findByCrewApplicationPK_CrewId(crewId);
     }
 }

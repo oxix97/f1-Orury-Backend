@@ -10,28 +10,32 @@ import java.time.LocalDateTime;
  * DTO for {@link CrewApplication}
  */
 public record CrewApplicationDto(
-        CrewApplicationPK crewApplicationPK,
+        Long crewId,
+        UserDto userDto,
         String answer,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
     public static CrewApplicationDto of(
-            CrewApplicationPK crewApplicationPK,
+            Long crewId,
+            UserDto userDto,
             String answer,
             LocalDateTime createdAt,
             LocalDateTime updatedAt
     ) {
         return new CrewApplicationDto(
-                crewApplicationPK,
+                crewId,
+                userDto,
                 answer,
                 createdAt,
                 updatedAt
         );
     }
 
-    public static CrewApplicationDto from(CrewApplication crewApplication) {
+    public static CrewApplicationDto from(CrewApplication crewApplication, UserDto userDto) {
         return CrewApplicationDto.of(
-                crewApplication.getCrewApplicationPK(),
+                crewApplication.getCrewApplicationPK().getCrewId(),
+                userDto,
                 crewApplication.getAnswer(),
                 crewApplication.getCreatedAt(),
                 crewApplication.getUpdatedAt()
@@ -40,7 +44,7 @@ public record CrewApplicationDto(
 
     public CrewApplication toEntity() {
         return CrewApplication.of(
-                crewApplicationPK,
+                CrewApplicationPK.of(userDto.id(), crewId),
                 answer,
                 createdAt,
                 updatedAt
@@ -48,9 +52,9 @@ public record CrewApplicationDto(
     }
 
     public static CrewApplicationDto of(CrewDto crewDto, UserDto userDto, String answer) {
-        CrewApplicationPK crewApplicationPK = CrewApplicationPK.of(userDto.id(), crewDto.id());
         return CrewApplicationDto.of(
-                crewApplicationPK,
+                crewDto.id(),
+                userDto,
                 answer,
                 null,
                 null

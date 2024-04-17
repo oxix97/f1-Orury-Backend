@@ -8,6 +8,7 @@ import org.orury.client.crew.interfaces.response.CrewMembersResponse;
 import org.orury.client.crew.interfaces.response.CrewResponse;
 import org.orury.client.crew.interfaces.response.CrewsResponse;
 import org.orury.client.user.application.UserService;
+import org.orury.domain.crew.domain.dto.CrewApplicationDto;
 import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.springframework.data.domain.Page;
@@ -119,7 +120,7 @@ public class CrewFacade {
     }
 
     public List<CrewApplicantsResponse> getCrewApplicants(Long crewId, Long userId) {
-        List<UserDto> userDtos = crewService.getApplicantsByCrew(crewId, userId);
+        List<CrewApplicationDto> userDtos = crewService.getApplicantsByCrew(crewId, userId);
         return userDtos.stream()
                 .map(CrewApplicantsResponse::of)
                 .toList();

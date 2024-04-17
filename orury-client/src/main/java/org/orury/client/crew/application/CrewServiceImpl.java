@@ -9,6 +9,7 @@ import org.orury.client.crew.interfaces.message.CrewMessage;
 import org.orury.common.error.code.CrewErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.domain.crew.domain.*;
+import org.orury.domain.crew.domain.dto.CrewApplicationDto;
 import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.crew.domain.entity.Crew;
 import org.orury.domain.crew.domain.entity.CrewMember;
@@ -211,10 +212,13 @@ public class CrewServiceImpl implements CrewService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<UserDto> getApplicantsByCrew(Long crewId, Long userId) {
+    public List<CrewApplicationDto> getApplicantsByCrew(Long crewId, Long userId) {
         crewPolicy.validateCrewCreator(crewId, userId);
         return crewApplicationReader.getApplicantsByCrewId(crewId)
-                .stream().map(UserDto::from).toList();
+                .stream().map(crewApplication -> {
+                    User user = userReader.getUserById(crewApplication.getCrewApplicationPK().getUserId());
+                    return CrewApplicationDto.from(crewApplication, UserDto.from(user));
+                }).toList();
     }
 
     private void removeMember(Long crewId, Long memberId) {
