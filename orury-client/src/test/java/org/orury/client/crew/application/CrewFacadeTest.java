@@ -361,7 +361,6 @@ class CrewFacadeTest extends FacadeTest {
         CrewDto crewDto = createCrewDto(crewId).build().get();
         given(crewService.getCrewDtoById(anyLong()))
                 .willReturn(crewDto);
-        List<UserDto> userDtos = List.of(createUserDto(1111L).build().get(), createUserDto(2222L).build().get());
         given(crewService.getMembersByCrew(anyLong(), anyLong()))
                 .willReturn(mock(List.class));
 
