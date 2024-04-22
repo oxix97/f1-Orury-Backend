@@ -2,6 +2,7 @@ package org.orury.domain.crew.infrastructures;
 
 import lombok.RequiredArgsConstructor;
 import org.orury.domain.crew.domain.CrewReader;
+import org.orury.domain.crew.domain.dto.CrewGender;
 import org.orury.domain.crew.domain.entity.Crew;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,12 +24,23 @@ public class CrewReaderImpl implements CrewReader {
     }
 
     @Override
-    public Page<Crew> getCrewsByRank(Pageable pageable) {
+    public Page<Crew> getCrewsByRecommendedSort(Pageable pageable, CrewGender userGender, int userAge) {
+        List<CrewGender> userGenders = List.of(userGender, CrewGender.ANY);
+        return crewRepository.findAllByGenderIsInAndMinAgeLessThanEqualAndMaxAgeGreaterThanEqualOrderByCreatedAtAsc(userGenders, userAge, userAge, pageable);
+    }
+
+    @Override
+    public Page<Crew> getCrewsByPopularSort(Pageable pageable) {
         return crewRepository.findByOrderByMemberCountDesc(pageable);
     }
 
     @Override
-    public Page<Crew> getCrewsByRecommend(Pageable pageable) {
+    public Page<Crew> getCrewsByActiveSort(Pageable pageable) {
+        return crewRepository.findDistinctCrewsOrderByMeetingCreatedAtDesc(pageable);
+    }
+
+    @Override
+    public Page<Crew> getCrewsByLatestSort(Pageable pageable) {
         return crewRepository.findByOrderByCreatedAtDesc(pageable);
     }
 

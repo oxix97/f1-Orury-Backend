@@ -8,9 +8,11 @@ import org.orury.client.crew.application.policy.CrewUpdatePolicy;
 import org.orury.client.crew.interfaces.message.CrewMessage;
 import org.orury.common.error.code.CrewErrorCode;
 import org.orury.common.error.exception.BusinessException;
+import org.orury.common.util.AgeUtils;
 import org.orury.domain.crew.domain.*;
 import org.orury.domain.crew.domain.dto.CrewApplicationDto;
 import org.orury.domain.crew.domain.dto.CrewDto;
+import org.orury.domain.crew.domain.dto.CrewGender;
 import org.orury.domain.crew.domain.entity.Crew;
 import org.orury.domain.crew.domain.entity.CrewMember;
 import org.orury.domain.image.domain.ImageStore;
@@ -76,15 +78,31 @@ public class CrewServiceImpl implements CrewService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<CrewDto> getCrewDtosByRank(Pageable pageable) {
-        Page<Crew> crews = crewReader.getCrewsByRank(pageable);
+    public Page<CrewDto> getCrewDtosByRecommendedSort(Pageable pageable, UserDto userDto) {
+        CrewGender userGender = CrewGender.convertFromUserGender(userDto.gender());
+        int userAge = AgeUtils.calculateAge(userDto.birthday());
+        Page<Crew> crews = crewReader.getCrewsByRecommendedSort(pageable, userGender, userAge);
         return convertCrewsToCrewDtos(crews);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<CrewDto> getCrewDtosByRecommend(Pageable pageable) {
-        Page<Crew> crews = crewReader.getCrewsByRecommend(pageable);
+    public Page<CrewDto> getCrewDtosByPopularSort(Pageable pageable) {
+        Page<Crew> crews = crewReader.getCrewsByPopularSort(pageable);
+        return convertCrewsToCrewDtos(crews);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<CrewDto> getCrewDtosByActiveSort(Pageable pageable) {
+        Page<Crew> crews = crewReader.getCrewsByActiveSort(pageable);
+        return convertCrewsToCrewDtos(crews);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<CrewDto> getCrewDtosByLatestSort(Pageable pageable) {
+        Page<Crew> crews = crewReader.getCrewsByLatestSort(pageable);
         return convertCrewsToCrewDtos(crews);
     }
 

@@ -39,18 +39,34 @@ public class CrewController {
         return ApiResponse.of(CrewMessage.CREW_CREATED.getMessage());
     }
 
-    @Operation(summary = "크루 랭킹순 조회", description = "크루를 랭킹 순으로 조회한다.")
-    @GetMapping("/rank")
-    public ApiResponse getCrewsByRank(@RequestParam int page) {
-        Page<CrewsResponse> pageResponse = crewFacade.getCrewsByRank(page);
+    @Operation(summary = "크루 추천순 조회", description = "크루를 추천 순으로 조회한다.")
+    @GetMapping("/recommended")
+    public ApiResponse getCrewsByRecommendedSort(@RequestParam int page, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        Page<CrewsResponse> pageResponse = crewFacade.getCrewsByRecommendedSort(page, userPrincipal.id());
 
         return ApiResponse.of(CrewMessage.CREWS_READ.getMessage(), pageResponse);
     }
 
-    @Operation(summary = "크루 추천순 조회", description = "크루를 추천 순으로 조회한다.")
-    @GetMapping("/recommend")
-    public ApiResponse getCrewsByRecommendation(@RequestParam int page) {
-        Page<CrewsResponse> pageResponse = crewFacade.getCrewsByRecommend(page);
+    @Operation(summary = "크루 인기순 조회", description = "크루를 인기 순으로 조회한다.")
+    @GetMapping("/popular")
+    public ApiResponse getCrewsByPopularSort(@RequestParam int page) {
+        Page<CrewsResponse> pageResponse = crewFacade.getCrewsByPopularSort(page);
+
+        return ApiResponse.of(CrewMessage.CREWS_READ.getMessage(), pageResponse);
+    }
+
+    @Operation(summary = "크루 활동순 조회", description = "크루를 활동 순으로 조회한다.")
+    @GetMapping("/active")
+    public ApiResponse getCrewsByActiveSort(@RequestParam int page) {
+        Page<CrewsResponse> pageResponse = crewFacade.getCrewsByActiveSort(page);
+
+        return ApiResponse.of(CrewMessage.CREWS_READ.getMessage(), pageResponse);
+    }
+
+    @Operation(summary = "크루 최신순 조회", description = "크루를 최신 순으로 조회한다.")
+    @GetMapping("/latest")
+    public ApiResponse getCrewsByLatestSort(@RequestParam int page) {
+        Page<CrewsResponse> pageResponse = crewFacade.getCrewsByLatestSort(page);
 
         return ApiResponse.of(CrewMessage.CREWS_READ.getMessage(), pageResponse);
     }
