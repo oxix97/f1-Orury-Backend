@@ -13,7 +13,7 @@ public record CrewsResponse(
         String name,
         int memberCount,
         int capacity,
-        Region region,
+        List<Region> region,
         String icon,
         @JsonFormat(shape = JsonFormat.Shape.STRING)
         LocalDateTime createdAt,
@@ -30,7 +30,7 @@ public record CrewsResponse(
                 crewDto.name(),
                 crewDto.memberCount(),
                 crewDto.capacity(),
-                crewDto.region(),
+                crewDto.regions(),
                 crewDto.icon(),
                 crewDto.createdAt(),
                 crewDto.updatedAt(),

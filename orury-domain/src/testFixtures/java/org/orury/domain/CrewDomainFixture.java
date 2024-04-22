@@ -30,7 +30,7 @@ public class CrewDomainFixture {
         private @Builder.Default String name = "테스트크루";
         private @Builder.Default int memberCount = 12;
         private @Builder.Default int capacity = 20;
-        private @Builder.Default Region region = Region.강남구;
+        private @Builder.Default List<Region> regions = List.of(Region.강남구, Region.강북구);
         private @Builder.Default String description = "크루 설명";
         private @Builder.Default String icon = "orury/crew/crew_icon";
         private @Builder.Default CrewStatus status = CrewStatus.ACTIVATED;
@@ -64,7 +64,7 @@ public class CrewDomainFixture {
         private @Builder.Default String name = "testCrewDto";
         private @Builder.Default int memberCount = 11;
         private @Builder.Default int capacity = 21;
-        private @Builder.Default Region region = Region.중구;
+        private @Builder.Default List<Region> regions = List.of(Region.중구, Region.영등포구);
         private @Builder.Default String description = "testCrewDescription";
         private @Builder.Default String icon = "testIcon";
         private @Builder.Default CrewStatus status = CrewStatus.ACTIVATED;
