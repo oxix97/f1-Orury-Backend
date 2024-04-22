@@ -26,9 +26,10 @@ public record CrewResponse(
         LocalDateTime updatedAt,
         List<String> tags,
         boolean isMember,
+        boolean isCrewCreator,
         List<String> userImages
 ) {
-    public static CrewResponse of(CrewDto crewDto, boolean isMember, List<String> userImages) {
+    public static CrewResponse of(CrewDto crewDto, boolean isMember, List<String> userImages, Long userId) {
         return new CrewResponse(
                 crewDto.id(),
                 crewDto.name(),
@@ -45,6 +46,7 @@ public record CrewResponse(
                 crewDto.updatedAt(),
                 crewDto.tags(),
                 isMember,
+                crewDto.userDto().id().equals(userId),
                 userImages
         );
     }
