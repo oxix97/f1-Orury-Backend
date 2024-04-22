@@ -14,7 +14,7 @@ public record CrewResponse(
         String headName,
         int memberCount,
         int capacity,
-        Region region,
+        List<Region> region,
         String description,
         String icon,
         CrewStatus status,
@@ -26,16 +26,17 @@ public record CrewResponse(
         LocalDateTime updatedAt,
         List<String> tags,
         boolean isMember,
+        boolean isCrewCreator,
         List<String> userImages
 ) {
-    public static CrewResponse of(CrewDto crewDto, boolean isMember, List<String> userImages) {
+    public static CrewResponse of(CrewDto crewDto, boolean isMember, List<String> userImages, Long userId) {
         return new CrewResponse(
                 crewDto.id(),
                 crewDto.name(),
                 crewDto.userDto().nickname(),
                 crewDto.memberCount(),
                 crewDto.capacity(),
-                crewDto.region(),
+                crewDto.regions(),
                 crewDto.description(),
                 crewDto.icon(),
                 crewDto.status(),
@@ -45,6 +46,7 @@ public record CrewResponse(
                 crewDto.updatedAt(),
                 crewDto.tags(),
                 isMember,
+                crewDto.userDto().id().equals(userId),
                 userImages
         );
     }

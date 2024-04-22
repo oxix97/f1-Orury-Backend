@@ -64,7 +64,7 @@ public class ClientFixtureFactory {
     public static class TestCrewRequest {
         private @Builder.Default String name = "테스트크루";
         private @Builder.Default int capacity = 12;
-        private @Builder.Default Region region = Region.강남구;
+        private @Builder.Default List<Region> regions = List.of(Region.강남구, Region.강동구);
         private @Builder.Default String description = "크루 설명";
         private @Builder.Default int minAge = 15;
         private @Builder.Default int maxAge = 35;

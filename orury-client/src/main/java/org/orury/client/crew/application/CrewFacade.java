@@ -61,7 +61,7 @@ public class CrewFacade {
         CrewDto crewDto = crewService.getCrewDtoById(crewId);
         boolean isMember = crewService.existCrewMember(crewId, userId);
         List<String> userImages = crewService.getUserImagesByCrew(crewDto, MAXIMUM_OF_CREW_DETAIL_THUMBNAILS);
-        return CrewResponse.of(crewDto, isMember, userImages);
+        return CrewResponse.of(crewDto, isMember, userImages, userId);
     }
 
     public void updateCrewInfo(Long crewId, CrewRequest request, Long userId) {
