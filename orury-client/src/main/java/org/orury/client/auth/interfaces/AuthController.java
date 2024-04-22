@@ -2,6 +2,7 @@ package org.orury.client.auth.interfaces;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.orury.client.auth.application.AuthFacade;
@@ -25,7 +26,7 @@ public class AuthController {
 
     @Operation(summary = "회원가입", description = "소셜 로그인을 통해 전달받은 정보를 기반으로 회원가입 수행")
     @PostMapping("/sign-up")
-    public ApiResponse signUp(@RequestBody SignUpRequest request) {
+    public ApiResponse signUp(@Valid @RequestBody SignUpRequest request) {
         var signUpResponse = authFacade.signUp(request.toDto());
         return ApiResponse.of(SIGNUP_SUCCESS.getMessage(), signUpResponse);
     }

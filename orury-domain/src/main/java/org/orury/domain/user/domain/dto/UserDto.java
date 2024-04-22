@@ -1,9 +1,11 @@
 package org.orury.domain.user.domain.dto;
 
+import org.orury.domain.global.domain.Region;
 import org.orury.domain.user.domain.entity.User;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * DTO for {@link User}
@@ -19,7 +21,8 @@ public record UserDto(
         String profileImage,
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
-        UserStatus status
+        UserStatus status,
+        List<Region> regions
 ) {
     public static UserDto of(
             Long id,
@@ -32,7 +35,8 @@ public record UserDto(
             String profileImage,
             LocalDateTime createdAt,
             LocalDateTime updatedAt,
-            UserStatus status
+            UserStatus status,
+            List<Region> regions
     ) {
         return new UserDto(
                 id,
@@ -45,7 +49,8 @@ public record UserDto(
                 profileImage,
                 createdAt,
                 updatedAt,
-                status
+                status,
+                regions
         );
     }
 
@@ -61,7 +66,8 @@ public record UserDto(
                 entity.getProfileImage(),
                 entity.getCreatedAt(),
                 entity.getUpdatedAt(),
-                entity.getStatus()
+                entity.getStatus(),
+                entity.getRegions()
         );
     }
 
@@ -77,7 +83,8 @@ public record UserDto(
                 profileImage,
                 entity.getCreatedAt(),
                 entity.getUpdatedAt(),
-                entity.getStatus()
+                entity.getStatus(),
+                entity.getRegions()
         );
     }
 
@@ -93,7 +100,8 @@ public record UserDto(
                 profileImage,
                 createdAt,
                 updatedAt,
-                status
+                status,
+                regions
         );
     }
 
@@ -109,7 +117,8 @@ public record UserDto(
                 newProfileImage,
                 createdAt,
                 updatedAt,
-                status
+                status,
+                regions
         );
     }
 
@@ -125,7 +134,8 @@ public record UserDto(
                 profileImage,
                 createdAt,
                 updatedAt,
-                status
+                status,
+                regions
         );
     }
 

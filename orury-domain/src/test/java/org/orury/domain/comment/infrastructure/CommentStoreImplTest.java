@@ -6,6 +6,7 @@ import org.orury.domain.comment.domain.entity.Comment;
 import org.orury.domain.comment.domain.entity.CommentLike;
 import org.orury.domain.config.InfrastructureTest;
 import org.orury.domain.global.constants.NumberConstants;
+import org.orury.domain.global.domain.Region;
 import org.orury.domain.post.domain.entity.Post;
 import org.orury.domain.user.domain.dto.UserStatus;
 import org.orury.domain.user.domain.entity.User;
@@ -143,7 +144,8 @@ class CommentStoreImplTest extends InfrastructureTest {
                 "userProfileImage",
                 LocalDateTime.of(1999, 3, 1, 7, 50),
                 LocalDateTime.of(1999, 3, 1, 7, 50),
-                UserStatus.ENABLE
+                UserStatus.ENABLE,
+                List.of(Region.강남구, Region.강북구)
         );
     }
 
