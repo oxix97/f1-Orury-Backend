@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface CrewService {
@@ -19,7 +20,9 @@ public interface CrewService {
 
     Page<CrewDto> getCrewDtosByRecommend(Pageable pageable);
 
-    Page<CrewDto> getCrewDtosByUserId(Long userId, Pageable pageable);
+    List<CrewDto> getJoinedCrewDtos(Long userId);
+
+    List<CrewDto> getAppliedCrewDtos(Long userId);
 
     List<String> getUserImagesByCrew(CrewDto crewDto, int maximumCount);
 
@@ -42,6 +45,10 @@ public interface CrewService {
     void leaveCrew(CrewDto crewDto, Long userId);
 
     void expelMember(CrewDto crewDto, Long memberId, Long userId);
+
+    LocalDateTime getJoinedAt(Long crewId, Long userId);
+
+    LocalDateTime getAppliedAt(Long crewId, Long userId);
 
     List<UserDto> getMembersByCrew(Long crewId, Long userId);
 

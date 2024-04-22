@@ -20,7 +20,9 @@ public record CrewsResponse(
         @JsonFormat(shape = JsonFormat.Shape.STRING)
         LocalDateTime updatedAt,
         List<String> tags,
-        List<String> userImages
+        List<String> userImages,
+        LocalDateTime joinedTime,
+        LocalDateTime appliedTime
 ) implements IdIdentifiable {
     public static CrewsResponse of(CrewDto crewDto, List<String> userImages) {
         return new CrewsResponse(
@@ -33,7 +35,43 @@ public record CrewsResponse(
                 crewDto.createdAt(),
                 crewDto.updatedAt(),
                 crewDto.tags(),
-                userImages
+                userImages,
+                null,
+                null
+        );
+    }
+
+    public static CrewsResponse ofWithJoinedTime(CrewDto crewDto, List<String> userImages, LocalDateTime joinedTime) {
+        return new CrewsResponse(
+                crewDto.id(),
+                crewDto.name(),
+                crewDto.memberCount(),
+                crewDto.capacity(),
+                crewDto.region(),
+                crewDto.icon(),
+                crewDto.createdAt(),
+                crewDto.updatedAt(),
+                crewDto.tags(),
+                userImages,
+                joinedTime,
+                null
+        );
+    }
+
+    public static CrewsResponse ofWithAppliedTime(CrewDto crewDto, List<String> userImages, LocalDateTime appliedTime) {
+        return new CrewsResponse(
+                crewDto.id(),
+                crewDto.name(),
+                crewDto.memberCount(),
+                crewDto.capacity(),
+                crewDto.region(),
+                crewDto.icon(),
+                crewDto.createdAt(),
+                crewDto.updatedAt(),
+                crewDto.tags(),
+                userImages,
+                null,
+                appliedTime
         );
     }
 }

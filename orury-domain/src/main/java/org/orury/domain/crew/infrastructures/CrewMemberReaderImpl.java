@@ -39,4 +39,9 @@ public class CrewMemberReaderImpl implements CrewMemberReader {
     public List<CrewMember> getOtherCrewMembersByCrewIdMaximum(Long crewId, Long crewCreatorId, int maximum) {
         return crewMemberRepository.findByCrewMemberPK_CrewIdAndCrewMemberPK_UserIdNot(crewId, crewCreatorId, PageRequest.of(0, maximum));
     }
+
+    @Override
+    public CrewMember getCrewMemberByCrewIdAndUserId(Long crewId, Long userId) {
+        return crewMemberRepository.getCrewMemberByCrewMemberPK_CrewIdAndCrewMemberPK_UserId(crewId, userId);
+    }
 }

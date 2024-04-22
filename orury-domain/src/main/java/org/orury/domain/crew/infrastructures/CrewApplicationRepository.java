@@ -11,5 +11,9 @@ public interface CrewApplicationRepository extends JpaRepository<CrewApplication
 
     List<CrewApplication> findByCrewApplicationPK_CrewId(Long crewId);
 
+    List<CrewApplication> findByCrewApplicationPK_UserId(Long userId);
+
     int countByCrewApplicationPK_UserId(Long userId);
+
+    CrewApplication getCrewApplicationByCrewApplicationPK_CrewIdAndCrewApplicationPK_UserId(Long crewId, Long userId);
 }

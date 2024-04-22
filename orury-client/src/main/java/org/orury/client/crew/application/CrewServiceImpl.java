@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -77,27 +78,28 @@ public class CrewServiceImpl implements CrewService {
     @Transactional(readOnly = true)
     public Page<CrewDto> getCrewDtosByRank(Pageable pageable) {
         Page<Crew> crews = crewReader.getCrewsByRank(pageable);
-        return crews.map(crew -> {
-            List<String> tags = crewTagReader.getTagsByCrewId(crew.getId());
-            return CrewDto.from(crew, tags);
-        });
+        return convertCrewsToCrewDtos(crews);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<CrewDto> getCrewDtosByRecommend(Pageable pageable) {
         Page<Crew> crews = crewReader.getCrewsByRecommend(pageable);
-        return crews.map(crew -> {
-            List<String> tags = crewTagReader.getTagsByCrewId(crew.getId());
-            return CrewDto.from(crew, tags);
-        });
+        return convertCrewsToCrewDtos(crews);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<CrewDto> getCrewDtosByUserId(Long userId, Pageable pageable) {
-        return crewReader.getCrewsByUserId(userId, pageable)
-                .map(CrewDto::from);
+    public List<CrewDto> getJoinedCrewDtos(Long userId) {
+        List<Crew> crews = crewReader.getJoinedCrewsByUserId(userId);
+        return convertCrewsToCrewDtos(crews);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<CrewDto> getAppliedCrewDtos(Long userId) {
+        List<Crew> crews = crewReader.getAppliedCrewsByUserId(userId);
+        return convertCrewsToCrewDtos(crews);
     }
 
     @Override
@@ -204,6 +206,18 @@ public class CrewServiceImpl implements CrewService {
 
     @Override
     @Transactional(readOnly = true)
+    public LocalDateTime getJoinedAt(Long crewId, Long userId) {
+        return crewMemberReader.getCrewMemberByCrewIdAndUserId(crewId, userId).getCreatedAt();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public LocalDateTime getAppliedAt(Long crewId, Long userId) {
+        return crewApplicationReader.getCrewApplicationByCrewIdAndUserId(crewId, userId).getCreatedAt();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<UserDto> getMembersByCrew(Long crewId, Long userId) {
         crewPolicy.validateCrewMember(crewId, userId);
         return crewMemberReader.getMembersByCrewId(crewId)
@@ -228,5 +242,20 @@ public class CrewServiceImpl implements CrewService {
         meetingStore.deleteAllByUserIdAndCrewId(memberId, crewId);
 
         crewMemberStore.subtractCrewMember(crewId, memberId);
+    }
+
+    private Page<CrewDto> convertCrewsToCrewDtos(Page<Crew> crews) {
+        return crews.map(crew -> {
+            List<String> tags = crewTagReader.getTagsByCrewId(crew.getId());
+            return CrewDto.from(crew, tags);
+        });
+    }
+
+    private List<CrewDto> convertCrewsToCrewDtos(List<Crew> crews) {
+        return crews.stream()
+                .map(crew -> {
+                    List<String> tags = crewTagReader.getTagsByCrewId(crew.getId());
+                    return CrewDto.from(crew, tags);
+                }).toList();
     }
 }

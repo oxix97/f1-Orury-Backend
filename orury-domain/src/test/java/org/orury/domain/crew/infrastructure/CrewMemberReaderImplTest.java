@@ -79,4 +79,15 @@ class CrewMemberReaderImplTest extends InfrastructureTest {
         then(crewMemberRepository).should(only())
                 .findByCrewMemberPK_CrewIdAndCrewMemberPK_UserIdNot(anyLong(), anyLong(), any(PageRequest.class));
     }
+
+    @DisplayName("크루id와 유저id를 받아, 해당 크루멤버를 반환한다.")
+    @Test
+    void getCrewMemberByCrewIdAndUserId() {
+        // given & when
+        crewMemberReader.getCrewMemberByCrewIdAndUserId(anyLong(), anyLong());
+
+        // then
+        then(crewMemberRepository).should(only())
+                .getCrewMemberByCrewMemberPK_CrewIdAndCrewMemberPK_UserId(anyLong(), anyLong());
+    }
 }

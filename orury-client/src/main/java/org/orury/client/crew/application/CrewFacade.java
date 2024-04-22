@@ -1,6 +1,7 @@
 package org.orury.client.crew.application;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.function.TriFunction;
 import org.orury.client.crew.interfaces.message.CrewMessage;
 import org.orury.client.crew.interfaces.request.CrewRequest;
 import org.orury.client.crew.interfaces.response.CrewApplicantsResponse;
@@ -16,7 +17,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.function.BiFunction;
 
 import static org.orury.domain.global.constants.NumberConstants.*;
 
@@ -44,10 +47,14 @@ public class CrewFacade {
         return convertCrewDtosToCrewsResponses(crewDtos);
     }
 
-    public Page<CrewsResponse> getMyCrews(Long userId, int page) {
-        var pageRequest = PageRequest.of(page, CREW_PAGINATION_SIZE);
-        Page<CrewDto> crewDtos = crewService.getCrewDtosByUserId(userId, pageRequest);
-        return convertCrewDtosToCrewsResponses(crewDtos);
+    public List<CrewsResponse> getJoinedCrews(Long userId) {
+        List<CrewDto> crewDtos = crewService.getJoinedCrewDtos(userId);
+        return convertCrewDtosToCrewsResponses(crewDtos, userId, crewService::getJoinedAt, CrewsResponse::ofWithJoinedTime);
+    }
+
+    public List<CrewsResponse> getAppliedCrews(Long userId) {
+        List<CrewDto> crewDtos = crewService.getAppliedCrewDtos(userId);
+        return convertCrewDtosToCrewsResponses(crewDtos, userId, crewService::getAppliedAt, CrewsResponse::ofWithAppliedTime);
     }
 
     public CrewResponse getCrewByCrewId(Long userId, Long crewId) {
@@ -117,6 +124,19 @@ public class CrewFacade {
         return userDtos.stream()
                 .map(userDto -> CrewMembersResponse.of(userDto, userId, crewDto.userDto().id()))
                 .toList();
+    }
+
+    private List<CrewsResponse> convertCrewDtosToCrewsResponses(
+            List<CrewDto> crewDtos,
+            Long userId, BiFunction<Long, Long, LocalDateTime> biFunction,
+            TriFunction<CrewDto, List<String>, LocalDateTime, CrewsResponse> triFunction
+    ) {
+        return crewDtos.stream()
+                .map(crewDto -> {
+                    List<String> userImages = crewService.getUserImagesByCrew(crewDto, MAXIMUM_OF_CREW_LIST_THUMBNAILS);
+                    LocalDateTime time = biFunction.apply(crewDto.id(), userId);
+                    return triFunction.apply(crewDto, userImages, time);
+                }).toList();
     }
 
     public List<CrewApplicantsResponse> getCrewApplicants(Long crewId, Long userId) {

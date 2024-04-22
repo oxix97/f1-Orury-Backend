@@ -33,4 +33,9 @@ public class CrewApplicationReaderImpl implements CrewApplicationReader {
     public List<CrewApplication> getApplicantsByCrewId(Long crewId) {
         return crewApplicationRepository.findByCrewApplicationPK_CrewId(crewId);
     }
+
+    @Override
+    public CrewApplication getCrewApplicationByCrewIdAndUserId(Long crewId, Long userId) {
+        return crewApplicationRepository.getCrewApplicationByCrewApplicationPK_CrewIdAndCrewApplicationPK_UserId(crewId, userId);
+    }
 }

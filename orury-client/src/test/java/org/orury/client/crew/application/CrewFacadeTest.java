@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -89,27 +90,54 @@ class CrewFacadeTest extends FacadeTest {
                 .getUserImagesByCrew(any(), anyInt());
     }
 
-    @DisplayName("페이지번호를 받으면, 유저id에 따른 크루 목록을 반환한다.")
+    @DisplayName("유저id를 받으면, 유저id에 따른 가입된 크루 목록을 반환한다.")
     @Test
-    void should_GetMyCrews() {
+    void should_GetJoinedCrews() {
         // given
         Long userId = 23L;
-        int page = 2;
         List<CrewDto> crewDtos = List.of(createCrewDto(3L).build().get(), createCrewDto(4L).build().get());
-        Page<CrewDto> crewDtoPage = new PageImpl<>(crewDtos, PageRequest.of(page, 10), 2);
-        given(crewService.getCrewDtosByUserId(anyLong(), any()))
-                .willReturn(crewDtoPage);
+        given(crewService.getJoinedCrewDtos(anyLong()))
+                .willReturn(crewDtos);
         given(crewService.getUserImagesByCrew(any(CrewDto.class), anyInt()))
                 .willReturn(mock(List.class));
+        given((crewService.getJoinedAt(anyLong(), anyLong())))
+                .willReturn(LocalDateTime.now().minusYears(1));
 
         // when
-        crewFacade.getMyCrews(userId, page);
+        crewFacade.getJoinedCrews(userId);
 
         // then
         then(crewService).should(times(1))
-                .getCrewDtosByUserId(anyLong(), any());
+                .getJoinedCrewDtos(anyLong());
         then(crewService).should(times(crewDtos.size()))
                 .getUserImagesByCrew(any(), anyInt());
+        then(crewService).should(times(crewDtos.size()))
+                .getJoinedAt(anyLong(), anyLong());
+    }
+
+    @DisplayName("유저id를 받으면, 유저id에 따른 가입신청한 크루 목록을 반환한다.")
+    @Test
+    void should_getAppliedCrews() {
+        // given
+        Long userId = 262L;
+        List<CrewDto> crewDtos = List.of(createCrewDto(694L).build().get(), createCrewDto(256L).build().get());
+        given(crewService.getAppliedCrewDtos(anyLong()))
+                .willReturn(crewDtos);
+        given(crewService.getUserImagesByCrew(any(CrewDto.class), anyInt()))
+                .willReturn(mock(List.class));
+        given((crewService.getAppliedAt(anyLong(), anyLong())))
+                .willReturn(LocalDateTime.now().minusYears(1));
+
+        // when
+        crewFacade.getAppliedCrews(userId);
+
+        // then
+        then(crewService).should(times(1))
+                .getAppliedCrewDtos(anyLong());
+        then(crewService).should(times(crewDtos.size()))
+                .getUserImagesByCrew(any(), anyInt());
+        then(crewService).should(times(crewDtos.size()))
+                .getAppliedAt(anyLong(), anyLong());
     }
 
     @DisplayName("유저id, 크루id를 받으면, 크루정보를 반환한다.")
@@ -333,6 +361,7 @@ class CrewFacadeTest extends FacadeTest {
         CrewDto crewDto = createCrewDto(crewId).build().get();
         given(crewService.getCrewDtoById(anyLong()))
                 .willReturn(crewDto);
+        List<UserDto> userDtos = List.of(createUserDto(1111L).build().get(), createUserDto(2222L).build().get());
         given(crewService.getMembersByCrew(anyLong(), anyLong()))
                 .willReturn(mock(List.class));
 

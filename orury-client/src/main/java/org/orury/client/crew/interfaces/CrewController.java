@@ -55,10 +55,18 @@ public class CrewController {
         return ApiResponse.of(CrewMessage.CREWS_READ.getMessage(), pageResponse);
     }
 
-    @Operation(summary = "내 크루 조회", description = "내가 가입한 크루를 조회한다.")
+    @Operation(summary = "가입 신청한 크루 조회", description = "내가 가입 신청한 크루를 조회한다.")
     @GetMapping("/mycrew")
-    public ApiResponse getMyCrews(@RequestParam int page, @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        Page<CrewsResponse> pageResponse = crewFacade.getMyCrews(userPrincipal.id(), page);
+    public ApiResponse getJoinedCrews(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        List<CrewsResponse> pageResponse = crewFacade.getJoinedCrews(userPrincipal.id());
+
+        return ApiResponse.of(CrewMessage.CREWS_READ.getMessage(), pageResponse);
+    }
+
+    @Operation(summary = "내 크루 조회", description = "내가 가입한 크루를 조회한다.")
+    @GetMapping("/myApplications")
+    public ApiResponse getAppliedCrews(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        List<CrewsResponse> pageResponse = crewFacade.getAppliedCrews(userPrincipal.id());
 
         return ApiResponse.of(CrewMessage.CREWS_READ.getMessage(), pageResponse);
     }
