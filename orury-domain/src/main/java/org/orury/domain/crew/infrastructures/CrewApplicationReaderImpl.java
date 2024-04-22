@@ -26,4 +26,9 @@ public class CrewApplicationReaderImpl implements CrewApplicationReader {
     public int countByUserId(Long userId) {
         return crewApplicationRepository.countByCrewApplicationPK_UserId(userId);
     }
+
+    @Override
+    public CrewApplication getCrewApplicationByCrewIdAndUserId(Long crewId, Long userId) {
+        return crewApplicationRepository.getCrewApplicationByCrewApplicationPK_CrewIdAndCrewApplicationPK_UserId(crewId, userId);
+    }
 }

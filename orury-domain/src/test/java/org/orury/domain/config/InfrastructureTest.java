@@ -181,7 +181,7 @@ public abstract class InfrastructureTest {
         crewApplicationStore = new CrewApplicationStoreImpl(crewApplicationRepository, crewRepository, crewMemberRepository);
         crewMemberReader = new CrewMemberReaderImpl(crewMemberRepository, userRepository);
         crewMemberStore = new CrewMemberStoreImpl(crewMemberRepository, crewRepository);
-        crewReader = new CrewReaderImpl(crewRepository, crewMemberRepository);
+        crewReader = new CrewReaderImpl(crewRepository, crewMemberRepository, crewApplicationRepository);
         crewStore = new CrewStoreImpl(crewRepository);
         crewTagReader = new CrewTagReaderImpl(crewTagRepository);
         crewTagStore = new CrewTagStoreImpl(crewTagRepository);

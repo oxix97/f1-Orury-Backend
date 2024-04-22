@@ -48,4 +48,15 @@ class CrewApplicationReaderImplTest extends InfrastructureTest {
         then(crewApplicationRepository).should(only())
                 .countByCrewApplicationPK_UserId(anyLong());
     }
+
+    @DisplayName("크루id와 유저id를 받아, 크루지원을 조회한다.")
+    @Test
+    void getCrewApplicationByCrewIdAndUserId() {
+        // given & when
+        crewApplicationReader.getCrewApplicationByCrewIdAndUserId(anyLong(), anyLong());
+
+        // then
+        then(crewApplicationRepository).should(only())
+                .getCrewApplicationByCrewApplicationPK_CrewIdAndCrewApplicationPK_UserId(anyLong(), anyLong());
+    }
 }
