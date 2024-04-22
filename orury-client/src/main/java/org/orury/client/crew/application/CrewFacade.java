@@ -4,10 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.function.TriFunction;
 import org.orury.client.crew.interfaces.message.CrewMessage;
 import org.orury.client.crew.interfaces.request.CrewRequest;
+import org.orury.client.crew.interfaces.response.CrewApplicantsResponse;
 import org.orury.client.crew.interfaces.response.CrewMembersResponse;
 import org.orury.client.crew.interfaces.response.CrewResponse;
 import org.orury.client.crew.interfaces.response.CrewsResponse;
 import org.orury.client.user.application.UserService;
+import org.orury.domain.crew.domain.dto.CrewApplicationDto;
 import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.springframework.data.domain.Page;
@@ -118,7 +120,7 @@ public class CrewFacade {
 
     public List<CrewMembersResponse> getCrewMembers(Long crewId, Long userId) {
         CrewDto crewDto = crewService.getCrewDtoById(crewId);
-        List<UserDto> userDtos = crewService.getUserDtosByCrew(crewId, userId);
+        List<UserDto> userDtos = crewService.getMembersByCrew(crewId, userId);
         return userDtos.stream()
                 .map(userDto -> CrewMembersResponse.of(userDto, userId, crewDto.userDto().id()))
                 .toList();
@@ -135,5 +137,12 @@ public class CrewFacade {
                     LocalDateTime time = biFunction.apply(crewDto.id(), userId);
                     return triFunction.apply(crewDto, userImages, time);
                 }).toList();
+    }
+
+    public List<CrewApplicantsResponse> getCrewApplicants(Long crewId, Long userId) {
+        List<CrewApplicationDto> userDtos = crewService.getApplicantsByCrew(crewId, userId);
+        return userDtos.stream()
+                .map(CrewApplicantsResponse::of)
+                .toList();
     }
 }

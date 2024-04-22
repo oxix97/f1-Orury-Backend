@@ -49,6 +49,17 @@ class CrewApplicationReaderImplTest extends InfrastructureTest {
                 .countByCrewApplicationPK_UserId(anyLong());
     }
 
+    @DisplayName("크루id를 받아, 해당 크루에 지원한 모든 유저 목록을 조회한다.")
+    @Test
+    void findAllUserByCrewId() {
+        // given & when
+        crewApplicationReader.getApplicantsByCrewId(anyLong());
+
+        // then
+        then(crewApplicationRepository).should(only())
+                .findByCrewApplicationPK_CrewId(anyLong());
+    }
+
     @DisplayName("크루id와 유저id를 받아, 크루지원을 조회한다.")
     @Test
     void getCrewApplicationByCrewIdAndUserId() {

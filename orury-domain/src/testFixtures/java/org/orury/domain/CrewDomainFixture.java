@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.Builder;
 import lombok.Getter;
+import org.orury.domain.crew.domain.dto.CrewApplicationDto;
 import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.crew.domain.dto.CrewGender;
 import org.orury.domain.crew.domain.dto.CrewStatus;
@@ -14,6 +15,8 @@ import org.orury.domain.user.domain.entity.User;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
+import static org.orury.domain.UserDomainFixture.TestUserDto.createUserDto;
 
 public class CrewDomainFixture {
 
@@ -68,7 +71,7 @@ public class CrewDomainFixture {
         private @Builder.Default String description = "testCrewDescription";
         private @Builder.Default String icon = "testIcon";
         private @Builder.Default CrewStatus status = CrewStatus.ACTIVATED;
-        private @Builder.Default UserDto userDto = UserDomainFixture.TestUserDto.createUserDto(7324L).build().get();
+        private @Builder.Default UserDto userDto = createUserDto(7324L).build().get();
         private @Builder.Default LocalDateTime createdAt = LocalDateTime.now();
         private @Builder.Default LocalDateTime updatedAt = LocalDateTime.now();
         private @Builder.Default int minAge = 14;
@@ -166,7 +169,8 @@ public class CrewDomainFixture {
     @Getter
     @Builder
     public static class TestCrewApplicationDto {
-        private @Builder.Default CrewApplicationPK crewApplicationPK = TestCrewApplicationPK.createCrewApplicationPK().build().get();
+        private @Builder.Default Long crewId = 95050L;
+        private @Builder.Default UserDto userDto = createUserDto(684022L).build().get();
         private @Builder.Default String answer = "crewApplicationAnswer";
         private @Builder.Default LocalDateTime createdAt = LocalDateTime.now();
         private @Builder.Default LocalDateTime updatedAt = LocalDateTime.now();
@@ -177,7 +181,12 @@ public class CrewDomainFixture {
 
         public static TestCrewApplicationDto.TestCrewApplicationDtoBuilder createCrewApplicationDto(Long crewId, Long userId) {
             return TestCrewApplicationDto.builder()
-                    .crewApplicationPK(TestCrewApplicationPK.createCrewApplicationPK().crewId(crewId).userId(userId).build().get());
+                    .crewId(crewId)
+                    .userDto(createUserDto(userId).build().get());
+        }
+
+        public CrewApplicationDto get() {
+            return mapper.convertValue(this, CrewApplicationDto.class);
         }
     }
 

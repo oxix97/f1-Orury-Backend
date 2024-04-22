@@ -8,9 +8,11 @@ import org.orury.client.config.ServiceTest;
 import org.orury.common.error.code.CrewErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.common.util.S3Folder;
+import org.orury.domain.crew.domain.dto.CrewApplicationDto;
 import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.crew.domain.dto.CrewGender;
 import org.orury.domain.crew.domain.entity.Crew;
+import org.orury.domain.crew.domain.entity.CrewApplication;
 import org.orury.domain.crew.domain.entity.CrewMember;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.user.domain.dto.UserDto;
@@ -565,7 +567,7 @@ class CrewServiceImplTest extends ServiceTest {
                 .willReturn(members);
 
         // when
-        List<UserDto> userDtos = crewService.getUserDtosByCrew(crewId, userId);
+        List<UserDto> userDtos = crewService.getMembersByCrew(crewId, userId);
 
         // then
         assertEquals(members.size(), userDtos.size());
@@ -573,5 +575,38 @@ class CrewServiceImplTest extends ServiceTest {
                 .validateCrewMember(anyLong(), anyLong());
         then(crewMemberReader).should(only())
                 .getMembersByCrewId(anyLong());
+    }
+
+    @DisplayName("[getApplicantsByCrew] 크루에 가입신청한 유저들을 가져온다.")
+    @Test
+    void should_GetApplicantsByCrew() {
+        // given
+        Long crewId = 726L;
+        Long userId = 326L;
+        List<CrewApplication> applicants = List.of(
+                createCrewApplication(crewId, 111L).build().get(),
+                createCrewApplication(crewId, 222L).build().get(),
+                createCrewApplication(crewId, 333L).build().get()
+        );
+        given(crewApplicationReader.getApplicantsByCrewId(crewId))
+                .willReturn(applicants);
+        given(userReader.getUserById(anyLong()))
+                .willReturn(
+                        createUser(111L).build().get(),
+                        createUser(222L).build().get(),
+                        createUser(333L).build().get()
+                );
+
+        // when
+        List<CrewApplicationDto> applicationDtos = crewService.getApplicantsByCrew(crewId, userId);
+
+        // then
+        assertEquals(applicants.size(), applicationDtos.size());
+        then(crewPolicy).should(only())
+                .validateCrewCreator(anyLong(), anyLong());
+        then(crewApplicationReader).should(only())
+                .getApplicantsByCrewId(anyLong());
+        then(userReader).should(times(applicants.size()))
+                .getUserById(anyLong());
     }
 }

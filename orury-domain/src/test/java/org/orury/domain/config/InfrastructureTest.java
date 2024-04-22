@@ -177,7 +177,7 @@ public abstract class InfrastructureTest {
         commentReader = new CommentReaderImpl(commentRepository, commentLikeRepository);
         commentStore = new CommentStoreImpl(commentRepository, commentLikeRepository, postRepository);
         //crew
-        crewApplicationReader = new CrewApplicationReaderImpl(crewApplicationRepository);
+        crewApplicationReader = new CrewApplicationReaderImpl(crewApplicationRepository, userRepository);
         crewApplicationStore = new CrewApplicationStoreImpl(crewApplicationRepository, crewRepository, crewMemberRepository);
         crewMemberReader = new CrewMemberReaderImpl(crewMemberRepository, userRepository);
         crewMemberStore = new CrewMemberStoreImpl(crewMemberRepository, crewRepository);

@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.orury.client.crew.application.CrewFacade;
 import org.orury.client.crew.interfaces.message.CrewMessage;
 import org.orury.client.crew.interfaces.request.CrewRequest;
+import org.orury.client.crew.interfaces.response.CrewApplicantsResponse;
 import org.orury.client.crew.interfaces.response.CrewMembersResponse;
 import org.orury.client.crew.interfaces.response.CrewResponse;
 import org.orury.client.crew.interfaces.response.CrewsResponse;
@@ -184,5 +185,12 @@ public class CrewController {
     public ApiResponse getCrewMembers(@PathVariable Long crewId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         List<CrewMembersResponse> response = crewFacade.getCrewMembers(crewId, userPrincipal.id());
         return ApiResponse.of(CrewMessage.CREW_MEMBERS_READ.getMessage(), response);
+    }
+
+    @Operation(summary = "크루 지원자 목록 조회", description = "크루id에 따른 크루 지원자 목록을 조회한다.")
+    @GetMapping("{crewId}/applicants")
+    public ApiResponse getCrewApplicants(@PathVariable Long crewId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        List<CrewApplicantsResponse> response = crewFacade.getCrewApplicants(crewId, userPrincipal.id());
+        return ApiResponse.of(CrewMessage.CREW_APPLICANTS_READ.getMessage(), response);
     }
 }

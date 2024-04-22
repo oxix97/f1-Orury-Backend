@@ -1,6 +1,7 @@
 package org.orury.client.crew.application;
 
 import org.orury.client.crew.interfaces.message.CrewMessage;
+import org.orury.domain.crew.domain.dto.CrewApplicationDto;
 import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.springframework.data.domain.Page;
@@ -49,5 +50,7 @@ public interface CrewService {
 
     LocalDateTime getAppliedAt(Long crewId, Long userId);
 
-    List<UserDto> getUserDtosByCrew(Long crewId, Long userId);
+    List<UserDto> getMembersByCrew(Long crewId, Long userId);
+
+    List<CrewApplicationDto> getApplicantsByCrew(Long crewId, Long userId);
 }

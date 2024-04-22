@@ -11,5 +11,7 @@ public interface CrewApplicationReader {
 
     int countByUserId(Long userId);
 
+    List<CrewApplication> getApplicantsByCrewId(Long crewId);
+
     CrewApplication getCrewApplicationByCrewIdAndUserId(Long crewId, Long userId);
 }
