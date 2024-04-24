@@ -4,12 +4,15 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.orury.domain.base.db.AuditingField;
+import org.orury.domain.global.domain.Region;
+import org.orury.domain.global.domain.RegionConverter;
 import org.orury.domain.global.listener.UserProfileConverter;
 import org.orury.domain.user.domain.dto.UserStatus;
 import org.orury.domain.user.domain.dto.UserStatusConverter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @ToString
@@ -51,7 +54,11 @@ public class User extends AuditingField {
     @Convert(converter = UserStatusConverter.class)
     private UserStatus status;
 
-    private User(Long id, String email, String nickname, String password, int signUpType, int gender, LocalDate birthday, String profileImage, LocalDateTime createdAt, LocalDateTime updatedAt, UserStatus status) {
+    @Convert(converter = RegionConverter.class)
+    @Column(name = "regions", nullable = false)
+    private List<Region> regions;
+
+    private User(Long id, String email, String nickname, String password, int signUpType, int gender, LocalDate birthday, String profileImage, LocalDateTime createdAt, LocalDateTime updatedAt, UserStatus status, List<Region> regions) {
         this.id = id;
         this.email = email;
         this.nickname = nickname;
@@ -63,9 +70,10 @@ public class User extends AuditingField {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.status = status;
+        this.regions = regions;
     }
 
-    public static User of(Long id, String email, String nickname, String password, int signUpType, int gender, LocalDate birthday, String profileImage, LocalDateTime createdAt, LocalDateTime updatedAt, UserStatus status) {
-        return new User(id, email, nickname, password, signUpType, gender, birthday, profileImage, createdAt, updatedAt, status);
+    public static User of(Long id, String email, String nickname, String password, int signUpType, int gender, LocalDate birthday, String profileImage, LocalDateTime createdAt, LocalDateTime updatedAt, UserStatus status, List<Region> regions) {
+        return new User(id, email, nickname, password, signUpType, gender, birthday, profileImage, createdAt, updatedAt, status, regions);
     }
 }
