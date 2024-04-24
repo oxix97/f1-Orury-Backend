@@ -16,9 +16,13 @@ public interface CrewService {
 
     void createCrew(CrewDto crewDto, MultipartFile image);
 
-    Page<CrewDto> getCrewDtosByRank(Pageable pageable);
+    Page<CrewDto> getCrewDtosByRecommendedSort(Pageable pageable, UserDto userDto);
 
-    Page<CrewDto> getCrewDtosByRecommend(Pageable pageable);
+    Page<CrewDto> getCrewDtosByPopularSort(Pageable pageable);
+
+    Page<CrewDto> getCrewDtosByActiveSort(Pageable pageable);
+
+    Page<CrewDto> getCrewDtosByLatestSort(Pageable pageable);
 
     List<CrewDto> getJoinedCrewDtos(Long userId);
 

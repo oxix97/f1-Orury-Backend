@@ -35,15 +35,28 @@ public class CrewFacade {
         crewService.createCrew(crewDto, image);
     }
 
-    public Page<CrewsResponse> getCrewsByRank(int page) {
+    public Page<CrewsResponse> getCrewsByRecommendedSort(int page, Long userId) {
         var pageRequest = PageRequest.of(page, CREW_PAGINATION_SIZE);
-        Page<CrewDto> crewDtos = crewService.getCrewDtosByRank(pageRequest);
+        var userDto = userService.getUserDtoById(userId);
+        Page<CrewDto> crewDtos = crewService.getCrewDtosByRecommendedSort(pageRequest, userDto);
         return convertCrewDtosToCrewsResponses(crewDtos);
     }
 
-    public Page<CrewsResponse> getCrewsByRecommend(int page) {
+    public Page<CrewsResponse> getCrewsByPopularSort(int page) {
         var pageRequest = PageRequest.of(page, CREW_PAGINATION_SIZE);
-        Page<CrewDto> crewDtos = crewService.getCrewDtosByRecommend(pageRequest);
+        Page<CrewDto> crewDtos = crewService.getCrewDtosByPopularSort(pageRequest);
+        return convertCrewDtosToCrewsResponses(crewDtos);
+    }
+
+    public Page<CrewsResponse> getCrewsByActiveSort(int page) {
+        var pageRequest = PageRequest.of(page, CREW_PAGINATION_SIZE);
+        Page<CrewDto> crewDtos = crewService.getCrewDtosByActiveSort(pageRequest);
+        return convertCrewDtosToCrewsResponses(crewDtos);
+    }
+
+    public Page<CrewsResponse> getCrewsByLatestSort(int page) {
+        var pageRequest = PageRequest.of(page, CREW_PAGINATION_SIZE);
+        Page<CrewDto> crewDtos = crewService.getCrewDtosByLatestSort(pageRequest);
         return convertCrewDtosToCrewsResponses(crewDtos);
     }
 

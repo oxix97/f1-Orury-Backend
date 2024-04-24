@@ -1,5 +1,6 @@
 package org.orury.domain.crew.infrastructures;
 
+import org.orury.domain.crew.domain.dto.CrewGender;
 import org.orury.domain.crew.domain.entity.Crew;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,11 +14,18 @@ public interface CrewRepository extends JpaRepository<Crew, Long> {
 
     Crew getCrewById(Long crewId);
 
+    Page<Crew> findAllByGenderIsInAndMinAgeLessThanEqualAndMaxAgeGreaterThanEqualOrderByCreatedAtAsc(List<CrewGender> userGenders, int userAge1, int userAge2, Pageable pageable);
+
     Page<Crew> findByOrderByMemberCountDesc(Pageable pageable);
 
-    Page<Crew> findByOrderByCreatedAtDesc(Pageable pageable);
+    @Query("SELECT c FROM crew c " +
+            "WHERE c.id IN " +
+            "(SELECT m.crew.id FROM crew_meeting m " +
+            "WHERE m.createdAt = (SELECT MAX(m2.createdAt) FROM crew_meeting m2 WHERE m2.crew = m.crew)) " +
+            "ORDER BY (SELECT MAX(m.createdAt) FROM crew_meeting m WHERE m.crew = c) DESC")
+    Page<Crew> findDistinctCrewsOrderByMeetingCreatedAtDesc(Pageable pageable);
 
-    Page<Crew> findAllByIdIn(List<Long> crewIds, Pageable pageable);
+    Page<Crew> findByOrderByCreatedAtDesc(Pageable pageable);
 
     @Modifying
     @Query("UPDATE crew SET memberCount = memberCount + 1 WHERE id = :crewId")
