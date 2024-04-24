@@ -114,53 +114,104 @@ class CrewServiceImplTest extends ServiceTest {
                 .addCrewMember(anyLong(), anyLong());
     }
 
-    @DisplayName("[getCrewDtosByRank] 페이지와 랭킹에 따른 크루 목록을 가져온다.")
+    @DisplayName("[getCrewDtosByRecommendedSort] 추천순으로 크루 목록을 가져온다.")
     @Test
-    void should_GetCrewDtosByRank() {
+    void should_GetCrewDtosByRecommendedSort() {
         // given
         Pageable pageable = mock(Pageable.class);
+        UserDto userDto = createUserDto().build().get();
         Page<Crew> crews = new PageImpl<>(List.of(
-                createCrew(852L).build().get(),
-                createCrew(159L).build().get(),
-                createCrew(261L).build().get()
+                createCrew(1L).build().get(),
+                createCrew(2L).build().get(),
+                createCrew(3L).build().get()
         ));
-        given(crewReader.getCrewsByRank(pageable))
+        given(crewReader.getCrewsByRecommendedSort(any(Pageable.class), any(CrewGender.class), anyInt()))
                 .willReturn(crews);
         given(crewTagReader.getTagsByCrewId(anyLong()))
                 .willReturn(mock(List.class));
 
         // when
-        crewService.getCrewDtosByRank(pageable);
+        crewService.getCrewDtosByRecommendedSort(pageable, userDto);
 
         // then
         then(crewReader).should(only())
-                .getCrewsByRank(any());
-        then(crewTagReader).should(times(crews.getSize()))
+                .getCrewsByRecommendedSort(any(Pageable.class), any(CrewGender.class), anyInt());
+        then(crewTagReader).should(times(crews.getContent().size()))
                 .getTagsByCrewId(anyLong());
     }
 
-    @DisplayName("[getCrewDtosByRecommend] 페이지와 추천에 따른 크루 목록을 가져온다.")
+    @DisplayName("[getCrewDtosByPopularSort] 인기순으로 크루 목록을 가져온다.")
     @Test
-    void should_GetCrewDtosByRecommend() {
+    void should_GetCrewDtosByPopularSort() {
         // given
         Pageable pageable = mock(Pageable.class);
         Page<Crew> crews = new PageImpl<>(List.of(
-                createCrew(852L).build().get(),
-                createCrew(159L).build().get(),
-                createCrew(261L).build().get()
+                createCrew(1L).build().get(),
+                createCrew(2L).build().get(),
+                createCrew(3L).build().get()
         ));
-        given(crewReader.getCrewsByRecommend(pageable))
+        given(crewReader.getCrewsByPopularSort(pageable))
                 .willReturn(crews);
         given(crewTagReader.getTagsByCrewId(anyLong()))
                 .willReturn(mock(List.class));
 
         // when
-        crewService.getCrewDtosByRecommend(pageable);
+        crewService.getCrewDtosByPopularSort(pageable);
 
         // then
         then(crewReader).should(only())
-                .getCrewsByRecommend(any());
-        then(crewTagReader).should(times(crews.getSize()))
+                .getCrewsByPopularSort(any());
+        then(crewTagReader).should(times(crews.getContent().size()))
+                .getTagsByCrewId(anyLong());
+    }
+
+    @DisplayName("[getCrewDtosByActiveSort] 활동순으로 크루 목록을 가져온다.")
+    @Test
+    void should_GetCrewDtosByActiveSort() {
+        // given
+        Pageable pageable = mock(Pageable.class);
+        Page<Crew> crews = new PageImpl<>(List.of(
+                createCrew(1L).build().get(),
+                createCrew(2L).build().get(),
+                createCrew(3L).build().get()
+        ));
+        given(crewReader.getCrewsByActiveSort(pageable))
+                .willReturn(crews);
+        given(crewTagReader.getTagsByCrewId(anyLong()))
+                .willReturn(mock(List.class));
+
+        // when
+        crewService.getCrewDtosByActiveSort(pageable);
+
+        // then
+        then(crewReader).should(only())
+                .getCrewsByActiveSort(any());
+        then(crewTagReader).should(times(crews.getContent().size()))
+                .getTagsByCrewId(anyLong());
+    }
+
+    @DisplayName("[getCrewDtosByNewestSort] 최신순으로 크루 목록을 가져온다.")
+    @Test
+    void should_GetCrewDtosByNewestSort() {
+        // given
+        Pageable pageable = mock(Pageable.class);
+        Page<Crew> crews = new PageImpl<>(List.of(
+                createCrew(1L).build().get(),
+                createCrew(2L).build().get(),
+                createCrew(3L).build().get()
+        ));
+        given(crewReader.getCrewsByLatestSort(pageable))
+                .willReturn(crews);
+        given(crewTagReader.getTagsByCrewId(anyLong()))
+                .willReturn(mock(List.class));
+
+        // when
+        crewService.getCrewDtosByLatestSort(pageable);
+
+        // then
+        then(crewReader).should(only())
+                .getCrewsByLatestSort(any());
+        then(crewTagReader).should(times(crews.getContent().size()))
                 .getTagsByCrewId(anyLong());
     }
 
