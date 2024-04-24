@@ -1,5 +1,18 @@
 package org.orury.client.crew.application;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.anyBoolean;
+import static org.mockito.BDDMockito.anyInt;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.mock;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.BDDMockito.times;
+import static org.mockito.Mockito.only;
+import static org.orury.client.ClientFixtureFactory.TestCrewRequest.createCrewRequest;
+import static org.orury.domain.CrewDomainFixture.TestCrewDto.createCrewDto;
+import static org.orury.domain.UserDomainFixture.TestUserDto.createUserDto;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.orury.client.config.FacadeTest;
@@ -14,14 +27,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.*;
-import static org.mockito.Mockito.only;
-import static org.orury.client.ClientFixtureFactory.TestCrewRequest.createCrewRequest;
-import static org.orury.domain.CrewDomainFixture.TestCrewDto.createCrewDto;
-import static org.orury.domain.UserDomainFixture.TestUserDto.createUserDto;
-
 @DisplayName("[Facade] 크루 Facade 테스트")
 class CrewFacadeTest extends FacadeTest {
 
@@ -32,9 +37,16 @@ class CrewFacadeTest extends FacadeTest {
         CrewRequest request = createCrewRequest().build().get();
         MultipartFile image = mock(MultipartFile.class);
         Long userId = 1L;
+        Long crewId = 1L;
+
         UserDto userDto = createUserDto(userId).build().get();
+        CrewDto crewDto = createCrewDto(crewId).build().get();
+
         given(userService.getUserDtoById(anyLong()))
                 .willReturn(userDto);
+        given(crewService.createCrew(any(), any()))
+                .willReturn(crewDto);
+
 
         // when
         crewFacade.createCrew(request, image, userId);
