@@ -1,13 +1,10 @@
 package org.orury.client.crew.interfaces;
 
-import io.swagger.v3.oas.annotations.Operation;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.orury.client.crew.application.CrewFacade;
 import org.orury.client.crew.interfaces.message.CrewMessage;
 import org.orury.client.crew.interfaces.request.CrewRequest;
 import org.orury.client.crew.interfaces.response.CrewApplicantsResponse;
+import org.orury.client.crew.interfaces.response.CrewIdResponse;
 import org.orury.client.crew.interfaces.response.CrewMembersResponse;
 import org.orury.client.crew.interfaces.response.CrewResponse;
 import org.orury.client.crew.interfaces.response.CrewsResponse;
@@ -15,10 +12,24 @@ import org.orury.domain.base.converter.ApiResponse;
 import org.orury.domain.user.domain.dto.UserPrincipal;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -34,9 +45,8 @@ public class CrewController {
             @RequestPart(required = false) MultipartFile image,
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
-        crewFacade.createCrew(request, image, userPrincipal.id());
-
-        return ApiResponse.of(CrewMessage.CREW_CREATED.getMessage());
+        CrewIdResponse response = crewFacade.createCrew(request, image, userPrincipal.id());
+        return ApiResponse.of(CrewMessage.CREW_CREATED.getMessage(), response);
     }
 
     @Operation(summary = "크루 추천순 조회", description = "크루를 추천 순으로 조회한다.")
