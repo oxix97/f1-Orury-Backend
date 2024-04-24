@@ -4,8 +4,9 @@ import org.orury.domain.global.constants.Constants;
 import org.orury.domain.gym.domain.dto.GymDto;
 
 import java.time.format.TextStyle;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.AbstractMap;
+import java.util.List;
+import java.util.Locale;
 
 public record GymResponse(
         Long id,
@@ -22,7 +23,7 @@ public record GymResponse(
         String instagramLink,
         String homepageLink,
         String settingDay,
-        List<Map.Entry<String, String>> businessHours,
+        List<AbstractMap.SimpleEntry<String, String>> businessHours,
         boolean doingBusiness,
         boolean isLike,
         String gymType,
@@ -35,26 +36,9 @@ public record GymResponse(
             boolean isLike,
             GymReviewStatistics gymReviewStatistics
     ) {
-
-        // 요일별 순서를 정의
-        Map<String, Integer> dayOrder = Map.of(
-                "월", 1,
-                "화", 2,
-                "수", 3,
-                "목", 4,
-                "금", 5,
-                "토", 6,
-                "일", 7
-        );
-
-        List<Map.Entry<String, String>> koreanBusinessHours = gymDto.businessHours().entrySet().stream()
-                .map(entry -> {
-                    // 운영시간이 null인 값은 null로 보내주기
-                    String key = entry.getKey() == null ? null : entry.getKey().getDisplayName(TextStyle.NARROW, Locale.KOREAN);
-                    return new AbstractMap.SimpleEntry<>(key, entry.getValue());
-                })
-                .sorted(Comparator.comparingInt(entry -> dayOrder.getOrDefault(entry.getKey(), 0)))
-                .collect(Collectors.toList());
+        List<AbstractMap.SimpleEntry<String, String>> koreanBusinessHours = gymDto.businessHours().entrySet().stream()
+                .map(entry -> new AbstractMap.SimpleEntry<>(entry.getKey().getDisplayName(TextStyle.NARROW, Locale.KOREAN), entry.getValue()))
+                .toList();
 
         return new GymResponse(
                 gymDto.id(),
