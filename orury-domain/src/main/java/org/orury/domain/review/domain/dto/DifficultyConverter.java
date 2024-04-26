@@ -12,7 +12,7 @@ import java.util.Objects;
 public class DifficultyConverter implements AttributeConverter<Difficulty, String> {
     @Override
     public String convertToDatabaseColumn(Difficulty difficulty) {
-        if (Objects.isNull(difficulty) || difficulty.equals("")) {
+        if (Objects.isNull(difficulty)) {
             return "";
         }
         return difficulty.name();
