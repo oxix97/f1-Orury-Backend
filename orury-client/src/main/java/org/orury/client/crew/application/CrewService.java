@@ -14,7 +14,7 @@ import java.util.List;
 public interface CrewService {
     CrewDto getCrewDtoById(Long crewId);
 
-    void createCrew(CrewDto crewDto, MultipartFile image);
+    Long createCrew(CrewDto crewDto, MultipartFile image);
 
     Page<CrewDto> getCrewDtosByRecommendedSort(Pageable pageable, UserDto userDto);
 

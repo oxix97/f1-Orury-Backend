@@ -1,10 +1,14 @@
 package org.orury.client.crew.application;
 
-import lombok.RequiredArgsConstructor;
+import static org.orury.domain.global.constants.NumberConstants.CREW_PAGINATION_SIZE;
+import static org.orury.domain.global.constants.NumberConstants.MAXIMUM_OF_CREW_DETAIL_THUMBNAILS;
+import static org.orury.domain.global.constants.NumberConstants.MAXIMUM_OF_CREW_LIST_THUMBNAILS;
+
 import org.apache.commons.lang3.function.TriFunction;
 import org.orury.client.crew.interfaces.message.CrewMessage;
 import org.orury.client.crew.interfaces.request.CrewRequest;
 import org.orury.client.crew.interfaces.response.CrewApplicantsResponse;
+import org.orury.client.crew.interfaces.response.CrewIdResponse;
 import org.orury.client.crew.interfaces.response.CrewMembersResponse;
 import org.orury.client.crew.interfaces.response.CrewResponse;
 import org.orury.client.crew.interfaces.response.CrewsResponse;
@@ -21,7 +25,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiFunction;
 
-import static org.orury.domain.global.constants.NumberConstants.*;
+import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
@@ -29,10 +33,12 @@ public class CrewFacade {
     private final CrewService crewService;
     private final UserService userService;
 
-    public void createCrew(CrewRequest request, MultipartFile image, Long userId) {
+    public CrewIdResponse createCrew(CrewRequest request, MultipartFile image, Long userId) {
         var userDto = userService.getUserDtoById(userId);
         var crewDto = request.toDto(userDto);
-        crewService.createCrew(crewDto, image);
+        var crewId = crewService.createCrew(crewDto, image);
+
+        return CrewIdResponse.of(crewId);
     }
 
     public Page<CrewsResponse> getCrewsByRecommendedSort(int page, Long userId) {
