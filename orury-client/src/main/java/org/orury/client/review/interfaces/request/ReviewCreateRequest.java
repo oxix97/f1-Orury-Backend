@@ -1,5 +1,6 @@
 package org.orury.client.review.interfaces.request;
 
+import org.orury.domain.global.validation.EnumValue;
 import org.orury.domain.gym.domain.dto.GymDto;
 import org.orury.domain.review.domain.dto.Difficulty;
 import org.orury.domain.review.domain.dto.ReviewDto;
@@ -12,11 +13,12 @@ public record ReviewCreateRequest(
         float score,
         Long gymId,
         String description,
-        Difficulty difficulty,
-        List<String> tags
+
+        @EnumValue(enumClass = Difficulty.class, message = "유효하지 않은 난이도입니다.")
+        Difficulty difficulty
 ) {
-    public static ReviewCreateRequest of(String content, float score, Long gymId, String description, Difficulty difficulty, List<String> tags) {
-        return new ReviewCreateRequest(content, score, gymId, description, difficulty, tags);
+    public static ReviewCreateRequest of(String content, float score, Long gymId, String description, Difficulty difficulty) {
+        return new ReviewCreateRequest(content, score, gymId, description, difficulty);
     }
 
     public ReviewDto toDto(UserDto userDto, GymDto gymDto) {
@@ -33,7 +35,9 @@ public record ReviewCreateRequest(
                 userDto,
                 gymDto,
                 null,
-                null
+                null,
+                description,
+                difficulty
         );
     }
 }

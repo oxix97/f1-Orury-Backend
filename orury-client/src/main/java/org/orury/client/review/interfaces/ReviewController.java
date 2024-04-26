@@ -1,6 +1,7 @@
 package org.orury.client.review.interfaces;
 
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.orury.client.review.application.ReviewFacade;
@@ -28,7 +29,7 @@ public class ReviewController {
     @PostMapping
     public ApiResponse createReview(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
-            @RequestPart ReviewCreateRequest request,
+            @Valid @RequestPart ReviewCreateRequest request,
             @RequestPart(required = false) List<MultipartFile> image
     ) {
         reviewFacade.createReview(userPrincipal.id(), request, image);
@@ -40,7 +41,7 @@ public class ReviewController {
     public ApiResponse updateReview(
             @PathVariable Long reviewId,
             @AuthenticationPrincipal UserPrincipal userPrincipal,
-            @RequestPart ReviewUpdateRequest request,
+            @Valid @RequestPart ReviewUpdateRequest request,
             @RequestPart(required = false) List<MultipartFile> image
     ) {
         reviewFacade.updateReview(reviewId, userPrincipal.id(), request, image);
