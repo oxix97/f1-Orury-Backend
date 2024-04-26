@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import org.orury.domain.gym.domain.dto.GymDto;
 import org.orury.domain.gym.domain.entity.Gym;
+import org.orury.domain.review.domain.dto.Difficulty;
 import org.orury.domain.review.domain.dto.ReviewDto;
 import org.orury.domain.review.domain.dto.ReviewReactionDto;
 import org.orury.domain.review.domain.entity.Review;
@@ -62,6 +63,8 @@ public class ReviewDomainFixture {
         private @Builder.Default String content = "reviewContent";
         private @Builder.Default List<String> images = List.of("image", "image2", "image33");
         private @Builder.Default float score = 2.5f;
+        private @Builder.Default String description = "description";
+        private @Builder.Default Difficulty difficulty = Difficulty.ORANGE;
         private @Builder.Default int interestCount = 1;
         private @Builder.Default int likeCount = 2;
         private @Builder.Default int helpCount = 3;

@@ -22,7 +22,9 @@ public record ReviewDto(
         UserDto userDto,
         GymDto gymDto,
         LocalDateTime createdAt,
-        LocalDateTime updatedAt
+        LocalDateTime updatedAt,
+        String description,
+        Difficulty difficulty
 ) {
     public static ReviewDto of(
             Long id,
@@ -36,7 +38,9 @@ public record ReviewDto(
             UserDto userDto,
             GymDto gymDto,
             LocalDateTime createdAt,
-            LocalDateTime updatedAt
+            LocalDateTime updatedAt,
+            String description,
+            Difficulty difficulty
     ) {
         return new ReviewDto(
                 id,
@@ -50,7 +54,9 @@ public record ReviewDto(
                 userDto,
                 gymDto,
                 createdAt,
-                updatedAt
+                updatedAt,
+                description,
+                difficulty
         );
     }
 
@@ -67,7 +73,9 @@ public record ReviewDto(
                 org.orury.domain.user.domain.dto.UserDto.from(entity.getUser()),
                 GymDto.from(entity.getGym()),
                 entity.getCreatedAt(),
-                entity.getUpdatedAt()
+                entity.getUpdatedAt(),
+                entity.getDescription(),
+                entity.getDifficulty()
         );
     }
 
@@ -84,7 +92,9 @@ public record ReviewDto(
                 org.orury.domain.user.domain.dto.UserDto.from(entity.getUser(), profileImgUrl),
                 GymDto.from(entity.getGym()),
                 entity.getCreatedAt(),
-                entity.getUpdatedAt()
+                entity.getUpdatedAt(),
+                entity.getDescription(),
+                entity.getDifficulty()
         );
     }
 
@@ -101,7 +111,9 @@ public record ReviewDto(
                 userDto.toEntity(),
                 gymDto.toEntity(),
                 createdAt,
-                updatedAt
+                updatedAt,
+                description,
+                difficulty
         );
     }
 
@@ -118,7 +130,9 @@ public record ReviewDto(
                 userDto.toEntity(),
                 gymDto.toEntity(),
                 createdAt,
-                updatedAt
+                updatedAt,
+                description,
+                difficulty
         );
     }
 }

@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.orury.domain.base.db.AuditingField;
 import org.orury.domain.global.listener.ReviewImagesConverter;
 import org.orury.domain.gym.domain.entity.Gym;
+import org.orury.domain.review.domain.dto.Difficulty;
+import org.orury.domain.review.domain.dto.DifficultyConverter;
 import org.orury.domain.user.domain.entity.User;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -59,6 +61,13 @@ public class Review extends AuditingField {
     @JoinColumn(name = "gym_id", nullable = false)
     private Gym gym;
 
+    @Column(name = "description")
+    private String description;
+
+    @Convert(converter = DifficultyConverter.class)
+    @Column(name = "difficulty", nullable = false)
+    private Difficulty difficulty;
+
     public Review(
             Long id,
             String content,
@@ -71,7 +80,9 @@ public class Review extends AuditingField {
             User user,
             Gym gym,
             LocalDateTime createdAt,
-            LocalDateTime updatedAt
+            LocalDateTime updatedAt,
+            String description,
+            Difficulty difficulty
     ) {
         this.id = id;
         this.content = content;
@@ -85,6 +96,8 @@ public class Review extends AuditingField {
         this.gym = gym;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.description = description;
+        this.difficulty = difficulty;
     }
 
     public static Review of(
@@ -99,7 +112,9 @@ public class Review extends AuditingField {
             User user,
             Gym gym,
             LocalDateTime createdAt,
-            LocalDateTime updatedAt
+            LocalDateTime updatedAt,
+            String description,
+            Difficulty difficulty
     ) {
         return new Review(
                 id,
@@ -113,7 +128,9 @@ public class Review extends AuditingField {
                 user,
                 gym,
                 createdAt,
-                updatedAt
+                updatedAt,
+                description,
+                difficulty
         );
     }
 }

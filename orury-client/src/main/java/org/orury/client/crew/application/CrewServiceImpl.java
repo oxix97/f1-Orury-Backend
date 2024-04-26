@@ -1,6 +1,7 @@
 package org.orury.client.crew.application;
 
-import lombok.RequiredArgsConstructor;
+import static org.orury.common.util.S3Folder.CREW;
+
 import org.orury.client.crew.application.policy.CrewApplicationPolicy;
 import org.orury.client.crew.application.policy.CrewCreatePolicy;
 import org.orury.client.crew.application.policy.CrewPolicy;
@@ -9,7 +10,14 @@ import org.orury.client.crew.interfaces.message.CrewMessage;
 import org.orury.common.error.code.CrewErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.common.util.AgeUtils;
-import org.orury.domain.crew.domain.*;
+import org.orury.domain.crew.domain.CrewApplicationReader;
+import org.orury.domain.crew.domain.CrewApplicationStore;
+import org.orury.domain.crew.domain.CrewMemberReader;
+import org.orury.domain.crew.domain.CrewMemberStore;
+import org.orury.domain.crew.domain.CrewReader;
+import org.orury.domain.crew.domain.CrewStore;
+import org.orury.domain.crew.domain.CrewTagReader;
+import org.orury.domain.crew.domain.CrewTagStore;
 import org.orury.domain.crew.domain.dto.CrewApplicationDto;
 import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.crew.domain.dto.CrewGender;
@@ -33,7 +41,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static org.orury.common.util.S3Folder.CREW;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -68,12 +76,13 @@ public class CrewServiceImpl implements CrewService {
 
     @Override
     @Transactional
-    public void createCrew(CrewDto crewDto, MultipartFile file) {
+    public Long createCrew(CrewDto crewDto, MultipartFile file) {
         crewCreatePolicy.validate(crewDto);
         var icon = imageStore.upload(CREW, file);
         Crew crew = crewStore.save(crewDto.toEntity(icon));
         crewTagStore.addTags(crew, crewDto.tags());
         crewMemberStore.addCrewMember(crew.getId(), crew.getUser().getId());
+        return crew.getId();
     }
 
     @Override
