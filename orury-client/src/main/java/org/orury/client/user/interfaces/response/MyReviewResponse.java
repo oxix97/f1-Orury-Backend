@@ -25,11 +25,10 @@ public record MyReviewResponse(
     public static MyReviewResponse of(ReviewDto reviewDto, int myReaction) {
 
         List<MyReviewResponse.ReviewReactionCount> reviewReactionCount = List.of(
-                new MyReviewResponse.ReviewReactionCount("thumb", reviewDto.thumbCount()),
-                new MyReviewResponse.ReviewReactionCount("interest", reviewDto.interestCount()),
-                new MyReviewResponse.ReviewReactionCount("help", reviewDto.helpCount()),
-                new MyReviewResponse.ReviewReactionCount("like", reviewDto.likeCount()),
-                new MyReviewResponse.ReviewReactionCount("angry", reviewDto.angryCount())
+                new MyReviewResponse.ReviewReactionCount("wantToGo", reviewDto.wantToGoCount()),
+                new MyReviewResponse.ReviewReactionCount("helped", reviewDto.helpedCount()),
+                new MyReviewResponse.ReviewReactionCount("great", reviewDto.greatCount()),
+                new MyReviewResponse.ReviewReactionCount("funny", reviewDto.funnyCount())
         );
 
         String myReactionType = mapReactionType(myReaction);
@@ -56,11 +55,10 @@ public record MyReviewResponse(
 
     private static String mapReactionType(int reaction) {
         return switch (reaction) {
-            case NumberConstants.THUMB_REACTION -> "thumb";
-            case NumberConstants.INTERREST_REACTION -> "interest";
-            case NumberConstants.HELP_REACTION -> "help";
-            case NumberConstants.LIKE_REACTION -> "like";
-            case NumberConstants.ANGRY_REACTION -> "angry";
+            case NumberConstants.REACTION_WANT_TO_GO -> "wantToGo";
+            case NumberConstants.REACTION_HELPED -> "helped";
+            case NumberConstants.REACTION_GREAT -> "great";
+            case NumberConstants.REACTION_FUNNY -> "funny";
             default -> null;
         };
     }

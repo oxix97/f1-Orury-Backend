@@ -39,20 +39,17 @@ public class Review extends AuditingField {
     @Column(name = "score", nullable = false)
     private float score;
 
-    @Column(name = "interest_count", nullable = false)
-    private int interestCount;
+    @Column(name = "want_to_go_count", nullable = false)
+    private int wantToGoCount;
 
-    @Column(name = "like_count", nullable = false)
-    private int likeCount;
+    @Column(name = "helped_count", nullable = false)
+    private int helpedCount;
 
-    @Column(name = "help_count", nullable = false)
-    private int helpCount;
+    @Column(name = "great_count", nullable = false)
+    private int greatCount;
 
-    @Column(name = "thumb_count", nullable = false)
-    private int thumbCount;
-
-    @Column(name = "angry_count", nullable = false)
-    private int angryCount;
+    @Column(name = "funny_count", nullable = false)
+    private int funnyCount;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false)
@@ -67,11 +64,10 @@ public class Review extends AuditingField {
             String content,
             List<String> images,
             float score,
-            int interestCount,
-            int likeCount,
-            int helpCount,
-            int thumbCount,
-            int angryCount,
+            int wantToGoCount,
+            int helpedCount,
+            int greatCount,
+            int funnyCount,
             User user,
             Gym gym,
             LocalDateTime createdAt,
@@ -81,11 +77,10 @@ public class Review extends AuditingField {
         this.content = content;
         this.images = images;
         this.score = score;
-        this.interestCount = interestCount;
-        this.likeCount = likeCount;
-        this.helpCount = helpCount;
-        this.thumbCount = thumbCount;
-        this.angryCount = angryCount;
+        this.wantToGoCount = wantToGoCount;
+        this.helpedCount = helpedCount;
+        this.greatCount = greatCount;
+        this.funnyCount = funnyCount;
         this.user = user;
         this.gym = gym;
         this.createdAt = createdAt;
@@ -97,11 +92,10 @@ public class Review extends AuditingField {
             String content,
             List<String> images,
             float score,
-            int interestCount,
-            int likeCount,
-            int helpCount,
-            int thumbCount,
-            int angryCount,
+            int wantToGoCount,
+            int helpedCount,
+            int greatCount,
+            int funnyCount,
             User user,
             Gym gym,
             LocalDateTime createdAt,
@@ -112,11 +106,10 @@ public class Review extends AuditingField {
                 content,
                 images,
                 score,
-                interestCount,
-                likeCount,
-                helpCount,
-                thumbCount,
-                angryCount,
+                wantToGoCount,
+                helpedCount,
+                greatCount,
+                funnyCount,
                 user,
                 gym,
                 createdAt,

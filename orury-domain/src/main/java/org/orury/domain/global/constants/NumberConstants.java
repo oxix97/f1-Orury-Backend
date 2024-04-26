@@ -42,11 +42,10 @@ public final class NumberConstants {
     public static final int HOT_POSTS_BOUNDARY = 3;
     // Review Reaction
     public static final int NOT_REACTION = 0;
-    public static final int THUMB_REACTION = 1;
-    public static final int INTERREST_REACTION = 2;
-    public static final int HELP_REACTION = 3;
-    public static final int LIKE_REACTION = 4;
-    public static final int ANGRY_REACTION = 5;
+    public static final int REACTION_WANT_TO_GO = 1;
+    public static final int REACTION_HELPED = 2;
+    public static final int REACTION_GREAT = 3;
+    public static final int REACTION_FUNNY = 4;
     // Maximum Number of Crew Participation
     public static final int MAXIMUM_CREW_PARTICIPATION = 5;
     // Maximum Number of User Profile Images from Thumbnail of Meetings List
