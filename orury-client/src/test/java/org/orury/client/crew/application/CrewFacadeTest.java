@@ -40,12 +40,11 @@ class CrewFacadeTest extends FacadeTest {
         Long crewId = 1L;
 
         UserDto userDto = createUserDto(userId).build().get();
-        CrewDto crewDto = createCrewDto(crewId).build().get();
 
         given(userService.getUserDtoById(anyLong()))
                 .willReturn(userDto);
         given(crewService.createCrew(any(), any()))
-                .willReturn(crewDto);
+                .willReturn(crewId);
 
 
         // when
