@@ -19,12 +19,12 @@ spring:
     default: dev
   application.name: orury-client
   datasource:
-    url: ${LOCAL_DB_NAME}
-    username: ${LOCAL_DB_USER_NAME}
-    password: ${LOCAL_DB_USER_PASSWORD}
-  #    url: ENC(+jNy+HRl5S5QeokxoLB89WTqqqa7EGm73Cpm2N4KXnu1yH3puewQxOUDussQQ9Qd)
-  #    username: ENC(ICwwkDRBtwGBxA6nGngL8g==)
-  #    password: ENC(HnXBRmSMLrFNxOsi9z6Iz+9nuM5BBLw2)
+    #    url: ${LOCAL_DB_NAME}
+    #    username: ${LOCAL_DB_USER_NAME}
+    #    password: ${LOCAL_DB_USER_PASSWORD}
+    url: ENC(+jNy+HRl5S5QeokxoLB89WTqqqa7EGm73Cpm2N4KXnu1yH3puewQxOUDussQQ9Qd)
+    username: ENC(ICwwkDRBtwGBxA6nGngL8g==)
+    password: ENC(HnXBRmSMLrFNxOsi9z6Iz+9nuM5BBLw2)
   jpa:
     properties:
       hibernate:
@@ -95,6 +95,6 @@ oauth-login:
     kakao:
       grant-type: authorization_code
       client-id: ENC(pgz2ivbzAfICX0Nilz7oi7v6ymwehNeaXussHnvSA2HPT9hUt/UWJpZON6xxG0ia)
-      redirect-uri: http://localhost:3000/sign-in/kakao
+      redirect-uri: ENC(0gMRz7DqO7u0eGd0MwL+wRGuQe3/xmwWpmLf4Xa14inFSyaMdvqZnA==)
       client-secret: ENC(5WX5kqJUy9bVfT4XdBxhLqtcJqEPdgMHGaJl79j1l96IWd5rwRBJ1UlsWzvyRuSJ)
       content-type: application/x-www-form-urlencoded;charset=utf-8
