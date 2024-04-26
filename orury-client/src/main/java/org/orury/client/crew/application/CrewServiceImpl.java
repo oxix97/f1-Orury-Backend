@@ -76,13 +76,13 @@ public class CrewServiceImpl implements CrewService {
 
     @Override
     @Transactional
-    public CrewDto createCrew(CrewDto crewDto, MultipartFile file) {
+    public Long createCrew(CrewDto crewDto, MultipartFile file) {
         crewCreatePolicy.validate(crewDto);
         var icon = imageStore.upload(CREW, file);
         Crew crew = crewStore.save(crewDto.toEntity(icon));
         crewTagStore.addTags(crew, crewDto.tags());
         crewMemberStore.addCrewMember(crew.getId(), crew.getUser().getId());
-        return CrewDto.from(crew);
+        return crew.getId();
     }
 
     @Override

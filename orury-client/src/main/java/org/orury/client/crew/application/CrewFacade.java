@@ -36,9 +36,9 @@ public class CrewFacade {
     public CrewIdResponse createCrew(CrewRequest request, MultipartFile image, Long userId) {
         var userDto = userService.getUserDtoById(userId);
         var crewDto = request.toDto(userDto);
-        var saveCrewDto = crewService.createCrew(crewDto, image);
+        var crewId = crewService.createCrew(crewDto, image);
 
-        return CrewIdResponse.of(saveCrewDto);
+        return CrewIdResponse.of(crewId);
     }
 
     public Page<CrewsResponse> getCrewsByRecommendedSort(int page, Long userId) {

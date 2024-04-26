@@ -1,13 +1,11 @@
 package org.orury.client.crew.interfaces.response;
 
-import org.orury.domain.crew.domain.dto.CrewDto;
-
 public record CrewIdResponse(
-        Long id
+        Long crewId
 ) {
-    public static CrewIdResponse of(CrewDto crewDto) {
+    public static CrewIdResponse of(Long id) {
         return new CrewIdResponse(
-                crewDto.id()
+                id
         );
     }
 }
