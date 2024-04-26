@@ -40,7 +40,7 @@ public class CrewController {
     }
 
     @Operation(summary = "크루 추천순 조회", description = "크루를 추천 순으로 조회한다.")
-    @GetMapping("/recommended")
+    @GetMapping("/recommend")
     public ApiResponse getCrewsByRecommendedSort(@RequestParam int page, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         Page<CrewsResponse> pageResponse = crewFacade.getCrewsByRecommendedSort(page, userPrincipal.id());
 
