@@ -12,6 +12,8 @@ public record ReviewsResponse(
         String content,
         List<String> images,
         float score,
+        String description,
+        String difficulty,
         List<ReviewReactionCount> reviewReactionCount,
         String myReaction,
         Writer writer,
@@ -28,7 +30,7 @@ public record ReviewsResponse(
                 .id()
                 .equals(loginId);
 
-        List<ReviewReactionCount> reviewReactionCount = List.of(
+        List<ReviewReactionCount> reviewReactionCount = java.util.List.of(
                 new ReviewReactionCount("thumb", reviewDto.thumbCount()),
                 new ReviewReactionCount("interest", reviewDto.interestCount()),
                 new ReviewReactionCount("help", reviewDto.helpCount()),
@@ -49,6 +51,8 @@ public record ReviewsResponse(
                 reviewDto.content(),
                 reviewDto.images(),
                 reviewDto.score(),
+                reviewDto.description(),
+                reviewDto.difficulty().getDescription(),
                 reviewReactionCount,
                 myReactionType,
                 writer,
