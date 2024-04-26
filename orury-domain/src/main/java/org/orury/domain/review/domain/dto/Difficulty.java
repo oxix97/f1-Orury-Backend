@@ -16,7 +16,7 @@ public enum Difficulty {
     PURPLE("보라"),
     GRAY("회색"),
     BLACK("검정"),
-    COMPI("컴피");
+    COMP("컴피");
 
     private final String description;
 
