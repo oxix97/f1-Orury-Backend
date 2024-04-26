@@ -2,6 +2,7 @@ package org.orury.client.review.interfaces.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.orury.domain.global.constants.NumberConstants;
+import org.orury.domain.review.domain.dto.Difficulty;
 import org.orury.domain.review.domain.dto.ReviewDto;
 
 import java.time.LocalDateTime;
@@ -12,6 +13,8 @@ public record ReviewsResponse(
         String content,
         List<String> images,
         float score,
+        String description,
+        Difficulty difficulty,
         List<ReviewReactionCount> reviewReactionCount,
         String myReaction,
         Writer writer,
@@ -28,7 +31,7 @@ public record ReviewsResponse(
                 .id()
                 .equals(loginId);
 
-        List<ReviewReactionCount> reviewReactionCount = List.of(
+        List<ReviewReactionCount> reviewReactionCount = java.util.List.of(
                 new ReviewReactionCount("thumb", reviewDto.thumbCount()),
                 new ReviewReactionCount("interest", reviewDto.interestCount()),
                 new ReviewReactionCount("help", reviewDto.helpCount()),
@@ -49,6 +52,8 @@ public record ReviewsResponse(
                 reviewDto.content(),
                 reviewDto.images(),
                 reviewDto.score(),
+                reviewDto.description(),
+                reviewDto.difficulty(),
                 reviewReactionCount,
                 myReactionType,
                 writer,
