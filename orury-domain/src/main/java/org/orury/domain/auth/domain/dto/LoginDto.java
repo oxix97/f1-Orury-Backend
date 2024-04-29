@@ -37,7 +37,8 @@ public record LoginDto(
                         null,
                         null,
                         null,
-                        UserStatus.ENABLE
+                        UserStatus.ENABLE,
+                        null
                 ),
                 jwtToken,
                 flag

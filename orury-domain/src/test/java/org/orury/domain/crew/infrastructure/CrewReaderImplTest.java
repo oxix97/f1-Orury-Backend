@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.orury.domain.config.InfrastructureTest;
+import org.orury.domain.crew.domain.dto.CrewGender;
 import org.orury.domain.crew.domain.entity.CrewApplication;
 import org.orury.domain.crew.domain.entity.CrewMember;
 import org.springframework.data.domain.Pageable;
@@ -36,22 +37,44 @@ class CrewReaderImplTest extends InfrastructureTest {
                 .findById(anyLong());
     }
 
+    @DisplayName("Pageable, 성별, 나이를 받아, 해당 값이 기준에 충족하는 크루 목록을 조회한다")
+    @Test
+    void getCrewsByRecommended() {
+        // given & when
+        crewReader.getCrewsByRecommendedSort(mock(Pageable.class), mock(CrewGender.class), 27);
+
+        // then
+        then(crewRepository).should(only())
+                .findAllByGenderIsInAndMinAgeLessThanEqualAndMaxAgeGreaterThanEqualOrderByCreatedAtAsc(any(), anyInt(), anyInt(), any());
+    }
+
     @DisplayName("Pageable을 받아, 멤버수 내림차순의 크루 목록을 조회한다")
     @Test
     void getCrewsByRank() {
         // given & when
-        crewReader.getCrewsByRank(mock(Pageable.class));
+        crewReader.getCrewsByPopularSort(mock(Pageable.class));
 
         // then
         then(crewRepository).should(only())
                 .findByOrderByMemberCountDesc(any(Pageable.class));
     }
 
+    @DisplayName("Pageable을 받아, 크루일정 생성일자 최신순의 크루 목록을 조회한다")
+    @Test
+    void getCrewsByActive() {
+        // given & when
+        crewReader.getCrewsByActiveSort(mock(Pageable.class));
+
+        // then
+        then(crewRepository).should(only())
+                .findDistinctCrewsOrderByMeetingCreatedAtDesc(any(Pageable.class));
+    }
+
     @DisplayName("Pageable을 받아, 생성일자 최신순의 크루 목록을 조회한다")
     @Test
     void getCrewsByRecommend() {
         // given & when
-        crewReader.getCrewsByRecommend(mock(Pageable.class));
+        crewReader.getCrewsByLatestSort(mock(Pageable.class));
 
         // then
         then(crewRepository).should(only())

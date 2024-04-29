@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.orury.domain.base.db.AuditingField;
 import org.orury.domain.global.listener.ReviewImagesConverter;
 import org.orury.domain.gym.domain.entity.Gym;
+import org.orury.domain.review.domain.dto.Difficulty;
+import org.orury.domain.review.domain.dto.DifficultyConverter;
 import org.orury.domain.user.domain.entity.User;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -39,20 +41,17 @@ public class Review extends AuditingField {
     @Column(name = "score", nullable = false)
     private float score;
 
-    @Column(name = "interest_count", nullable = false)
-    private int interestCount;
+    @Column(name = "want_to_go_count", nullable = false)
+    private int wantToGoCount;
 
-    @Column(name = "like_count", nullable = false)
-    private int likeCount;
+    @Column(name = "helped_count", nullable = false)
+    private int helpedCount;
 
-    @Column(name = "help_count", nullable = false)
-    private int helpCount;
+    @Column(name = "great_count", nullable = false)
+    private int greatCount;
 
-    @Column(name = "thumb_count", nullable = false)
-    private int thumbCount;
-
-    @Column(name = "angry_count", nullable = false)
-    private int angryCount;
+    @Column(name = "funny_count", nullable = false)
+    private int funnyCount;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false)
@@ -62,34 +61,43 @@ public class Review extends AuditingField {
     @JoinColumn(name = "gym_id", nullable = false)
     private Gym gym;
 
+    @Column(name = "description")
+    private String description;
+
+    @Convert(converter = DifficultyConverter.class)
+    @Column(name = "difficulty", nullable = false)
+    private Difficulty difficulty;
+
     public Review(
             Long id,
             String content,
             List<String> images,
             float score,
-            int interestCount,
-            int likeCount,
-            int helpCount,
-            int thumbCount,
-            int angryCount,
+            int wantToGoCount,
+            int helpedCount,
+            int greatCount,
+            int funnyCount,
             User user,
             Gym gym,
             LocalDateTime createdAt,
-            LocalDateTime updatedAt
+            LocalDateTime updatedAt,
+            String description,
+            Difficulty difficulty
     ) {
         this.id = id;
         this.content = content;
         this.images = images;
         this.score = score;
-        this.interestCount = interestCount;
-        this.likeCount = likeCount;
-        this.helpCount = helpCount;
-        this.thumbCount = thumbCount;
-        this.angryCount = angryCount;
+        this.wantToGoCount = wantToGoCount;
+        this.helpedCount = helpedCount;
+        this.greatCount = greatCount;
+        this.funnyCount = funnyCount;
         this.user = user;
         this.gym = gym;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.description = description;
+        this.difficulty = difficulty;
     }
 
     public static Review of(
@@ -97,30 +105,32 @@ public class Review extends AuditingField {
             String content,
             List<String> images,
             float score,
-            int interestCount,
-            int likeCount,
-            int helpCount,
-            int thumbCount,
-            int angryCount,
+            int wantToGoCount,
+            int helpedCount,
+            int greatCount,
+            int funnyCount,
             User user,
             Gym gym,
             LocalDateTime createdAt,
-            LocalDateTime updatedAt
+            LocalDateTime updatedAt,
+            String description,
+            Difficulty difficulty
     ) {
         return new Review(
                 id,
                 content,
                 images,
                 score,
-                interestCount,
-                likeCount,
-                helpCount,
-                thumbCount,
-                angryCount,
+                wantToGoCount,
+                helpedCount,
+                greatCount,
+                funnyCount,
                 user,
                 gym,
                 createdAt,
-                updatedAt
+                updatedAt,
+                description,
+                difficulty
         );
     }
 }

@@ -15,45 +15,48 @@ public record ReviewDto(
         String content,
         List<String> images,
         float score,
-        int interestCount,
-        int likeCount,
-        int helpCount,
-        int thumbCount,
-        int angryCount,
+        int wantToGoCount,
+        int helpedCount,
+        int greatCount,
+        int funnyCount,
         UserDto userDto,
         GymDto gymDto,
         LocalDateTime createdAt,
-        LocalDateTime updatedAt
+        LocalDateTime updatedAt,
+        String description,
+        Difficulty difficulty
 ) {
     public static ReviewDto of(
             Long id,
             String content,
             List<String> images,
             float score,
-            int interestCount,
-            int likeCount,
-            int helpCount,
-            int thumbCount,
-            int angryCount,
+            int wantToGoCount,
+            int helpedCount,
+            int greatCount,
+            int funnyCount,
             UserDto userDto,
             GymDto gymDto,
             LocalDateTime createdAt,
-            LocalDateTime updatedAt
+            LocalDateTime updatedAt,
+            String description,
+            Difficulty difficulty
     ) {
         return new ReviewDto(
                 id,
                 content,
                 images,
                 score,
-                interestCount,
-                likeCount,
-                helpCount,
-                thumbCount,
-                angryCount,
+                wantToGoCount,
+                helpedCount,
+                greatCount,
+                funnyCount,
                 userDto,
                 gymDto,
                 createdAt,
-                updatedAt
+                updatedAt,
+                description,
+                difficulty
         );
     }
 
@@ -63,15 +66,16 @@ public record ReviewDto(
                 entity.getContent(),
                 entity.getImages(),
                 entity.getScore(),
-                entity.getInterestCount(),
-                entity.getLikeCount(),
-                entity.getHelpCount(),
-                entity.getThumbCount(),
-                entity.getAngryCount(),
+                entity.getWantToGoCount(),
+                entity.getHelpedCount(),
+                entity.getGreatCount(),
+                entity.getFunnyCount(),
                 UserDto.from(entity.getUser()),
                 GymDto.from(entity.getGym()),
                 entity.getCreatedAt(),
-                entity.getUpdatedAt()
+                entity.getUpdatedAt(),
+                entity.getDescription(),
+                entity.getDifficulty()
         );
     }
 
@@ -81,15 +85,16 @@ public record ReviewDto(
                 entity.getContent(),
                 imgUrls,
                 entity.getScore(),
-                entity.getInterestCount(),
-                entity.getLikeCount(),
-                entity.getHelpCount(),
-                entity.getThumbCount(),
-                entity.getAngryCount(),
+                entity.getWantToGoCount(),
+                entity.getHelpedCount(),
+                entity.getGreatCount(),
+                entity.getFunnyCount(),
                 UserDto.from(entity.getUser(), profileImgUrl),
                 GymDto.from(entity.getGym()),
                 entity.getCreatedAt(),
-                entity.getUpdatedAt()
+                entity.getUpdatedAt(),
+                entity.getDescription(),
+                entity.getDifficulty()
         );
     }
 
@@ -99,15 +104,16 @@ public record ReviewDto(
                 content,
                 images,
                 score,
-                interestCount,
-                likeCount,
-                helpCount,
-                thumbCount,
-                angryCount,
+                wantToGoCount,
+                helpedCount,
+                greatCount,
+                funnyCount,
                 userDto.toEntity(),
                 gymDto.toEntity(),
                 createdAt,
-                updatedAt
+                updatedAt,
+                description,
+                difficulty
         );
     }
 
@@ -117,15 +123,16 @@ public record ReviewDto(
                 content,
                 images,
                 score,
-                interestCount,
-                likeCount,
-                helpCount,
-                thumbCount,
-                angryCount,
+                wantToGoCount,
+                helpedCount,
+                greatCount,
+                funnyCount,
                 userDto.toEntity(),
                 gymDto.toEntity(),
                 createdAt,
-                updatedAt
+                updatedAt,
+                description,
+                difficulty
         );
     }
 }

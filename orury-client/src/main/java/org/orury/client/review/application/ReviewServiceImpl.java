@@ -38,7 +38,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final ImageStore imageStore;
 
     private static final int minReactionType = 1;
-    private static final int maxReactionType = 5;
+    private static final int maxReactionType = 4;
 
     @Transactional
     @Override

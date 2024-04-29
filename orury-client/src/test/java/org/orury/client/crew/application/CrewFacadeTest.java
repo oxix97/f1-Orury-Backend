@@ -1,5 +1,18 @@
 package org.orury.client.crew.application;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.anyBoolean;
+import static org.mockito.BDDMockito.anyInt;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.mock;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.BDDMockito.times;
+import static org.mockito.Mockito.only;
+import static org.orury.client.ClientFixtureFactory.TestCrewRequest.createCrewRequest;
+import static org.orury.domain.CrewDomainFixture.TestCrewDto.createCrewDto;
+import static org.orury.domain.UserDomainFixture.TestUserDto.createUserDto;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.orury.client.config.FacadeTest;
@@ -14,14 +27,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.*;
-import static org.mockito.Mockito.only;
-import static org.orury.client.ClientFixtureFactory.TestCrewRequest.createCrewRequest;
-import static org.orury.domain.CrewDomainFixture.TestCrewDto.createCrewDto;
-import static org.orury.domain.UserDomainFixture.TestUserDto.createUserDto;
-
 @DisplayName("[Facade] 크루 Facade 테스트")
 class CrewFacadeTest extends FacadeTest {
 
@@ -32,9 +37,15 @@ class CrewFacadeTest extends FacadeTest {
         CrewRequest request = createCrewRequest().build().get();
         MultipartFile image = mock(MultipartFile.class);
         Long userId = 1L;
+        Long crewId = 1L;
+
         UserDto userDto = createUserDto(userId).build().get();
+
         given(userService.getUserDtoById(anyLong()))
                 .willReturn(userDto);
+        given(crewService.createCrew(any(), any()))
+                .willReturn(crewId);
+
 
         // when
         crewFacade.createCrew(request, image, userId);
@@ -46,47 +57,84 @@ class CrewFacadeTest extends FacadeTest {
                 .createCrew(any(CrewDto.class), any(MultipartFile.class));
     }
 
-    @DisplayName("페이지번호를 받으면, 크루랭크에 따른 크루 목록을 반환한다.")
+    @DisplayName("페이지, 유저id를 받으면, 추천순으로 크루목록을 반환한다.")
     @Test
-    void should_GetCrewsByRank() {
+    void should_GetCrewsByRecommendedSort() {
         // given
-        int page = 2;
-        List<CrewDto> crewDtos = List.of(createCrewDto(3L).build().get(), createCrewDto(4L).build().get());
-        Page<CrewDto> crewDtoPage = new PageImpl<>(crewDtos, PageRequest.of(page, 10), 2);
-        given(crewService.getCrewDtosByRank(any()))
-                .willReturn(crewDtoPage);
-        given(crewService.getUserImagesByCrew(any(CrewDto.class), anyInt()))
-                .willReturn(mock(List.class));
+        int page = 1;
+        Long userId = 23L;
+        Page<CrewDto> crewDtos = new PageImpl<>(List.of(createCrewDto(3L).build().get(), createCrewDto(4L).build().get()));
+        given(userService.getUserDtoById(anyLong()))
+                .willReturn(createUserDto(userId).build().get());
+        given(crewService.getCrewDtosByRecommendedSort(any(PageRequest.class), any(UserDto.class))
+        ).willReturn(crewDtos);
 
         // when
-        crewFacade.getCrewsByRank(page);
+        crewFacade.getCrewsByRecommendedSort(page, userId);
 
         // then
+        then(userService).should(only())
+                .getUserDtoById(anyLong());
         then(crewService).should(times(1))
-                .getCrewDtosByRank(any());
-        then(crewService).should(times(crewDtos.size()))
+                .getCrewDtosByRecommendedSort(any(PageRequest.class), any(UserDto.class));
+        then(crewService).should(times(crewDtos.getSize()))
                 .getUserImagesByCrew(any(), anyInt());
     }
 
-    @DisplayName("페이지번호를 받으면, 크루추천에 따른 크루 목록을 반환한다.")
+    @DisplayName("페이지를 받으면, 인기순으로 크루목록을 반환한다.")
     @Test
-    void should_GetCrewsByRecommend() {
+    void should_GetCrewsByPopularSort() {
         // given
-        int page = 2;
-        List<CrewDto> crewDtos = List.of(createCrewDto(3L).build().get(), createCrewDto(4L).build().get());
-        Page<CrewDto> crewDtoPage = new PageImpl<>(crewDtos, PageRequest.of(page, 10), 2);
-        given(crewService.getCrewDtosByRecommend(any()))
-                .willReturn(crewDtoPage);
-        given(crewService.getUserImagesByCrew(any(CrewDto.class), anyInt()))
-                .willReturn(mock(List.class));
+        int page = 1;
+        Page<CrewDto> crewDtos = new PageImpl<>(List.of(createCrewDto(3L).build().get(), createCrewDto(4L).build().get()));
+        given(crewService.getCrewDtosByPopularSort(any(PageRequest.class)))
+                .willReturn(crewDtos);
 
         // when
-        crewFacade.getCrewsByRecommend(page);
+        crewFacade.getCrewsByPopularSort(page);
 
         // then
         then(crewService).should(times(1))
-                .getCrewDtosByRecommend(any());
-        then(crewService).should(times(crewDtos.size()))
+                .getCrewDtosByPopularSort(any(PageRequest.class));
+        then(crewService).should(times(crewDtos.getSize()))
+                .getUserImagesByCrew(any(), anyInt());
+    }
+
+    @DisplayName("페이지를 받으면, 활동순으로 크루목록을 반환한다.")
+    @Test
+    void should_GetCrewsByActiveSort() {
+        // given
+        int page = 1;
+        Page<CrewDto> crewDtos = new PageImpl<>(List.of(createCrewDto(3L).build().get(), createCrewDto(4L).build().get()));
+        given(crewService.getCrewDtosByActiveSort(any(PageRequest.class)))
+                .willReturn(crewDtos);
+
+        // when
+        crewFacade.getCrewsByActiveSort(page);
+
+        // then
+        then(crewService).should(times(1))
+                .getCrewDtosByActiveSort(any(PageRequest.class));
+        then(crewService).should(times(crewDtos.getSize()))
+                .getUserImagesByCrew(any(), anyInt());
+    }
+
+    @DisplayName("페이지를 받으면, 최신순으로 크루목록을 반환한다.")
+    @Test
+    void should_GetCrewsByLatestSort() {
+        // given
+        int page = 1;
+        Page<CrewDto> crewDtos = new PageImpl<>(List.of(createCrewDto(3L).build().get(), createCrewDto(4L).build().get()));
+        given(crewService.getCrewDtosByLatestSort(any(PageRequest.class)))
+                .willReturn(crewDtos);
+
+        // when
+        crewFacade.getCrewsByLatestSort(page);
+
+        // then
+        then(crewService).should(times(1))
+                .getCrewDtosByLatestSort(any(PageRequest.class));
+        then(crewService).should(times(crewDtos.getSize()))
                 .getUserImagesByCrew(any(), anyInt());
     }
 

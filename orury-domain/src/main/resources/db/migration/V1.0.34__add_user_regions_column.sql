@@ -1,0 +1,2 @@
+ALTER TABLE `user`
+    ADD COLUMN regions VARCHAR(30) NOT NULL;

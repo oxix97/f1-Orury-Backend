@@ -14,11 +14,15 @@ import java.util.List;
 public interface CrewService {
     CrewDto getCrewDtoById(Long crewId);
 
-    void createCrew(CrewDto crewDto, MultipartFile image);
+    Long createCrew(CrewDto crewDto, MultipartFile image);
 
-    Page<CrewDto> getCrewDtosByRank(Pageable pageable);
+    Page<CrewDto> getCrewDtosByRecommendedSort(Pageable pageable, UserDto userDto);
 
-    Page<CrewDto> getCrewDtosByRecommend(Pageable pageable);
+    Page<CrewDto> getCrewDtosByPopularSort(Pageable pageable);
+
+    Page<CrewDto> getCrewDtosByActiveSort(Pageable pageable);
+
+    Page<CrewDto> getCrewDtosByLatestSort(Pageable pageable);
 
     List<CrewDto> getJoinedCrewDtos(Long userId);
 

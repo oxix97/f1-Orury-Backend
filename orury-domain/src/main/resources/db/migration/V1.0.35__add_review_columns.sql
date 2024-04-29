@@ -1,0 +1,5 @@
+ALTER TABLE `review`
+    ADD COLUMN difficulty VARCHAR(10) NOT NULL;
+
+ALTER TABLE `review`
+    ADD COLUMN description VARCHAR(500) NOT NULL;

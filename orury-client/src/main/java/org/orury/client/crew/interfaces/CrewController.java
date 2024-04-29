@@ -1,13 +1,10 @@
 package org.orury.client.crew.interfaces;
 
-import io.swagger.v3.oas.annotations.Operation;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.orury.client.crew.application.CrewFacade;
 import org.orury.client.crew.interfaces.message.CrewMessage;
 import org.orury.client.crew.interfaces.request.CrewRequest;
 import org.orury.client.crew.interfaces.response.CrewApplicantsResponse;
+import org.orury.client.crew.interfaces.response.CrewIdResponse;
 import org.orury.client.crew.interfaces.response.CrewMembersResponse;
 import org.orury.client.crew.interfaces.response.CrewResponse;
 import org.orury.client.crew.interfaces.response.CrewsResponse;
@@ -15,10 +12,24 @@ import org.orury.domain.base.converter.ApiResponse;
 import org.orury.domain.user.domain.dto.UserPrincipal;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -34,23 +45,38 @@ public class CrewController {
             @RequestPart(required = false) MultipartFile image,
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
-        crewFacade.createCrew(request, image, userPrincipal.id());
-
-        return ApiResponse.of(CrewMessage.CREW_CREATED.getMessage());
-    }
-
-    @Operation(summary = "크루 랭킹순 조회", description = "크루를 랭킹 순으로 조회한다.")
-    @GetMapping("/rank")
-    public ApiResponse getCrewsByRank(@RequestParam int page) {
-        Page<CrewsResponse> pageResponse = crewFacade.getCrewsByRank(page);
-
-        return ApiResponse.of(CrewMessage.CREWS_READ.getMessage(), pageResponse);
+        CrewIdResponse response = crewFacade.createCrew(request, image, userPrincipal.id());
+        return ApiResponse.of(CrewMessage.CREW_CREATED.getMessage(), response);
     }
 
     @Operation(summary = "크루 추천순 조회", description = "크루를 추천 순으로 조회한다.")
     @GetMapping("/recommend")
-    public ApiResponse getCrewsByRecommendation(@RequestParam int page) {
-        Page<CrewsResponse> pageResponse = crewFacade.getCrewsByRecommend(page);
+    public ApiResponse getCrewsByRecommendedSort(@RequestParam int page, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        Page<CrewsResponse> pageResponse = crewFacade.getCrewsByRecommendedSort(page, userPrincipal.id());
+
+        return ApiResponse.of(CrewMessage.CREWS_READ.getMessage(), pageResponse);
+    }
+
+    @Operation(summary = "크루 인기순 조회", description = "크루를 인기 순으로 조회한다.")
+    @GetMapping("/popular")
+    public ApiResponse getCrewsByPopularSort(@RequestParam int page) {
+        Page<CrewsResponse> pageResponse = crewFacade.getCrewsByPopularSort(page);
+
+        return ApiResponse.of(CrewMessage.CREWS_READ.getMessage(), pageResponse);
+    }
+
+    @Operation(summary = "크루 활동순 조회", description = "크루를 활동 순으로 조회한다.")
+    @GetMapping("/active")
+    public ApiResponse getCrewsByActiveSort(@RequestParam int page) {
+        Page<CrewsResponse> pageResponse = crewFacade.getCrewsByActiveSort(page);
+
+        return ApiResponse.of(CrewMessage.CREWS_READ.getMessage(), pageResponse);
+    }
+
+    @Operation(summary = "크루 최신순 조회", description = "크루를 최신 순으로 조회한다.")
+    @GetMapping("/latest")
+    public ApiResponse getCrewsByLatestSort(@RequestParam int page) {
+        Page<CrewsResponse> pageResponse = crewFacade.getCrewsByLatestSort(page);
 
         return ApiResponse.of(CrewMessage.CREWS_READ.getMessage(), pageResponse);
     }

@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.orury.domain.global.constants.NumberConstants;
 
+import java.util.Arrays;
+
 @Getter
 @AllArgsConstructor
 public enum CrewGender {
@@ -24,5 +26,11 @@ public enum CrewGender {
             }
         }
         return null;
+    }
+
+    public static CrewGender convertFromUserGender(int userGender) {
+        return Arrays.stream(CrewGender.values())
+                .filter(crewGender -> crewGender.getUserCode() == userGender)
+                .findFirst().get();
     }
 }

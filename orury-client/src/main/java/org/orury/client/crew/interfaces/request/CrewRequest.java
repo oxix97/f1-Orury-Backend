@@ -1,9 +1,5 @@
 package org.orury.client.crew.interfaces.request;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
 import org.apache.logging.log4j.util.Strings;
 import org.hibernate.validator.constraints.Length;
 import org.orury.domain.crew.domain.dto.CrewDto;
@@ -15,6 +11,11 @@ import org.orury.domain.global.validation.EnumValues;
 import org.orury.domain.user.domain.dto.UserDto;
 
 import java.util.List;
+
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 
 public record CrewRequest(
         @Length(min = 3, max = 15, message = "크루명은 3~15 글자수로 설정 가능합니다.")
