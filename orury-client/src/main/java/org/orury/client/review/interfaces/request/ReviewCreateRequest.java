@@ -31,7 +31,6 @@ public record ReviewCreateRequest(
                 0,
                 0,
                 0,
-                0,
                 userDto,
                 gymDto,
                 null,

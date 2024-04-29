@@ -12,8 +12,6 @@ public record ReviewsResponse(
         String content,
         List<String> images,
         float score,
-        String description,
-        String difficulty,
         List<ReviewReactionCount> reviewReactionCount,
         String myReaction,
         Writer writer,
@@ -30,12 +28,11 @@ public record ReviewsResponse(
                 .id()
                 .equals(loginId);
 
-        List<ReviewReactionCount> reviewReactionCount = java.util.List.of(
-                new ReviewReactionCount("thumb", reviewDto.thumbCount()),
-                new ReviewReactionCount("interest", reviewDto.interestCount()),
-                new ReviewReactionCount("help", reviewDto.helpCount()),
-                new ReviewReactionCount("like", reviewDto.likeCount()),
-                new ReviewReactionCount("angry", reviewDto.angryCount())
+        List<ReviewReactionCount> reviewReactionCount = List.of(
+                new ReviewReactionCount("wantToGo", reviewDto.wantToGoCount()),
+                new ReviewReactionCount("helped", reviewDto.helpedCount()),
+                new ReviewReactionCount("great", reviewDto.greatCount()),
+                new ReviewReactionCount("funny", reviewDto.funnyCount())
         );
 
         Writer writer = new Writer(reviewDto.userDto()
@@ -51,8 +48,6 @@ public record ReviewsResponse(
                 reviewDto.content(),
                 reviewDto.images(),
                 reviewDto.score(),
-                reviewDto.description(),
-                reviewDto.difficulty().getDescription(),
                 reviewReactionCount,
                 myReactionType,
                 writer,
@@ -64,11 +59,10 @@ public record ReviewsResponse(
 
     private static String mapReactionType(int reaction) {
         return switch (reaction) {
-            case NumberConstants.THUMB_REACTION -> "thumb";
-            case NumberConstants.INTERREST_REACTION -> "interest";
-            case NumberConstants.HELP_REACTION -> "help";
-            case NumberConstants.LIKE_REACTION -> "like";
-            case NumberConstants.ANGRY_REACTION -> "angry";
+            case NumberConstants.REACTION_WANT_TO_GO -> "wantToGo";
+            case NumberConstants.REACTION_HELPED -> "helped";
+            case NumberConstants.REACTION_GREAT -> "great";
+            case NumberConstants.REACTION_FUNNY -> "funny";
             default -> null;
         };
     }
