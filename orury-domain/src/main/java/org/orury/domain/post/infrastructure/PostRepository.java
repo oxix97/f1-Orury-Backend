@@ -15,18 +15,21 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     List<Post> findByCategoryAndIdLessThanOrderByIdDesc(int category, Long cursor, Pageable pageable);
 
-    List<Post> findByTitleContainingOrContentContainingOrderByIdDesc(String titleSearchWord, String contentSearchWord, Pageable pageable);
+    List<Post> findByTitleContainingOrContentContainingOrderByCreatedAtDesc(String titleSearchWord, String contentSearchWord, Pageable pageable);
 
     List<Post> findByIdLessThanAndTitleContainingOrIdLessThanAndContentContainingOrderByIdDesc(Long cursor1, String titleSearchWord, Long cursor2, String contentSearchWord, Pageable pageable);
 
+    List<Post> findByLikeCountLessThanAndTitleContainingOrLikeCountLessThanAndContentContainingOrderByLikeCountDesc(int likeCount1, String titleSearchWord, int likeCount2, String contentSearchWord, Pageable pageable);
+
     Page<Post> findByLikeCountGreaterThanEqualAndCreatedAtGreaterThanEqualOrderByLikeCountDescCreatedAtDesc(int likeCount, LocalDateTime localDateTime, Pageable pageable);
+
+    List<Post> findByTitleContainingOrContentContainingOrderByLikeCountDesc(String titleSearchWord, Pageable pageable);
 
     List<Post> findByUserIdOrderByIdDesc(Long userId, Pageable pageable);
 
     List<Post> findByUserIdAndIdLessThanOrderByIdDesc(Long userId, Long cursor, Pageable pageable);
 
     List<Post> findByUserId(Long userId);
-
 
     @Modifying
     @Query("UPDATE post SET viewCount = viewCount + 1 WHERE id = :id")

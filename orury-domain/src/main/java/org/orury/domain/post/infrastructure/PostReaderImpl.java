@@ -32,9 +32,16 @@ public class PostReaderImpl implements PostReader {
     }
 
     @Override
-    public List<Post> findByTitleContainingOrContentContainingOrderByIdDesc(String searchWord, Long cursor, Pageable pageable) {
+    public List<Post> findByTitleContainingOrContentContainingOrderByLikeCountDesc(String searchWord, Long cursor, Integer likeCount, Pageable pageable) {
         return (cursor.equals(NumberConstants.FIRST_CURSOR))
-                ? postRepository.findByTitleContainingOrContentContainingOrderByIdDesc(searchWord, searchWord, pageable)
+                ? postRepository.findByTitleContainingOrContentContainingOrderByLikeCountDesc(searchWord, pageable)
+                : postRepository.findByLikeCountLessThanAndTitleContainingOrLikeCountLessThanAndContentContainingOrderByLikeCountDesc(likeCount, searchWord, likeCount, searchWord, pageable);
+    }
+
+    @Override
+    public List<Post> findByTitleContainingOrContentContainingOrderByCreatedAtDesc(String searchWord, Long cursor, Pageable pageable) {
+        return (cursor.equals(NumberConstants.FIRST_CURSOR))
+                ? postRepository.findByTitleContainingOrContentContainingOrderByCreatedAtDesc(searchWord, searchWord, pageable)
                 : postRepository.findByIdLessThanAndTitleContainingOrIdLessThanAndContentContainingOrderByIdDesc(cursor, searchWord, cursor, searchWord, pageable);
     }
 
