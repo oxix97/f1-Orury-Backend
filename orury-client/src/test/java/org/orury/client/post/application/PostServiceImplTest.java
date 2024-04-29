@@ -296,13 +296,13 @@ class PostServiceImplTest extends ServiceTest {
                 createPost(10L, 2L)
         );
 
-        when(postReader.findByTitleContainingOrContentContainingOrderByIdDesc(searchWord, cursor, pageable)).thenReturn(posts);
+        when(postReader.findByTitleContainingOrContentContainingOrderByCreatedAtDesc(searchWord, cursor, pageable)).thenReturn(posts);
 
         // when
-        List<PostDto> resultPostDtos = postService.getPostDtosBySearchWord(searchWord, cursor, PageRequest.of(0, 10));
+        List<PostDto> resultPostDtos = postService.getPostDtosBySearchWord(searchWord, cursor, PageRequest.of(0, 10), null);
 
         // then
-        verify(postReader).findByTitleContainingOrContentContainingOrderByIdDesc(searchWord, cursor, pageable);
+        verify(postReader).findByTitleContainingOrContentContainingOrderByCreatedAtDesc(searchWord, cursor, pageable);
         assertEquals(postDtos.size(), resultPostDtos.size());
     }
 
@@ -323,13 +323,13 @@ class PostServiceImplTest extends ServiceTest {
                 createPost(2L, 1L)
         );
 
-        when(postReader.findByTitleContainingOrContentContainingOrderByIdDesc(searchWord, cursor, pageable)).thenReturn(posts);
+        when(postReader.findByTitleContainingOrContentContainingOrderByCreatedAtDesc(searchWord, cursor, pageable)).thenReturn(posts);
 
         // when
-        List<PostDto> resultPostDtos = postService.getPostDtosBySearchWord(searchWord, cursor, PageRequest.of(0, 10));
+        List<PostDto> resultPostDtos = postService.getPostDtosBySearchWord(searchWord, cursor, PageRequest.of(0, 10), null);
 
         // then
-        verify(postReader).findByTitleContainingOrContentContainingOrderByIdDesc(searchWord, cursor, pageable);
+        verify(postReader).findByTitleContainingOrContentContainingOrderByCreatedAtDesc(searchWord, cursor, pageable);
         assertEquals(postDtos.size(), resultPostDtos.size());
     }
 
