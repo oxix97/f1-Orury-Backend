@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.orury.client.global.WithCursorResponse;
 import org.orury.client.user.application.UserFacade;
 import org.orury.client.user.interfaces.message.UserMessage;
+import org.orury.client.user.interfaces.request.MeetingViewedRequest;
 import org.orury.client.user.interfaces.request.UserInfoRequest;
 import org.orury.client.user.interfaces.request.UserReportRequest;
 import org.orury.client.user.interfaces.response.*;
@@ -96,6 +97,13 @@ public class UserController {
         return ApiResponse.of(UserMessage.USER_CREW_MEMBERS_READ.getMessage(), response);
     }
 
+    @Operation(summary = "크루일정 조회여부 수정", description = "가입된 크루들 각각의 크루일정 조회여부를 수정한다.")
+    @PatchMapping("/meetings/view-settings")
+    public ApiResponse updateMeetingViewed(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody List<MeetingViewedRequest> requests) {
+        userFacade.updateMeetingViewed(userPrincipal.id(), requests);
+
+        return ApiResponse.of(UserMessage.USER_MEETING_VIEWED_UPDATED.getMessage());
+    }
 
     @Operation(summary = "회원 탈퇴", description = "id에 해당하는 회원을 탈퇴합니다. ")
     @DeleteMapping

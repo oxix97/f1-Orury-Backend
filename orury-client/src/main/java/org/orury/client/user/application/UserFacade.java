@@ -9,6 +9,7 @@ import org.orury.client.global.WithCursorResponse;
 import org.orury.client.meeting.application.MeetingService;
 import org.orury.client.post.application.PostService;
 import org.orury.client.review.application.ReviewService;
+import org.orury.client.user.interfaces.request.MeetingViewedRequest;
 import org.orury.client.user.interfaces.request.UserInfoRequest;
 import org.orury.client.user.interfaces.response.*;
 import org.orury.client.user.interfaces.request.UserReportRequest;
@@ -18,6 +19,7 @@ import org.orury.client.user.interfaces.response.MyPostResponse;
 import org.orury.client.user.interfaces.response.MyReviewResponse;
 import org.orury.domain.comment.domain.dto.CommentDto;
 import org.orury.domain.crew.domain.dto.CrewDto;
+import org.orury.domain.crew.domain.entity.CrewMemberPK;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.meeting.domain.dto.MeetingDto;
 import org.orury.domain.post.domain.dto.PostDto;
@@ -93,6 +95,13 @@ public class UserFacade {
                             .getMeetingViewed();
                     return MyCrewMemberResponse.of(crewDto, meetingViewed);
                 }).toList();
+    }
+
+    public void updateMeetingViewed(Long userId, List<MeetingViewedRequest> requests) {
+        requests.forEach(request -> {
+            CrewMemberPK crewMemberPK = CrewMemberPK.of(userId, request.crewId());
+            crewService.updateMeetingViewed(request.toDto(crewMemberPK));
+        });
     }
 
     public void deleteUser(Long id) {

@@ -13,6 +13,7 @@ import org.orury.domain.crew.domain.*;
 import org.orury.domain.crew.domain.dto.CrewApplicationDto;
 import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.crew.domain.dto.CrewGender;
+import org.orury.domain.crew.domain.dto.CrewMemberDto;
 import org.orury.domain.crew.domain.entity.Crew;
 import org.orury.domain.crew.domain.entity.CrewMember;
 import org.orury.domain.image.domain.ImageStore;
@@ -258,6 +259,13 @@ public class CrewServiceImpl implements CrewService {
     @Transactional(readOnly = true)
     public CrewMember getCrewMemberByCrewIdAndUserId(Long crewId, Long userId) {
         return crewMemberReader.getCrewMemberByCrewIdAndUserId(crewId, userId);
+    }
+
+    @Override
+    @Transactional
+    public void updateMeetingViewed(CrewMemberDto crewMemberDto) {
+        crewPolicy.validateCrewMember(crewMemberDto.crewMemberPK().getCrewId(), crewMemberDto.crewMemberPK().getUserId());
+        crewMemberStore.updateMeetingViewed(crewMemberDto.toEntity());
     }
 
     private void removeMember(Long crewId, Long memberId) {

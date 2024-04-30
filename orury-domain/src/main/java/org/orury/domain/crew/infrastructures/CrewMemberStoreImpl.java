@@ -25,4 +25,9 @@ public class CrewMemberStoreImpl implements CrewMemberStore {
         crewMemberRepository.deleteById(crewMemberPK);
         crewRepository.decreaseMemberCount(crewId);
     }
+
+    @Override
+    public void updateMeetingViewed(CrewMember crewMember) {
+        crewMemberRepository.save(crewMember);
+    }
 }
