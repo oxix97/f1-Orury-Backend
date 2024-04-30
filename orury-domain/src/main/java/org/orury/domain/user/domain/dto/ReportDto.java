@@ -4,23 +4,26 @@ import org.orury.domain.user.domain.entity.Report;
 
 public record ReportDto(
         Long id,
+        int type,
         UserDto reporterDto,
         UserDto reporteeDto,
-        ReportInfo report,
+        ReportInfo reportInfo,
         Long targetId
 ) {
     public static ReportDto of(
             Long id,
+            int type,
             UserDto reporterDto,
             UserDto reporteeDto,
-            ReportInfo report,
+            ReportInfo reportInfo,
             Long targetId
     ) {
         return new ReportDto(
                 id,
+                type,
                 reporterDto,
                 reporteeDto,
-                report,
+                reportInfo,
                 targetId
         );
     }
@@ -28,10 +31,12 @@ public record ReportDto(
     public Report toEntity() {
         return Report.of(
                 id,
-                reporterDto.toEntity(),
+                type,
+                reportInfo.getCode(),
+                reportInfo.getDescription(),
+                targetId,
                 reporteeDto.toEntity(),
-                report,
-                targetId
+                reporterDto.toEntity()
         );
     }
 }

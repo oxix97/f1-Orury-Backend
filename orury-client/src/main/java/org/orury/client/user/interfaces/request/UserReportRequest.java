@@ -8,9 +8,10 @@ import org.orury.domain.user.domain.dto.UserDto;
 
 public record UserReportRequest(
         Long userId,
+        int type,
 
         @EnumValue(enumClass = ReportInfo.class, message = "유효하지 않은 신고사유 코드입니다.")
-        ReportInfo type,
+        ReportInfo reportInfo,
 
         @NotEmpty(message = "신고물 id는 필수 입력 사항입니다.")
         Long targetId
@@ -18,18 +19,20 @@ public record UserReportRequest(
 ) {
     public static UserReportRequest of(
             Long userId,
-            ReportInfo type,
+            int type,
+            ReportInfo reportInfo,
             Long targetId
     ) {
-        return new UserReportRequest(userId, type, targetId);
+        return new UserReportRequest(userId, type, reportInfo, targetId);
     }
 
     public ReportDto toDto(UserDto reporterDto, UserDto reporteeDto) {
         return ReportDto.of(
                 null,
+                type,
                 reporterDto,
                 reporteeDto,
-                type,
+                reportInfo,
                 targetId
         );
     }
