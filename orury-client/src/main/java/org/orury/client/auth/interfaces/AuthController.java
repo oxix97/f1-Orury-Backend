@@ -10,10 +10,8 @@ import org.orury.client.auth.interfaces.request.LoginRequest;
 import org.orury.client.auth.interfaces.request.SignUpRequest;
 import org.orury.common.error.code.AuthErrorCode;
 import org.orury.domain.base.converter.ApiResponse;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import static org.orury.client.auth.interfaces.message.AuthMessage.*;
 
@@ -26,8 +24,8 @@ public class AuthController {
 
     @Operation(summary = "회원가입", description = "소셜 로그인을 통해 전달받은 정보를 기반으로 회원가입 수행")
     @PostMapping("/sign-up")
-    public ApiResponse signUp(@Valid @RequestBody SignUpRequest request) {
-        var signUpResponse = authFacade.signUp(request.toDto());
+    public ApiResponse signUp(@Valid @RequestPart SignUpRequest request, @RequestPart(required = false) MultipartFile image) {
+        var signUpResponse = authFacade.signUp(request.toDto(), image);
         return ApiResponse.of(SIGNUP_SUCCESS.getMessage(), signUpResponse);
     }
 
