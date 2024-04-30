@@ -20,24 +20,29 @@ import java.time.LocalDateTime;
 public class CrewMember extends AuditingField {
     @EmbeddedId
     private CrewMemberPK crewMemberPK;
+    private Boolean meetingViewed;
 
     private CrewMember(
             CrewMemberPK crewMemberPK,
+            Boolean meetingViewed,
             LocalDateTime createdAt,
             LocalDateTime updatedAt
     ) {
         this.crewMemberPK = crewMemberPK;
+        this.meetingViewed = meetingViewed;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
 
     public static CrewMember of(
             CrewMemberPK crewMemberPK,
+            Boolean meetingViewed,
             LocalDateTime createdAt,
             LocalDateTime updatedAt
     ) {
         return new CrewMember(
                 crewMemberPK,
+                meetingViewed,
                 createdAt,
                 updatedAt
         );

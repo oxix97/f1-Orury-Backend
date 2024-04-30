@@ -14,7 +14,7 @@ public class CrewMemberStoreImpl implements CrewMemberStore {
 
     @Override
     public void addCrewMember(Long crewId, Long userId) {
-        var crewMember = CrewMember.of(CrewMemberPK.of(userId, crewId), null, null);
+        var crewMember = CrewMember.of(CrewMemberPK.of(userId, crewId), true, null, null);
         crewMemberRepository.save(crewMember);
         crewRepository.increaseMemberCount(crewId);
     }
