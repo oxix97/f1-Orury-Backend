@@ -74,6 +74,13 @@ public class MeetingServiceImpl implements MeetingService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<MeetingDto> getUpcomingMeetingDtosByUserId(Long userId) {
+        return meetingReader.getUpcomingMeetingsByUserId(userId)
+                .stream().map(MeetingDto::from).toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<String> getUserImagesByMeeting(MeetingDto meetingDto) {
         UserDto meetingCreator = meetingDto.userDto();
         List<MeetingMember> otherMembers = meetingMemberReader.getOtherMeetingMembersByMeetingIdMaximum(meetingDto.id(), meetingDto.userDto().id(), NumberConstants.MAXIMUM_OF_MEETING_THUMBNAILS - 1);

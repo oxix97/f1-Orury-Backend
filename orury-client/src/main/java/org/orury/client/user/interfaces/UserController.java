@@ -9,16 +9,15 @@ import org.orury.client.user.application.UserFacade;
 import org.orury.client.user.interfaces.message.UserMessage;
 import org.orury.client.user.interfaces.request.UserInfoRequest;
 import org.orury.client.user.interfaces.request.UserReportRequest;
-import org.orury.client.user.interfaces.response.MyCommentResponse;
-import org.orury.client.user.interfaces.response.MyPostResponse;
-import org.orury.client.user.interfaces.response.MyReviewResponse;
-import org.orury.client.user.interfaces.response.MypageResponse;
+import org.orury.client.user.interfaces.response.*;
 import org.orury.domain.base.converter.ApiResponse;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.orury.domain.user.domain.dto.UserPrincipal;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -79,6 +78,14 @@ public class UserController {
         WithCursorResponse<MyCommentResponse> cursorResponse = userFacade.getCommentsByUserId(userPrincipal.id(), cursor);
 
         return ApiResponse.of(UserMessage.USER_COMMENTS_READ.getMessage(), cursorResponse);
+    }
+
+    @Operation(summary = "다가오는 크루일정 조회", description = "user_id로 다가오는 크루일정 목록을 조회한다.")
+    @GetMapping("/meetings")
+    public ApiResponse getMeetingsByUserId(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        List<MyMeetingResponse> response = userFacade.getMeetingsByUserId(userPrincipal.id());
+
+        return ApiResponse.of(UserMessage.USER_MEETINGS_READ.getMessage(), response);
     }
 
     @Operation(summary = "회원 탈퇴", description = "id에 해당하는 회원을 탈퇴합니다. ")

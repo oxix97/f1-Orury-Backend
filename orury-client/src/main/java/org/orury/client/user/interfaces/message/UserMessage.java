@@ -12,6 +12,7 @@ public enum UserMessage {
     USER_POSTS_READ("작성한 게시글을 조회했습니다."),
     USER_COMMENTS_READ("작성한 댓글을 조회했습니다."),
     USER_REVIEWS_READ("작성한 리뷰를 조회했습니다."),
+    USER_MEETINGS_READ("다가오는 크루 일정을 조회했습니다."),
     USER_REPORTED("신고가 완료되었습니다.");
 
     private final String message;

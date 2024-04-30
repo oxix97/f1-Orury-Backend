@@ -5,15 +5,18 @@ import lombok.RequiredArgsConstructor;
 import org.orury.client.comment.application.CommentService;
 import org.orury.client.global.IdIdentifiable;
 import org.orury.client.global.WithCursorResponse;
+import org.orury.client.meeting.application.MeetingService;
 import org.orury.client.post.application.PostService;
 import org.orury.client.review.application.ReviewService;
 import org.orury.client.user.interfaces.request.UserInfoRequest;
 import org.orury.client.user.interfaces.request.UserReportRequest;
 import org.orury.client.user.interfaces.response.MyCommentResponse;
+import org.orury.client.user.interfaces.response.MyMeetingResponse;
 import org.orury.client.user.interfaces.response.MyPostResponse;
 import org.orury.client.user.interfaces.response.MyReviewResponse;
 import org.orury.domain.comment.domain.dto.CommentDto;
 import org.orury.domain.global.constants.NumberConstants;
+import org.orury.domain.meeting.domain.dto.MeetingDto;
 import org.orury.domain.post.domain.dto.PostDto;
 import org.orury.domain.review.domain.dto.ReviewDto;
 import org.orury.domain.user.domain.dto.ReportDto;
@@ -32,6 +35,7 @@ public class UserFacade {
     private final PostService postService;
     private final ReviewService reviewService;
     private final CommentService commentService;
+    private final MeetingService meetingService;
 
     public UserDto readMypage(Long id) {
         return userService.getUserDtoById(id);
@@ -67,6 +71,14 @@ public class UserFacade {
         List<CommentDto> commmentDtos = commentService.getCommentDtosByUserId(id, cursor);
 
         return convertDtosToWithCursorResponse(commmentDtos, MyCommentResponse::of, cursor);
+    }
+
+    public List<MyMeetingResponse> getMeetingsByUserId(Long userId) {
+        List<MeetingDto> meetingDtos = meetingService.getUpcomingMeetingDtosByUserId(userId);
+
+        return meetingDtos.stream()
+                .map(meetingDto -> MyMeetingResponse.of(meetingDto, userId))
+                .toList();
     }
 
     public void deleteUser(Long id) {

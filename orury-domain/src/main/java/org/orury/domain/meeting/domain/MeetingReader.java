@@ -11,4 +11,6 @@ public interface MeetingReader {
     List<Meeting> getNotStartedMeetingsByCrewId(Long crewId);
 
     List<Meeting> getStartedMeetingsByCrewId(Long crewId);
+
+    List<Meeting> getUpcomingMeetingsByUserId(Long userId);
 }

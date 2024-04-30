@@ -1,10 +1,9 @@
 package org.orury.domain.crew.domain.entity;
 
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.type.NumericBooleanConverter;
 import org.orury.domain.base.db.AuditingField;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -20,6 +19,9 @@ import java.time.LocalDateTime;
 public class CrewMember extends AuditingField {
     @EmbeddedId
     private CrewMemberPK crewMemberPK;
+
+    @Convert(converter = NumericBooleanConverter.class)
+    @Column(name = "meeting_viewed", nullable = false)
     private Boolean meetingViewed;
 
     private CrewMember(
