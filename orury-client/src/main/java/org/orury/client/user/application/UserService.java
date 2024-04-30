@@ -1,5 +1,6 @@
 package org.orury.client.user.application;
 
+import org.orury.domain.user.domain.dto.ReportDto;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,4 +13,6 @@ public interface UserService {
     void updateUserInfo(UserDto userDto);
 
     void deleteUser(UserDto userDto);
+
+    void reportUser(ReportDto reportDto);
 }

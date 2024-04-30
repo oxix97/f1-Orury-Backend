@@ -1,13 +1,14 @@
 package org.orury.client.user.interfaces;
 
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.orury.client.comment.interfaces.request.CommentCreateRequest;
 import org.orury.client.global.WithCursorResponse;
 import org.orury.client.user.application.UserFacade;
 import org.orury.client.user.interfaces.message.UserMessage;
 import org.orury.client.user.interfaces.request.UserInfoRequest;
+import org.orury.client.user.interfaces.request.UserReportRequest;
 import org.orury.client.user.interfaces.response.MyCommentResponse;
 import org.orury.client.user.interfaces.response.MyPostResponse;
 import org.orury.client.user.interfaces.response.MyReviewResponse;
@@ -91,9 +92,12 @@ public class UserController {
     }
 
     @Operation(summary = "유저 신고", description = "신고 게시글/댓글 유형과 유저id를 받아 신고 처리한다.")
-    @PostMapping
-    public ApiResponse createReport(@RequestBody CommentCreateRequest request, @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        commentFacade.createComment(request, userPrincipal.id());
+    @PostMapping("/report")
+    public ApiResponse createReport(
+            @Valid @RequestBody UserReportRequest request,
+            @AuthenticationPrincipal UserPrincipal userPrincipal
+    ) {
+        userFacade.createReport(request, userPrincipal.id());
         return ApiResponse.of(COMMENT_CREATED.getMessage());
     }
 }

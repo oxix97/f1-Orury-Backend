@@ -11,6 +11,7 @@ import org.orury.domain.post.domain.PostStore;
 import org.orury.domain.review.domain.ReviewStore;
 import org.orury.domain.user.domain.UserReader;
 import org.orury.domain.user.domain.UserStore;
+import org.orury.domain.user.domain.dto.ReportDto;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.orury.domain.user.domain.dto.UserStatus;
 import org.orury.domain.user.domain.entity.User;
@@ -67,6 +68,11 @@ public class UserServiceImpl implements UserService {
         user.setProfileImage(null);
         imageStore.delete(USER, userDto.profileImage());
         userStore.save(user);
+    }
+
+    @Override
+    public void reportUser(ReportDto reportDto) {
+        
     }
 
     /**
