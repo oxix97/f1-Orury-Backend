@@ -88,6 +88,15 @@ public class UserController {
         return ApiResponse.of(UserMessage.USER_MEETINGS_READ.getMessage(), response);
     }
 
+    @Operation(summary = "크루일정 조회여부 조회", description = "user_id로 가입된 크루들과 각각의 크루일정 조회여부를 조회한다.")
+    @GetMapping("/meetings/view-settings")
+    public ApiResponse getCrewMembersByUserId(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        List<MyCrewMemberResponse> response = userFacade.getCrewMembersByUserId(userPrincipal.id());
+
+        return ApiResponse.of(UserMessage.USER_CREW_MEMBERS_READ.getMessage(), response);
+    }
+
+
     @Operation(summary = "회원 탈퇴", description = "id에 해당하는 회원을 탈퇴합니다. ")
     @DeleteMapping
     public ApiResponse deleteUser(@AuthenticationPrincipal UserPrincipal userPrincipal) {

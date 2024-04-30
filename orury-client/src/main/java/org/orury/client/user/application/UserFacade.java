@@ -3,18 +3,21 @@ package org.orury.client.user.application;
 
 import lombok.RequiredArgsConstructor;
 import org.orury.client.comment.application.CommentService;
+import org.orury.client.crew.application.CrewService;
 import org.orury.client.global.IdIdentifiable;
 import org.orury.client.global.WithCursorResponse;
 import org.orury.client.meeting.application.MeetingService;
 import org.orury.client.post.application.PostService;
 import org.orury.client.review.application.ReviewService;
 import org.orury.client.user.interfaces.request.UserInfoRequest;
+import org.orury.client.user.interfaces.response.*;
 import org.orury.client.user.interfaces.request.UserReportRequest;
 import org.orury.client.user.interfaces.response.MyCommentResponse;
 import org.orury.client.user.interfaces.response.MyMeetingResponse;
 import org.orury.client.user.interfaces.response.MyPostResponse;
 import org.orury.client.user.interfaces.response.MyReviewResponse;
 import org.orury.domain.comment.domain.dto.CommentDto;
+import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.meeting.domain.dto.MeetingDto;
 import org.orury.domain.post.domain.dto.PostDto;
@@ -36,6 +39,7 @@ public class UserFacade {
     private final ReviewService reviewService;
     private final CommentService commentService;
     private final MeetingService meetingService;
+    private final CrewService crewService;
 
     public UserDto readMypage(Long id) {
         return userService.getUserDtoById(id);
@@ -81,6 +85,16 @@ public class UserFacade {
                 .toList();
     }
 
+    public List<MyCrewMemberResponse> getCrewMembersByUserId(Long userId) {
+        List<CrewDto> crewDtos = crewService.getJoinedCrewDtos(userId);
+        return crewDtos.stream()
+                .map(crewDto -> {
+                    Boolean meetingViewed = crewService.getCrewMemberByCrewIdAndUserId(crewDto.id(), userId)
+                            .getMeetingViewed();
+                    return MyCrewMemberResponse.of(crewDto, meetingViewed);
+                }).toList();
+    }
+
     public void deleteUser(Long id) {
         UserDto userDto = userService.getUserDtoById(id);
         userService.deleteUser(userDto);
@@ -100,4 +114,5 @@ public class UserFacade {
 
         return WithCursorResponse.of(responses, cursor);
     }
+
 }
