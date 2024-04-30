@@ -14,8 +14,11 @@ import org.orury.client.review.interfaces.request.ReviewCreateRequest;
 import org.orury.client.review.interfaces.request.ReviewReactionRequest;
 import org.orury.client.review.interfaces.request.ReviewUpdateRequest;
 import org.orury.client.user.interfaces.request.UserInfoRequest;
+import org.orury.client.user.interfaces.request.UserReportRequest;
 import org.orury.domain.crew.domain.dto.CrewGender;
 import org.orury.domain.global.domain.Region;
+import org.orury.domain.user.domain.dto.ReportInfo;
+import org.orury.domain.user.domain.dto.ReportType;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -188,6 +191,23 @@ public class ClientFixtureFactory {
 
         public LoginRequest get() {
             return mapper.convertValue(this, LoginRequest.class);
+        }
+    }
+
+    @Getter
+    @Builder
+    public static class TestReportRequest {
+        private @Builder.Default ReportType reportType = ReportType.POST;
+        private @Builder.Default ReportInfo reportInfo = ReportInfo.CONTAIN_PERSONAL_INFO;
+        private @Builder.Default Long userId = 12145L;
+        private @Builder.Default Long targetId = 12145L;
+
+        public static TestReportRequest.TestReportRequestBuilder createReportRequest() {
+            return TestReportRequest.builder();
+        }
+
+        public UserReportRequest get() {
+            return mapper.convertValue(this, UserReportRequest.class);
         }
     }
 }

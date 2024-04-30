@@ -24,6 +24,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
+import static org.orury.client.ClientFixtureFactory.TestReportRequest.createReportRequest;
 import static org.orury.client.ClientFixtureFactory.TestUserInfoRequest.createUserInfoRequest;
 import static org.orury.domain.CommentDomainFixture.TestCommentDto.createCommentDto;
 import static org.orury.domain.PostDomainFixture.TestPostDto.createPostDto;
@@ -179,5 +180,26 @@ class UserFacadeTest extends FacadeTest {
 
         //then
         then(userService).should(times(1)).getUserDtoById(anyLong());
+    }
+
+    @Test
+    @DisplayName("createReport(UserReportRequest request, Long reporterId) test: request, reporterId를 받아 신고를 생성한다. [성공] ")
+    void should_createReport() {
+        //given
+        Long reporterId = 1234L;
+        Long reporteeId = 12145L;
+        UserDto reporterDto = createUserDto(reporterId).build().get();
+        UserDto reporteeDto = createUserDto(reporteeId).build().get();
+
+        given(userService.getUserDtoById(reporterId)).willReturn(reporterDto);
+        given(userService.getUserDtoById(reporteeId)).willReturn(reporteeDto);
+
+        //when
+        userFacade.createReport(createReportRequest().build().get(), reporterId);
+
+        //then
+        then(userService).should(times(1)).getUserDtoById(reporterId);
+        then(userService).should(times(1)).getUserDtoById(reporteeId);
+        then(userService).should(times(1)).reportUser(any());
     }
 }
