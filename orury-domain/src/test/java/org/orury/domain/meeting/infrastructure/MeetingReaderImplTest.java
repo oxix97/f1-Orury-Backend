@@ -1,12 +1,11 @@
 package org.orury.domain.meeting.infrastructure;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.orury.domain.config.InfrastructureTest;
 import org.orury.domain.crew.domain.entity.Crew;
-import org.orury.domain.meeting.domain.MeetingReader;
 import org.orury.domain.meeting.domain.entity.Meeting;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -21,16 +20,7 @@ import static org.mockito.Mockito.only;
 @ExtendWith(MockitoExtension.class)
 @DisplayName("[Reader] 일정 ReaderImpl 테스트")
 @ActiveProfiles("test")
-class MeetingReaderImplTest {
-    MeetingReader meetingReader;
-    MeetingRepository meetingRepository;
-
-    @BeforeEach
-    void setUp() {
-        meetingRepository = mock(MeetingRepository.class);
-
-        meetingReader = new MeetingReaderImpl(meetingRepository);
-    }
+class MeetingReaderImplTest extends InfrastructureTest {
 
     @DisplayName("일정id를 받아, 일정을 조회한다.")
     @Test

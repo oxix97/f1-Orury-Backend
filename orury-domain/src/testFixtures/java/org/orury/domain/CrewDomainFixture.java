@@ -114,6 +114,7 @@ public class CrewDomainFixture {
     @Builder
     public static class TestCrewMember {
         private @Builder.Default CrewMemberPK crewMemberPK = TestCrewMemberPK.createCrewMemberPK().build().get();
+        private @Builder.Default Boolean meetingViewed = true;
         private @Builder.Default LocalDateTime createdAt = LocalDateTime.now();
         private @Builder.Default LocalDateTime updatedAt = LocalDateTime.now();
 
