@@ -35,10 +35,9 @@ public class MeetingReaderImpl implements MeetingReader {
 
     @Override
     public List<Meeting> getUpcomingMeetingsByUserId(Long userId) {
-        List<Long> meetingViewedTrueCrewIds = crewMemberRepository.findByCrewMemberPK_UserIdAndMeetingViewedTrue(userId)
-                .stream().map(crewMember -> crewMember.getCrewMemberPK().getCrewId()).toList();
         List<Meeting> upcomingMeetings = new LinkedList<>();
-        meetingViewedTrueCrewIds.stream()
+        crewMemberRepository.findByCrewMemberPK_UserIdAndMeetingViewedTrue(userId).stream()
+                .map(crewMember -> crewMember.getCrewMemberPK().getCrewId())
                 .map(crewId -> meetingRepository.findByCrew_IdAndStartTimeAfterOrderByIdDesc(crewId, LocalDateTime.now()))
                 .map(meetings -> meetings.stream()
                         .filter(meeting -> meetingMemberRepository.existsByMeetingMemberPK_MeetingIdAndMeetingMemberPK_UserId(meeting.getId(), userId))
