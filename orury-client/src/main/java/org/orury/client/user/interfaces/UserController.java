@@ -1,5 +1,9 @@
 package org.orury.client.user.interfaces;
 
+import io.swagger.v3.oas.annotations.Operation;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.orury.client.comment.interfaces.request.CommentCreateRequest;
 import org.orury.client.global.WithCursorResponse;
 import org.orury.client.user.application.UserFacade;
 import org.orury.client.user.interfaces.message.UserMessage;
@@ -12,20 +16,10 @@ import org.orury.domain.base.converter.ApiResponse;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.orury.domain.user.domain.dto.UserPrincipal;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import io.swagger.v3.oas.annotations.Operation;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import static org.orury.client.comment.interfaces.message.CommentMessage.COMMENT_CREATED;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -94,5 +88,12 @@ public class UserController {
         userFacade.deleteUser(userPrincipal.id());
 
         return ApiResponse.of(UserMessage.USER_DELETED.getMessage());
+    }
+
+    @Operation(summary = "유저 신고", description = "신고 게시글/댓글 유형과 유저id를 받아 신고 처리한다.")
+    @PostMapping
+    public ApiResponse createReport(@RequestBody CommentCreateRequest request, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        commentFacade.createComment(request, userPrincipal.id());
+        return ApiResponse.of(COMMENT_CREATED.getMessage());
     }
 }
