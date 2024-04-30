@@ -9,6 +9,7 @@ import org.orury.domain.gym.domain.GymStore;
 import org.orury.domain.image.domain.ImageStore;
 import org.orury.domain.post.domain.PostStore;
 import org.orury.domain.review.domain.ReviewStore;
+import org.orury.domain.user.domain.ReportStore;
 import org.orury.domain.user.domain.UserReader;
 import org.orury.domain.user.domain.UserStore;
 import org.orury.domain.user.domain.dto.ReportDto;
@@ -32,6 +33,7 @@ public class UserServiceImpl implements UserService {
     private final CommentStore commentStore;
     private final ReviewStore reviewStore;
     private final GymStore gymStore;
+    private final ReportStore reportStore;
 
     @Override
     @Transactional(readOnly = true)
@@ -71,8 +73,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void reportUser(ReportDto reportDto) {
-        
+        reportStore.save(reportDto.toEntity());
     }
 
     /**
