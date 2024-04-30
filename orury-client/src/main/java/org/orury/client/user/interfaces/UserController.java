@@ -20,8 +20,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import static org.orury.client.comment.interfaces.message.CommentMessage.COMMENT_CREATED;
-
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/user")
@@ -98,6 +96,6 @@ public class UserController {
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
         userFacade.createReport(request, userPrincipal.id());
-        return ApiResponse.of(COMMENT_CREATED.getMessage());
+        return ApiResponse.of(UserMessage.USER_REPORTED.getMessage());
     }
 }
