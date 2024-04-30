@@ -7,17 +7,18 @@ import org.orury.domain.meeting.domain.entity.MeetingMemberPK;
  * DTO for {@link MeetingMember}
  */
 public record MeetingMemberDto(
-        MeetingMemberPK meetingMemberPK
+        MeetingMemberPK meetingMemberPK,
+        Boolean meetingViewed
 ) {
-    public static MeetingMemberDto of(MeetingMemberPK meetingMemberPK) {
-        return new MeetingMemberDto(meetingMemberPK);
+    public static MeetingMemberDto of(MeetingMemberPK meetingMemberPK, Boolean meetingViewed) {
+        return new MeetingMemberDto(meetingMemberPK, meetingViewed);
     }
 
     public static MeetingMemberDto from(MeetingMember meetingMember) {
-        return MeetingMemberDto.of(meetingMember.getMeetingMemberPK());
+        return MeetingMemberDto.of(meetingMember.getMeetingMemberPK(), meetingMember.getMeetingViewed());
     }
 
     public MeetingMember toEntity() {
-        return MeetingMember.of(meetingMemberPK);
+        return MeetingMember.of(meetingMemberPK, meetingViewed);
     }
 }
