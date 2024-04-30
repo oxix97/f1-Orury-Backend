@@ -1,5 +1,6 @@
 package org.orury.domain.user.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;
 
 @Getter
@@ -20,4 +21,13 @@ public enum ReportInfo {
         this.code = code;
     }
 
+    @JsonCreator
+    public static ReportInfo getEnumFromValue(String value) {
+        for (ReportInfo reportInfo : ReportInfo.values()) {
+            if (reportInfo.name().equals(value)) {
+                return reportInfo;
+            }
+        }
+        return null;
+    }
 }
