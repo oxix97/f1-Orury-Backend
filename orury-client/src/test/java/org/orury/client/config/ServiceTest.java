@@ -157,6 +157,7 @@ public abstract class ServiceTest {
         //user
         userReader = mock(UserReader.class);
         userStore = mock(UserStore.class);
+        reportStore = mock(ReportStore.class);
 
         //gym
         gymReader = mock(GymReader.class);

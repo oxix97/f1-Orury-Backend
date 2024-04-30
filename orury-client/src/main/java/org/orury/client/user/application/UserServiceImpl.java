@@ -90,7 +90,6 @@ public class UserServiceImpl implements UserService {
             Comment comment = commentReader.findCommentById(reportDto.targetId())
                     .orElseThrow(() -> new BusinessException(CommentErrorCode.NOT_FOUND));
         }
-
         reportStore.save(reportDto.toEntity());
     }
 
