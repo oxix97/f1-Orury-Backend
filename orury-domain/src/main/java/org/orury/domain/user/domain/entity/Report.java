@@ -33,13 +33,18 @@ public class Report extends AuditingField {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "reporter_id", nullable = false)
+    private User reportUser;
+
     private Report(
             Long id,
             int type,
             int reasonCode,
             String description,
             Long targetId,
-            User user
+            User user,
+            User reportUser
     ) {
         this.id = id;
         this.type = type;
@@ -47,6 +52,7 @@ public class Report extends AuditingField {
         this.description = description;
         this.targetId = targetId;
         this.user = user;
+        this.reportUser = reportUser;
     }
 
     public static Report of(
@@ -55,7 +61,8 @@ public class Report extends AuditingField {
             int reasonCode,
             String description,
             Long targetId,
-            User user
+            User user,
+            User reportUser
     ) {
         return new Report(
                 id,
@@ -63,7 +70,8 @@ public class Report extends AuditingField {
                 reasonCode,
                 description,
                 targetId,
-                user
+                user,
+                reportUser
         );
     }
 
