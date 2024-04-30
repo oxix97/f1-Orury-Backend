@@ -4,11 +4,13 @@ import jakarta.validation.constraints.NotNull;
 import org.orury.domain.global.validation.EnumValue;
 import org.orury.domain.user.domain.dto.ReportDto;
 import org.orury.domain.user.domain.dto.ReportInfo;
+import org.orury.domain.user.domain.dto.ReportType;
 import org.orury.domain.user.domain.dto.UserDto;
 
 public record UserReportRequest(
         Long userId,
-        int type,
+        @EnumValue(enumClass = ReportType.class, message = "유효하지 않은 신고 유형입니다.")
+        ReportType reportType,
 
         @EnumValue(enumClass = ReportInfo.class, message = "유효하지 않은 신고사유 코드입니다.")
         ReportInfo reportInfo,
@@ -19,17 +21,17 @@ public record UserReportRequest(
 ) {
     public static UserReportRequest of(
             Long userId,
-            int type,
+            ReportType reportType,
             ReportInfo reportInfo,
             Long targetId
     ) {
-        return new UserReportRequest(userId, type, reportInfo, targetId);
+        return new UserReportRequest(userId, reportType, reportInfo, targetId);
     }
 
     public ReportDto toDto(UserDto reporterDto, UserDto reporteeDto) {
         return ReportDto.of(
                 null,
-                type,
+                reportType.getCode(),
                 reporterDto,
                 reporteeDto,
                 reportInfo,
