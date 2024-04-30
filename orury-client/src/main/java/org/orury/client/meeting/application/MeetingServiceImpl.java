@@ -123,8 +123,7 @@ public class MeetingServiceImpl implements MeetingService {
             throw new BusinessException(MeetingErrorCode.MEETING_CREATOR);
         if (!meetingMemberReader.existsByMeetingIdAndUserId(meetingDto.id(), userId))
             throw new BusinessException(MeetingErrorCode.NOT_JOINED_MEETING);
-        MeetingMemberDto meetingMemberDto = MeetingMemberDto.of(MeetingMemberPK.of(userId, meetingDto.id()));
-        meetingMemberStore.removeMember(meetingMemberDto.toEntity());
+        meetingMemberStore.removeMember(userId, meetingDto.id());
     }
 
     @Override
