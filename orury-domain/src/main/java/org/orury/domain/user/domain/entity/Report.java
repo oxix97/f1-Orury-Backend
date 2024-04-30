@@ -20,8 +20,8 @@ public class Report extends AuditingField {
     @Column(name = "type", nullable = false)
     private int type;
 
-    @Column(name = "reason_code", nullable = false)
-    private int reasonCode;
+    @Column(name = "reason", nullable = false)
+    private int reason;
 
     @Column(name = "description", nullable = false)
     private String description;
@@ -40,7 +40,7 @@ public class Report extends AuditingField {
     private Report(
             Long id,
             int type,
-            int reasonCode,
+            int reason,
             String description,
             Long targetId,
             User user,
@@ -48,7 +48,7 @@ public class Report extends AuditingField {
     ) {
         this.id = id;
         this.type = type;
-        this.reasonCode = reasonCode;
+        this.reason = reason;
         this.description = description;
         this.targetId = targetId;
         this.user = user;
@@ -74,5 +74,4 @@ public class Report extends AuditingField {
                 reportUser
         );
     }
-
 }
