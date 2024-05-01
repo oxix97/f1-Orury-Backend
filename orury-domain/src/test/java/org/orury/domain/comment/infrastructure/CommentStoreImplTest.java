@@ -5,14 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.orury.domain.comment.domain.entity.Comment;
 import org.orury.domain.comment.domain.entity.CommentLike;
 import org.orury.domain.config.InfrastructureTest;
-import org.orury.domain.global.constants.NumberConstants;
-import org.orury.domain.global.domain.Region;
-import org.orury.domain.post.domain.entity.Post;
-import org.orury.domain.user.domain.dto.UserStatus;
-import org.orury.domain.user.domain.entity.User;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -20,6 +13,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
+import static org.orury.domain.CommentDomainFixture.TestComment.createComment;
 import static org.orury.domain.CommentDomainFixture.TestCommentLike.createCommentLike;
 
 @DisplayName("[Store] 댓글 StoreImpl 테스트")
@@ -29,7 +23,7 @@ class CommentStoreImplTest extends InfrastructureTest {
     @DisplayName("댓글 생성 시, 댓글을 저장하고 게시글의 댓글 수를 증가시켜야 한다.")
     void when_CreateComment_Then_SaveCommentAndIncreaseCommentLikeCount() {
         // given
-        Comment comment = createComment();
+        Comment comment = createComment().build().get();
 
         // when
         commentStore.createComment(comment);
@@ -45,7 +39,7 @@ class CommentStoreImplTest extends InfrastructureTest {
     @DisplayName("댓글 수정 시, 댓글을 저장해야 한다.")
     void when_UpdateComment_Then_SaveComment() {
         // given
-        Comment comment = createComment();
+        Comment comment = createComment().build().get();
 
         // when
         commentStore.updateComment(comment);
@@ -60,7 +54,7 @@ class CommentStoreImplTest extends InfrastructureTest {
     void when_DeleteComment_Then_DeleteCommentAndDeleteCommentLikesAndDecreaseCommentCountsOfPost() {
         // given
         Long commentId = 2L;
-        Comment comment = createComment(commentId);
+        Comment comment = createComment(commentId).build().get();
 
         // when
         commentStore.deleteComment(comment);
@@ -130,67 +124,6 @@ class CommentStoreImplTest extends InfrastructureTest {
                 .decreaseLikeCount(anyLong());
         then(commentLikeRepository).should(times(commentLikes.size()))
                 .delete(any());
-    }
-
-    private User createUser() {
-        return User.of(
-                1L,
-                "userEmail",
-                "userNickname",
-                "userPassword",
-                1,
-                1,
-                LocalDate.now(),
-                "userProfileImage",
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                UserStatus.ENABLE,
-                List.of(Region.강남구, Region.강북구)
-        );
-    }
-
-    private Post createPost() {
-        return Post.of(
-                1L,
-                "postTitle",
-                "postContent",
-                0,
-                0,
-                0,
-                List.of(),
-                1,
-                createUser(),
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
-    }
-
-    private Comment createComment() {
-        return Comment.of(
-                1L,
-                "commentContent",
-                NumberConstants.PARENT_COMMENT,
-                0,
-                createPost(),
-                createUser(),
-                NumberConstants.IS_NOT_DELETED,
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
-    }
-
-    private Comment createComment(Long commentId) {
-        return Comment.of(
-                commentId,
-                "commentContent",
-                NumberConstants.PARENT_COMMENT,
-                0,
-                createPost(),
-                createUser(),
-                NumberConstants.IS_NOT_DELETED,
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
     }
 }
 
