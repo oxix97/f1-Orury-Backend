@@ -6,9 +6,10 @@ import org.orury.domain.auth.domain.dto.JwtToken;
 import org.orury.domain.auth.domain.dto.LoginDto;
 import org.orury.domain.auth.domain.dto.SignUpDto;
 import org.orury.domain.user.domain.dto.UserDto;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface AuthService {
-    SignUpDto signUp(UserDto userDto);
+    SignUpDto signUp(UserDto userDto, MultipartFile file);
 
     LoginDto login(LoginRequest loginRequest);
 

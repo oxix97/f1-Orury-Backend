@@ -14,6 +14,7 @@ import org.orury.common.error.exception.BusinessException;
 import org.orury.domain.auth.domain.dto.JwtToken;
 import org.orury.domain.auth.domain.dto.LoginDto;
 import org.orury.domain.auth.domain.dto.SignUpDto;
+import org.orury.domain.image.domain.ImageStore;
 import org.orury.domain.user.domain.UserReader;
 import org.orury.domain.user.domain.UserStore;
 import org.orury.domain.user.domain.dto.UserDto;
@@ -22,8 +23,11 @@ import org.orury.domain.user.domain.entity.User;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Objects;
+
+import static org.orury.common.util.S3Folder.USER;
 
 @RequiredArgsConstructor
 @Service
@@ -32,12 +36,14 @@ public class AuthServiceImpl implements AuthService {
     private final UserStore userStore;
     private final JwtTokenService jwtTokenService;
     private final OAuthServiceManager oAuthServiceManager;
+    private final ImageStore imageStore;
 
     @Transactional
     @Override
-    public SignUpDto signUp(UserDto userDto) {
+    public SignUpDto signUp(UserDto userDto, MultipartFile file) {
+        String image = imageStore.upload(USER, file);
         try {
-            userStore.saveAndFlush(userDto.toEntity());
+            userStore.saveAndFlush(userDto.toEntity(image));
         } catch (DataIntegrityViolationException e) {
             throw new BusinessException(UserErrorCode.DUPLICATED_USER);
         }
