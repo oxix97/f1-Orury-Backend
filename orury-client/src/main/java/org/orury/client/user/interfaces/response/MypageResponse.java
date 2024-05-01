@@ -1,7 +1,6 @@
 package org.orury.client.user.interfaces.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-
 import org.orury.domain.user.domain.dto.UserDto;
 
 import java.time.LocalDate;
@@ -14,7 +13,8 @@ public record MypageResponse(
         int gender,
         @JsonFormat(shape = JsonFormat.Shape.STRING)
         LocalDate birthday,
-        String profileImage
+        String profileImage,
+        String selfIntroduction
 ) {
     public static MypageResponse of(UserDto userDto) {
         return new MypageResponse(
@@ -24,7 +24,8 @@ public record MypageResponse(
                 userDto.signUpType(),
                 userDto.gender(),
                 userDto.birthday(),
-                userDto.profileImage()
+                userDto.profileImage(),
+                userDto.selfIntroduction()
         );
     }
 }

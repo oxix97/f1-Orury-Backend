@@ -22,7 +22,8 @@ public record UserDto(
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
         UserStatus status,
-        List<Region> regions
+        List<Region> regions,
+        String selfIntroduction
 ) {
     public static UserDto of(
             Long id,
@@ -36,7 +37,8 @@ public record UserDto(
             LocalDateTime createdAt,
             LocalDateTime updatedAt,
             UserStatus status,
-            List<Region> regions
+            List<Region> regions,
+            String selfIntroduction
     ) {
         return new UserDto(
                 id,
@@ -50,7 +52,8 @@ public record UserDto(
                 createdAt,
                 updatedAt,
                 status,
-                regions
+                regions,
+                selfIntroduction
         );
     }
 
@@ -67,7 +70,8 @@ public record UserDto(
                 entity.getCreatedAt(),
                 entity.getUpdatedAt(),
                 entity.getStatus(),
-                entity.getRegions()
+                entity.getRegions(),
+                entity.getSelfIntroduction()
         );
     }
 
@@ -84,7 +88,8 @@ public record UserDto(
                 entity.getCreatedAt(),
                 entity.getUpdatedAt(),
                 entity.getStatus(),
-                entity.getRegions()
+                entity.getRegions(),
+                entity.getSelfIntroduction()
         );
     }
 
@@ -101,7 +106,8 @@ public record UserDto(
                 createdAt,
                 updatedAt,
                 status,
-                regions
+                regions,
+                selfIntroduction
         );
     }
 
@@ -118,7 +124,8 @@ public record UserDto(
                 createdAt,
                 updatedAt,
                 status,
-                regions
+                regions,
+                selfIntroduction
         );
     }
 
@@ -135,7 +142,8 @@ public record UserDto(
                 createdAt,
                 updatedAt,
                 status,
-                regions
+                regions,
+                selfIntroduction
         );
     }
 

@@ -58,7 +58,10 @@ public class User extends AuditingField {
     @Column(name = "regions", nullable = false)
     private List<Region> regions;
 
-    private User(Long id, String email, String nickname, String password, int signUpType, int gender, LocalDate birthday, String profileImage, LocalDateTime createdAt, LocalDateTime updatedAt, UserStatus status, List<Region> regions) {
+    @Column(name = "self_introduction")
+    private String selfIntroduction;
+
+    private User(Long id, String email, String nickname, String password, int signUpType, int gender, LocalDate birthday, String profileImage, LocalDateTime createdAt, LocalDateTime updatedAt, UserStatus status, List<Region> regions, String selfIntroduction) {
         this.id = id;
         this.email = email;
         this.nickname = nickname;
@@ -71,9 +74,10 @@ public class User extends AuditingField {
         this.updatedAt = updatedAt;
         this.status = status;
         this.regions = regions;
+        this.selfIntroduction = selfIntroduction;
     }
 
-    public static User of(Long id, String email, String nickname, String password, int signUpType, int gender, LocalDate birthday, String profileImage, LocalDateTime createdAt, LocalDateTime updatedAt, UserStatus status, List<Region> regions) {
-        return new User(id, email, nickname, password, signUpType, gender, birthday, profileImage, createdAt, updatedAt, status, regions);
+    public static User of(Long id, String email, String nickname, String password, int signUpType, int gender, LocalDate birthday, String profileImage, LocalDateTime createdAt, LocalDateTime updatedAt, UserStatus status, List<Region> regions, String selfIntroduction) {
+        return new User(id, email, nickname, password, signUpType, gender, birthday, profileImage, createdAt, updatedAt, status, regions, selfIntroduction);
     }
 }

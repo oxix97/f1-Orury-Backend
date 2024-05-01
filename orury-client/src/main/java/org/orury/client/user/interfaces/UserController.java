@@ -50,7 +50,7 @@ public class UserController {
     @PatchMapping
     public ApiResponse updateUserInfo(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
-            @RequestBody UserInfoRequest userInfoRequest
+            @RequestBody @Valid UserInfoRequest userInfoRequest
     ) {
         userFacade.updateUserInfo(userPrincipal.id(), userInfoRequest);
 

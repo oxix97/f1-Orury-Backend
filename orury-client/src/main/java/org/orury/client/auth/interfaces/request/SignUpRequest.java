@@ -41,7 +41,8 @@ public record SignUpRequest(
                 null,
                 null,
                 UserStatus.ENABLE,
-                regions
+                regions,
+                null
         );
     }
 }

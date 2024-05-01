@@ -44,8 +44,7 @@ public class UserFacade {
 
     public void updateUserInfo(Long id, UserInfoRequest userInfoRequest) {
         UserDto userDto = userService.getUserDtoById(id);
-        UserDto updateUserDto = UserInfoRequest.toDto(userDto, userInfoRequest);
-        userService.updateUserInfo(updateUserDto);
+        userService.updateUserInfo(userInfoRequest.toDto(userDto));
     }
 
     public WithCursorResponse<MyPostResponse> getPostsByUserId(Long id, Long cursor) {
