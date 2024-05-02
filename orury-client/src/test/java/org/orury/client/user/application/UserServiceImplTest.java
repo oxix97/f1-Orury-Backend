@@ -10,6 +10,7 @@ import org.orury.common.util.S3Folder;
 import org.orury.domain.comment.domain.entity.Comment;
 import org.orury.domain.post.domain.entity.Post;
 import org.orury.domain.user.domain.dto.ReportDto;
+import org.orury.domain.user.domain.dto.ReportType;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.orury.domain.user.domain.entity.User;
 import org.springframework.web.multipart.MultipartFile;
@@ -117,6 +118,7 @@ class UserServiceImplTest extends ServiceTest {
         UserDto reporterDto = createUserDto(231L).build().get();
         UserDto reporteeDto = createUserDto(23125L).build().get();
         ReportDto reportDto = createReportDto(21514L, reporterDto.id(), reporteeDto.id())
+                .reportType(ReportType.POST)
                 .build().get();
         Post post = createPost(12586L).build().get();
         given(postReader.findById(anyLong())).willReturn(Optional.of(post));
@@ -136,7 +138,7 @@ class UserServiceImplTest extends ServiceTest {
         UserDto reporterDto = createUserDto(231L).build().get();
         UserDto reporteeDto = createUserDto(23125L).build().get();
         ReportDto reportDto = createReportDto(21514L, reporterDto.id(), reporteeDto.id())
-                .type(2)
+                .reportType(ReportType.COMMENT)
                 .build().get();
         Comment comment = createComment(12586L).build().get();
         given(commentReader.findCommentById(anyLong())).willReturn(Optional.of(comment));
@@ -147,5 +149,25 @@ class UserServiceImplTest extends ServiceTest {
         // then
         then(commentReader).should(times(1)).findCommentById(anyLong());
         then(reportStore).should(times(1)).save(any());
+    }
+
+    @Test
+    @DisplayName("유저를 신고할 때, 이미 신고한 컨텐츠라면 when_DuplicatedReport_Then_ThrowException [실패]")
+    void when_DuplicatedReport_Then_ThrowException() {
+        //given
+        UserDto reporterDto = createUserDto(231L).build().get();
+        UserDto reporteeDto = createUserDto(23125L).build().get();
+        ReportDto reportDto = createReportDto(21514L, reporterDto.id(), reporteeDto.id())
+                .reportType(ReportType.POST)
+                .build().get();
+        Post post = createPost(12586L).build().get();
+        given(postReader.findById(anyLong())).willReturn(Optional.of(post));
+        given(reportReader.checkDuplicateReport(any())).willReturn(true);
+
+        // when & then
+        BusinessException exception = Assertions.assertThrows(BusinessException.class,
+                () -> userService.reportUser(reportDto));
+
+        assertThat(exception.getStatus()).isEqualTo(UserErrorCode.DUPLICATED_REPORT.getStatus());
     }
 }

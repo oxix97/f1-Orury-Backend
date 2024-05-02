@@ -5,10 +5,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.Builder;
 import lombok.Getter;
 import org.orury.domain.global.constants.NumberConstants;
-import org.orury.domain.user.domain.dto.ReportDto;
-import org.orury.domain.user.domain.dto.ReportInfo;
-import org.orury.domain.user.domain.dto.UserDto;
-import org.orury.domain.user.domain.dto.UserStatus;
+import org.orury.domain.user.domain.dto.*;
 import org.orury.domain.user.domain.entity.Report;
 import org.orury.domain.user.domain.entity.User;
 
@@ -83,7 +80,7 @@ public class UserDomainFixture {
     @Builder
     public static class TestReport {
         private @Builder.Default Long id = 1171231L;
-        private @Builder.Default Long userId = 117143L;
+        private @Builder.Default Long reporteeId = 117143L;
         private @Builder.Default Long reporterId = 1123451L;
         private @Builder.Default int type = 1;
         private @Builder.Default int reason = 1;
@@ -109,7 +106,7 @@ public class UserDomainFixture {
     @Builder
     public static class TestReportDto {
         private @Builder.Default Long id = 125521L;
-        private @Builder.Default int type = 1;
+        private @Builder.Default ReportType reportType = ReportType.POST;
         private @Builder.Default UserDto reporterDto = TestUserDto.createUserDto(1123451L).build().get();
         private @Builder.Default UserDto reporteeDto = TestUserDto.createUserDto(2512568L).build().get();
         private @Builder.Default ReportInfo reportInfo = ReportInfo.CONTAIN_PERSONAL_INFO;
