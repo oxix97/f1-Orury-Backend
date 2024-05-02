@@ -168,7 +168,7 @@ public abstract class ServiceTest {
         reviewStore = mock(ReviewStore.class);
 
         //services
-        authService = new AuthServiceImpl(userReader, userStore, jwtTokenService, oAuthServiceManager);
+        authService = new AuthServiceImpl(userReader, userStore, jwtTokenService, oAuthServiceManager, imageStore);
         commentService = new CommentServiceImpl(commentReader, commentStore);
         postService = new PostServiceImpl(postReader, postStore, imageStore);
         crewService = new CrewServiceImpl(crewReader, crewStore, crewTagReader, crewTagStore, crewMemberReader, crewMemberStore, crewApplicationReader, crewApplicationStore, meetingStore, meetingMemberStore, userReader, imageStore, crewPolicy, crewCreatePolicy, crewUpdatePolicy, crewApplicationPolicy);

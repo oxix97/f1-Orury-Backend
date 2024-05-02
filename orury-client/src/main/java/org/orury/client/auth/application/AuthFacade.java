@@ -11,14 +11,15 @@ import org.orury.domain.auth.domain.dto.LoginDto;
 import org.orury.domain.auth.domain.dto.SignUpDto;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
 public class AuthFacade {
     private final AuthService authService;
 
-    public SignUpResponse signUp(UserDto userDto) {
-        SignUpDto signUpDto = authService.signUp(userDto);
+    public SignUpResponse signUp(UserDto userDto, MultipartFile image) {
+        SignUpDto signUpDto = authService.signUp(userDto, image);
         return SignUpResponse.of(signUpDto);
     }
 
