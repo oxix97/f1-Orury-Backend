@@ -31,7 +31,7 @@ public record UserReportRequest(
     public ReportDto toDto(UserDto reporterDto, UserDto reporteeDto) {
         return ReportDto.of(
                 null,
-                reportType.getCode(),
+                reportType,
                 reporterDto,
                 reporteeDto,
                 reportInfo,

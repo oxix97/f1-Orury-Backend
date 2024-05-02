@@ -4,7 +4,7 @@ import org.orury.domain.user.domain.entity.Report;
 
 public record ReportDto(
         Long id,
-        int type,
+        ReportType reportType,
         UserDto reporterDto,
         UserDto reporteeDto,
         ReportInfo reportInfo,
@@ -12,7 +12,7 @@ public record ReportDto(
 ) {
     public static ReportDto of(
             Long id,
-            int type,
+            ReportType reportType,
             UserDto reporterDto,
             UserDto reporteeDto,
             ReportInfo reportInfo,
@@ -20,7 +20,7 @@ public record ReportDto(
     ) {
         return new ReportDto(
                 id,
-                type,
+                reportType,
                 reporterDto,
                 reporteeDto,
                 reportInfo,
@@ -31,7 +31,7 @@ public record ReportDto(
     public Report toEntity() {
         return Report.of(
                 id,
-                type,
+                reportType.getCode(),
                 reportInfo.getCode(),
                 reportInfo.getDescription(),
                 targetId,

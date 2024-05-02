@@ -2,18 +2,14 @@ package org.orury.client.user.application;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.orury.common.error.code.CommentErrorCode;
-import org.orury.common.error.code.PostErrorCode;
 import org.orury.common.error.code.UserErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.domain.comment.domain.CommentReader;
 import org.orury.domain.comment.domain.CommentStore;
-import org.orury.domain.comment.domain.entity.Comment;
 import org.orury.domain.gym.domain.GymStore;
 import org.orury.domain.image.domain.ImageStore;
 import org.orury.domain.post.domain.PostReader;
 import org.orury.domain.post.domain.PostStore;
-import org.orury.domain.post.domain.entity.Post;
 import org.orury.domain.review.domain.ReviewStore;
 import org.orury.domain.user.domain.ReportStore;
 import org.orury.domain.user.domain.UserReader;
@@ -83,13 +79,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void reportUser(ReportDto reportDto) {
-        if (reportDto.type() == 1) {
-            Post post = postReader.findById(reportDto.targetId())
-                    .orElseThrow(() -> new BusinessException(PostErrorCode.NOT_FOUND));
-        } else {
-            Comment comment = commentReader.findCommentById(reportDto.targetId())
-                    .orElseThrow(() -> new BusinessException(CommentErrorCode.NOT_FOUND));
-        }
+        reportDto.reportType().checkReportTarget(reportDto.targetId(), postReader, commentReader);
         reportStore.save(reportDto.toEntity());
     }
 
