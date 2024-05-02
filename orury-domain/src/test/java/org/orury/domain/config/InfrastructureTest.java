@@ -51,6 +51,7 @@ import org.orury.domain.review.infrastructure.ReviewReactionRepository;
 import org.orury.domain.review.infrastructure.ReviewReaderImpl;
 import org.orury.domain.review.infrastructure.ReviewRepository;
 import org.orury.domain.review.infrastructure.ReviewStoreImpl;
+import org.orury.domain.user.domain.ReportReader;
 import org.orury.domain.user.domain.ReportStore;
 import org.orury.domain.user.domain.UserReader;
 import org.orury.domain.user.domain.UserStore;
@@ -123,6 +124,7 @@ public abstract class InfrastructureTest {
     protected UserReader userReader;
     protected UserStore userStore;
     protected ReportStore reportStore;
+    protected ReportReader reportReader;
 
     @BeforeEach
     void setUp() {
@@ -208,5 +210,6 @@ public abstract class InfrastructureTest {
         userReader = new UserReaderImpl(userRepository);
         userStore = new UserStoreImpl(userRepository);
         reportStore = new ReportStoreImpl(reportRepository);
+        reportReader = new ReportReaderImpl(reportRepository);
     }
 }
