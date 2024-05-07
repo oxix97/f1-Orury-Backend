@@ -40,12 +40,8 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<PostDto> getPostDtosBySearchWord(String searchWord, Long cursor, Pageable pageable, Integer likeCount) {
-        if (likeCount != null)
-            return postReader.findByTitleContainingOrContentContainingOrderByLikeCountDesc(searchWord, cursor, likeCount, pageable).stream()
-                    .map(this::postDtoConverter)
-                    .toList();
-        return postReader.findByTitleContainingOrContentContainingOrderByCreatedAtDesc(searchWord, cursor, pageable).stream()
+    public List<PostDto> getPostDtosBySearchWord(String searchWord, Pageable pageable, Boolean isLiked) {
+        return postReader.findByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(searchWord, pageable).stream()
                 .map(this::postDtoConverter)
                 .toList();
     }
