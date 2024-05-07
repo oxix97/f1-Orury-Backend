@@ -11,6 +11,7 @@ import org.orury.domain.post.domain.dto.PostLikeDto;
 import org.orury.domain.post.domain.entity.Post;
 import org.orury.domain.post.domain.entity.PostLike;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
@@ -295,14 +296,15 @@ class PostServiceImplTest extends ServiceTest {
                 createPost(9L, 5L),
                 createPost(10L, 2L)
         );
+        Page<Post> page = new PageImpl<>(posts, pageable, posts.size());
 
-        when(postReader.findByTitleContainingOrContentContainingOrderByCreatedAtDesc(searchWord, cursor, pageable)).thenReturn(posts);
+        when(postReader.findByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(searchWord, pageable)).thenReturn(page);
 
         // when
-        List<PostDto> resultPostDtos = postService.getPostDtosBySearchWord(searchWord, cursor, PageRequest.of(0, 10), null);
+        List<PostDto> resultPostDtos = postService.getPostDtosBySearchWord(searchWord, PageRequest.of(0, 10), null);
 
         // then
-        verify(postReader).findByTitleContainingOrContentContainingOrderByCreatedAtDesc(searchWord, cursor, pageable);
+        verify(postReader).findByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(searchWord, pageable);
         assertEquals(postDtos.size(), resultPostDtos.size());
     }
 
@@ -322,14 +324,15 @@ class PostServiceImplTest extends ServiceTest {
                 createPost(1L, 1L),
                 createPost(2L, 1L)
         );
+        Page<Post> page = new PageImpl<>(posts, pageable, posts.size());
 
-        when(postReader.findByTitleContainingOrContentContainingOrderByCreatedAtDesc(searchWord, cursor, pageable)).thenReturn(posts);
+        when(postReader.findByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(searchWord, pageable)).thenReturn(page);
 
         // when
-        List<PostDto> resultPostDtos = postService.getPostDtosBySearchWord(searchWord, cursor, PageRequest.of(0, 10), null);
+        List<PostDto> resultPostDtos = postService.getPostDtosBySearchWord(searchWord, PageRequest.of(0, 10), null);
 
         // then
-        verify(postReader).findByTitleContainingOrContentContainingOrderByCreatedAtDesc(searchWord, cursor, pageable);
+        verify(postReader).findByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(searchWord, pageable);
         assertEquals(postDtos.size(), resultPostDtos.size());
     }
 

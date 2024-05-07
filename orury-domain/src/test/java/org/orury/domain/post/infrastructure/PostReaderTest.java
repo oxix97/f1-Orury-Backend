@@ -81,7 +81,7 @@ class PostReaderTest extends InfrastructureTest {
         given(postRepository.findByTitleContainingOrContentContainingOrderByLikeCountDesc(searchWord, pageable)).willReturn(expectedPosts);
 
         // when
-        List<Post> result = postReader.findByTitleContainingOrContentContainingOrderByLikeCountDesc(searchWord, cursor, likeCount, pageable);
+        List<Post> result = postReader.findByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(searchWord, cursor, likeCount, pageable);
 
         // then
         assertSame(expectedPosts, result);
@@ -98,7 +98,7 @@ class PostReaderTest extends InfrastructureTest {
         given(postRepository.findByLikeCountLessThanAndTitleContainingOrLikeCountLessThanAndContentContainingOrderByLikeCountDesc(likeCount, searchWord, likeCount, searchWord, pageable)).willReturn(expectedPosts);
 
         // when
-        List<Post> result = postReader.findByTitleContainingOrContentContainingOrderByLikeCountDesc(searchWord, cursor, likeCount, pageable);
+        List<Post> result = postReader.findByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(searchWord, cursor, likeCount, pageable);
 
         // then
         assertSame(expectedPosts, result);
