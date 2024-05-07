@@ -15,7 +15,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     List<Post> findByCategoryAndIdLessThanOrderByIdDesc(int category, Long cursor, Pageable pageable);
 
-    List<Post> findByTitleContainingOrContentContainingOrderByCreatedAtDesc(String titleSearchWord, String contentSearchWord, Pageable pageable);
+    Page<Post> findByTitleContainingOrContentContainingOrderByCreatedAtDesc(String titleSearchWord, String ContentSearchWord, Pageable pageable);
 
     List<Post> findByIdLessThanAndTitleContainingOrIdLessThanAndContentContainingOrderByIdDesc(Long cursor1, String titleSearchWord, Long cursor2, String contentSearchWord, Pageable pageable);
 
@@ -23,7 +23,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     Page<Post> findByLikeCountGreaterThanEqualAndCreatedAtGreaterThanEqualOrderByLikeCountDescCreatedAtDesc(int likeCount, LocalDateTime localDateTime, Pageable pageable);
 
-    List<Post> findByTitleContainingOrContentContainingOrderByLikeCountDesc(String titleSearchWord, Pageable pageable);
+    Page<Post> findByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(String titleSearchWord, String ContentSearchWord, Pageable pageable);
 
     List<Post> findByUserIdOrderByIdDesc(Long userId, Pageable pageable);
 
