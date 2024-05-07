@@ -56,9 +56,9 @@ public class PostController {
     public ApiResponse getPostsBySearchWord(
             @RequestParam String searchWord,
             @RequestParam Long cursor,
-            @RequestParam(required = false) Integer likeCount
+            @RequestParam(required = false) Boolean isLiked
     ) {
-        var posts = postFacade.getPostsBySearchWord(searchWord, cursor, likeCount);
+        var posts = postFacade.getPostsBySearchWord(searchWord, cursor, isLiked);
         PostsWithCursorResponse response = PostsWithCursorResponse.of(posts, cursor);
         return ApiResponse.of(POSTS_READ.getMessage(), response);
     }
