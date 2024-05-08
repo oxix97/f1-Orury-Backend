@@ -7,6 +7,10 @@ import org.orury.client.config.ServiceTest;
 import org.orury.common.error.code.UserErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.common.util.S3Folder;
+import org.orury.domain.comment.domain.entity.Comment;
+import org.orury.domain.post.domain.entity.Post;
+import org.orury.domain.user.domain.dto.ReportDto;
+import org.orury.domain.user.domain.dto.ReportType;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.orury.domain.user.domain.entity.User;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +23,9 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
+import static org.orury.domain.CommentDomainFixture.TestComment.createComment;
+import static org.orury.domain.PostDomainFixture.TestPost.createPost;
+import static org.orury.domain.UserDomainFixture.TestReportDto.createReportDto;
 import static org.orury.domain.UserDomainFixture.TestUser.createUser;
 import static org.orury.domain.UserDomainFixture.TestUserDto.createUserDto;
 
@@ -102,5 +109,65 @@ class UserServiceImplTest extends ServiceTest {
         then(postStore).should(times(1)).deletePostsByUserId(any());
         then(imageStore).should(times(1)).delete(any(S3Folder.class), anyString());
         then(userStore).should(times(1)).save(any());
+    }
+
+    @Test
+    @DisplayName("reportUser(ReportDto reportDto) Test : ReportDto로 부적절한 게시글을 작성한 유저를 신고한다. [성공]")
+    void when_reportUser_Then_ReportSuccessfully() {
+        //given
+        UserDto reporterDto = createUserDto(231L).build().get();
+        UserDto reporteeDto = createUserDto(23125L).build().get();
+        ReportDto reportDto = createReportDto(21514L, reporterDto.id(), reporteeDto.id())
+                .reportType(ReportType.POST)
+                .build().get();
+        Post post = createPost(12586L).build().get();
+        given(postReader.findById(anyLong())).willReturn(Optional.of(post));
+
+        // when
+        userService.reportUser(reportDto);
+
+        // then
+        then(postReader).should(times(1)).findById(anyLong());
+        then(reportStore).should(times(1)).save(any());
+    }
+
+    @Test
+    @DisplayName("reportUser(ReportDto reportDto) Test : ReportDto로 부적절한 댓글을 작성한 유저를 신고한다. [성공]")
+    void when_reportUser_Then_ReportCommentSuccessfully() {
+        //given
+        UserDto reporterDto = createUserDto(231L).build().get();
+        UserDto reporteeDto = createUserDto(23125L).build().get();
+        ReportDto reportDto = createReportDto(21514L, reporterDto.id(), reporteeDto.id())
+                .reportType(ReportType.COMMENT)
+                .build().get();
+        Comment comment = createComment(12586L).build().get();
+        given(commentReader.findCommentById(anyLong())).willReturn(Optional.of(comment));
+
+        // when
+        userService.reportUser(reportDto);
+
+        // then
+        then(commentReader).should(times(1)).findCommentById(anyLong());
+        then(reportStore).should(times(1)).save(any());
+    }
+
+    @Test
+    @DisplayName("유저를 신고할 때, 이미 신고한 컨텐츠라면 when_DuplicatedReport_Then_ThrowException [실패]")
+    void when_DuplicatedReport_Then_ThrowException() {
+        //given
+        UserDto reporterDto = createUserDto(231L).build().get();
+        UserDto reporteeDto = createUserDto(23125L).build().get();
+        ReportDto reportDto = createReportDto(21514L, reporterDto.id(), reporteeDto.id())
+                .reportType(ReportType.POST)
+                .build().get();
+        Post post = createPost(12586L).build().get();
+        given(postReader.findById(anyLong())).willReturn(Optional.of(post));
+        given(reportReader.checkDuplicateReport(any())).willReturn(true);
+
+        // when & then
+        BusinessException exception = Assertions.assertThrows(BusinessException.class,
+                () -> userService.reportUser(reportDto));
+
+        assertThat(exception.getStatus()).isEqualTo(UserErrorCode.DUPLICATED_REPORT.getStatus());
     }
 }

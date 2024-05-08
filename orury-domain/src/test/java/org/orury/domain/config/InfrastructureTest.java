@@ -51,11 +51,11 @@ import org.orury.domain.review.infrastructure.ReviewReactionRepository;
 import org.orury.domain.review.infrastructure.ReviewReaderImpl;
 import org.orury.domain.review.infrastructure.ReviewRepository;
 import org.orury.domain.review.infrastructure.ReviewStoreImpl;
+import org.orury.domain.user.domain.ReportReader;
+import org.orury.domain.user.domain.ReportStore;
 import org.orury.domain.user.domain.UserReader;
 import org.orury.domain.user.domain.UserStore;
-import org.orury.domain.user.infrastucture.UserReaderImpl;
-import org.orury.domain.user.infrastucture.UserRepository;
-import org.orury.domain.user.infrastucture.UserStoreImpl;
+import org.orury.domain.user.infrastucture.*;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.mockito.Mockito.mock;
@@ -120,8 +120,11 @@ public abstract class InfrastructureTest {
     protected ReviewReactionRepository reviewReactionRepository;
     //user
     protected UserRepository userRepository;
+    protected ReportRepository reportRepository;
     protected UserReader userReader;
     protected UserStore userStore;
+    protected ReportStore reportStore;
+    protected ReportReader reportReader;
 
     @BeforeEach
     void setUp() {
@@ -154,6 +157,7 @@ public abstract class InfrastructureTest {
 
         //user
         userRepository = mock(UserRepository.class);
+        reportRepository = mock(ReportRepository.class);
 
         //gym
         gymRepository = mock(GymRepository.class);
@@ -205,5 +209,7 @@ public abstract class InfrastructureTest {
         //user
         userReader = new UserReaderImpl(userRepository);
         userStore = new UserStoreImpl(userRepository);
+        reportStore = new ReportStoreImpl(reportRepository);
+        reportReader = new ReportReaderImpl(reportRepository);
     }
 }

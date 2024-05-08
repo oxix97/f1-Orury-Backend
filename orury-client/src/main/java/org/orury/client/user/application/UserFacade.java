@@ -8,6 +8,7 @@ import org.orury.client.global.WithCursorResponse;
 import org.orury.client.post.application.PostService;
 import org.orury.client.review.application.ReviewService;
 import org.orury.client.user.interfaces.request.UserInfoRequest;
+import org.orury.client.user.interfaces.request.UserReportRequest;
 import org.orury.client.user.interfaces.response.MyCommentResponse;
 import org.orury.client.user.interfaces.response.MyPostResponse;
 import org.orury.client.user.interfaces.response.MyReviewResponse;
@@ -15,6 +16,7 @@ import org.orury.domain.comment.domain.dto.CommentDto;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.post.domain.dto.PostDto;
 import org.orury.domain.review.domain.dto.ReviewDto;
+import org.orury.domain.user.domain.dto.ReportDto;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
@@ -72,6 +74,13 @@ public class UserFacade {
         userService.deleteUser(userDto);
     }
 
+    public void createReport(UserReportRequest request, Long reporterId) {
+        UserDto reporterDto = userService.getUserDtoById(reporterId);
+        UserDto reporteeDto = userService.getUserDtoById(request.userId());
+        ReportDto reportDto = request.toDto(reporterDto, reporteeDto);
+        userService.reportUser(reportDto);
+    }
+
     private <T, R extends IdIdentifiable> WithCursorResponse<R> convertDtosToWithCursorResponse(List<T> dtos, Function<T, R> toResponseFunction, Long cursor) {
         List<R> responses = dtos.stream()
                 .map(toResponseFunction)
@@ -79,6 +88,4 @@ public class UserFacade {
 
         return WithCursorResponse.of(responses, cursor);
     }
-
-
 }

@@ -5,8 +5,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.Builder;
 import lombok.Getter;
 import org.orury.domain.global.constants.NumberConstants;
-import org.orury.domain.user.domain.dto.UserDto;
-import org.orury.domain.user.domain.dto.UserStatus;
+import org.orury.domain.user.domain.dto.*;
+import org.orury.domain.user.domain.entity.Report;
 import org.orury.domain.user.domain.entity.User;
 
 import java.time.LocalDate;
@@ -73,6 +73,58 @@ public class UserDomainFixture {
 
         public UserDto get() {
             return mapper.convertValue(this, UserDto.class);
+        }
+    }
+
+    @Getter
+    @Builder
+    public static class TestReport {
+        private @Builder.Default Long id = 1171231L;
+        private @Builder.Default Long reporteeId = 117143L;
+        private @Builder.Default Long reporterId = 1123451L;
+        private @Builder.Default int type = 1;
+        private @Builder.Default int reason = 1;
+        private @Builder.Default Long targetId = 117143L;
+        private @Builder.Default String description = "테스트신고내용";
+        private @Builder.Default LocalDateTime createdAt = LocalDateTime.now();
+        private @Builder.Default LocalDateTime updatedAt = LocalDateTime.now();
+
+        public static TestReport.TestReportBuilder createReport() {
+            return TestReport.builder();
+        }
+
+        public static TestReport.TestReportBuilder createReport(Long reportId) {
+            return TestReport.builder().id(reportId);
+        }
+
+        public Report get() {
+            return mapper.convertValue(this, Report.class);
+        }
+    }
+
+    @Getter
+    @Builder
+    public static class TestReportDto {
+        private @Builder.Default Long id = 125521L;
+        private @Builder.Default ReportType reportType = ReportType.POST;
+        private @Builder.Default UserDto reporterDto = TestUserDto.createUserDto(1123451L).build().get();
+        private @Builder.Default UserDto reporteeDto = TestUserDto.createUserDto(2512568L).build().get();
+        private @Builder.Default ReportInfo reportInfo = ReportInfo.CONTAIN_PERSONAL_INFO;
+        private @Builder.Default Long targetId = 12512L;
+
+        public static TestReportDto.TestReportDtoBuilder createReportDto() {
+            return TestReportDto.builder();
+        }
+
+        public static TestReportDto.TestReportDtoBuilder createReportDto(Long reportId, Long reporterId, Long reporteeId) {
+            return TestReportDto.builder()
+                    .id(reportId)
+                    .reporterDto(TestUserDto.createUserDto(reporterId).build().get())
+                    .reporteeDto(TestUserDto.createUserDto(reporteeId).build().get());
+        }
+
+        public ReportDto get() {
+            return mapper.convertValue(this, ReportDto.class);
         }
     }
 }
