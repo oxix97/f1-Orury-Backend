@@ -13,7 +13,6 @@ import org.orury.domain.post.domain.dto.PostDto;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -135,7 +134,7 @@ class PostFacadeTest extends FacadeTest {
         var searchWord = "searchWord";
         var cursor = 0L;
         var posts = List.of(createPostDto(1L), createPostDto(2L), createPostDto(3L));
-        given(postService.getPostDtosBySearchWord(searchWord, PageRequest.of(0, 10, Sort.by(Sort.Order.desc("createdAt"))), null)).willReturn(posts);
+        given(postService.getPostDtosBySearchWord(searchWord, cursor, null)).willReturn(posts);
 
         //when
         var actual = postFacade.getPostsBySearchWord(searchWord, cursor, null);
@@ -145,7 +144,7 @@ class PostFacadeTest extends FacadeTest {
                 .isNotNull()
                 .hasSize(posts.size())
                 .isEqualTo(posts.stream().map(PostsResponse::of).collect(Collectors.toList()));
-        then(postService).should(times(1)).getPostDtosBySearchWord(searchWord, PageRequest.of(0, 10, Sort.by(Sort.Order.desc("createdAt"))), null);
+        then(postService).should(times(1)).getPostDtosBySearchWord(searchWord, cursor, null);
     }
 
     @DisplayName("페이지 정보를 받아 인기 게시글 목록을 조회한다.")

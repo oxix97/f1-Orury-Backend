@@ -11,7 +11,6 @@ import org.orury.domain.post.domain.dto.PostLikeDto;
 import org.orury.domain.post.domain.entity.Post;
 import org.orury.domain.post.domain.entity.PostLike;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
@@ -263,14 +262,12 @@ class PostServiceImplTest extends ServiceTest {
         assertEquals(postDtos.size(), resultPostDtos.size());
     }
 
-    //
     @Test
     @DisplayName("검색어 검색 시 첫 페이지인 경우, 최대 10개까지 게시글을 가져온다.")
     void when_RetrieveSearchWordWithFirstCursor_Then_GetMaximum10Posts() {
         // given
         Long cursor = 0L;
         String searchWord = "title";
-        Pageable pageable = PageRequest.of(0, 10);
 
         List<PostDto> postDtos = Arrays.asList(
                 createPostDto(1L, 1L),
@@ -296,15 +293,14 @@ class PostServiceImplTest extends ServiceTest {
                 createPost(9L, 5L),
                 createPost(10L, 2L)
         );
-        Page<Post> page = new PageImpl<>(posts, pageable, posts.size());
 
-        when(postReader.findByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(searchWord, pageable)).thenReturn(page);
+        when(postReader.findBySearchWordOrderByIdDesc(searchWord, cursor)).thenReturn(posts);
 
         // when
-        List<PostDto> resultPostDtos = postService.getPostDtosBySearchWord(searchWord, PageRequest.of(0, 10), null);
+        List<PostDto> resultPostDtos = postService.getPostDtosBySearchWord(searchWord, cursor, null);
 
         // then
-        verify(postReader).findByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(searchWord, pageable);
+        verify(postReader).findBySearchWordOrderByIdDesc(searchWord, cursor);
         assertEquals(postDtos.size(), resultPostDtos.size());
     }
 
@@ -314,7 +310,6 @@ class PostServiceImplTest extends ServiceTest {
         // given
         Long cursor = 2L;
         String searchWord = "title";
-        Pageable pageable = PageRequest.of(0, 10);
 
         List<PostDto> postDtos = Arrays.asList(
                 createPostDto(1L, 1L),
@@ -324,15 +319,14 @@ class PostServiceImplTest extends ServiceTest {
                 createPost(1L, 1L),
                 createPost(2L, 1L)
         );
-        Page<Post> page = new PageImpl<>(posts, pageable, posts.size());
 
-        when(postReader.findByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(searchWord, pageable)).thenReturn(page);
+        when(postReader.findBySearchWordOrderByIdDesc(searchWord, cursor)).thenReturn(posts);
 
         // when
-        List<PostDto> resultPostDtos = postService.getPostDtosBySearchWord(searchWord, PageRequest.of(0, 10), null);
+        List<PostDto> resultPostDtos = postService.getPostDtosBySearchWord(searchWord, cursor, null);
 
         // then
-        verify(postReader).findByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(searchWord, pageable);
+        verify(postReader).findBySearchWordOrderByIdDesc(searchWord, cursor);
         assertEquals(postDtos.size(), resultPostDtos.size());
     }
 
