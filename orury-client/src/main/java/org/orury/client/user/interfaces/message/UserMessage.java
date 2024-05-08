@@ -13,13 +13,9 @@ public enum UserMessage {
     USER_COMMENTS_READ("작성한 댓글을 조회했습니다."),
     USER_REVIEWS_READ("작성한 리뷰를 조회했습니다."),
     USER_CREW_MEMBERS_READ("크루 일정 조회여부를 조회했습니다."),
+    USER_MEETING_VIEWED_UPDATED("크루 일정 조회여부를 수정했습니다."),
     USER_MEETINGS_READ("다가오는 크루 일정을 조회했습니다."),
-<<<<<<< HEAD
     USER_REPORTED("신고가 완료되었습니다.");
-=======
-    USER_CREW_MEMBERS_READ("크루 일정 조회여부를 조회했습니다."),
-    USER_MEETING_VIEWED_UPDATED("크루 일정 조회여부를 수정했습니다.");
->>>>>>> 51fec3ba (feat : 마이페이지의 다가오는일정 크루별 조회여부 수정 구현)
 
     private final String message;
 
