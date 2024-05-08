@@ -5,12 +5,14 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.Builder;
 import lombok.Getter;
 import org.orury.domain.global.constants.NumberConstants;
+import org.orury.domain.global.domain.Region;
 import org.orury.domain.user.domain.dto.*;
 import org.orury.domain.user.domain.entity.Report;
 import org.orury.domain.user.domain.entity.User;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class UserDomainFixture {
 
@@ -34,6 +36,8 @@ public class UserDomainFixture {
         private @Builder.Default UserStatus status = UserStatus.ENABLE;
         private @Builder.Default LocalDateTime createdAt = LocalDateTime.now();
         private @Builder.Default LocalDateTime updatedAt = LocalDateTime.now();
+        private @Builder.Default List<Region> regions = List.of(Region.강남구, Region.성북구);
+        private @Builder.Default String selfIntroduction = "테스트 자기소개 입니다.";
 
         public static TestUser.TestUserBuilder createUser() {
             return TestUser.builder();
@@ -62,6 +66,8 @@ public class UserDomainFixture {
         private @Builder.Default LocalDateTime createdAt = LocalDateTime.now();
         private @Builder.Default LocalDateTime updatedAt = LocalDateTime.now();
         private @Builder.Default UserStatus status = UserStatus.ENABLE;
+        private @Builder.Default List<Region> regions = List.of(Region.중구, Region.중랑구);
+        private @Builder.Default String selfIntroduction = "This is self introduction for test user.";
 
         public static TestUserDto.TestUserDtoBuilder createUserDto() {
             return TestUserDto.builder();
