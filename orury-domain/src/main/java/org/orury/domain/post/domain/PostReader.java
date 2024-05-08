@@ -15,7 +15,9 @@ public interface PostReader {
 
     Page<Post> findByLikeCountGreaterDescAndCreatedAtDesc(Pageable pageable);
 
-    Page<Post> findByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(String searchWord, Pageable pageable);
+    List<Post> findBySearchWordOrderByIdDesc(String searchWord, Long cursor);
+
+    List<Post> findBySearchWordOrderByLikeCountDesc(String searchWord, Long cursor, int lastLikeCount);
 
     Optional<Post> findById(Long id);
 

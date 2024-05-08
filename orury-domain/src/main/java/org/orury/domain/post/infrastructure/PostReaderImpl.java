@@ -9,6 +9,7 @@ import org.orury.domain.post.domain.PostReader;
 import org.orury.domain.post.domain.entity.Post;
 import org.orury.domain.post.domain.entity.PostLikePK;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
@@ -32,8 +33,19 @@ public class PostReaderImpl implements PostReader {
     }
 
     @Override
-    public Page<Post> findByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(String searchWord, Pageable pageable) {
-        return postRepository.findByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(searchWord, searchWord, pageable);
+    public List<Post> findBySearchWordOrderByIdDesc(String searchWord, Long cursor) {
+        var pageable = PageRequest.of(0, NumberConstants.POST_PAGINATION_SIZE);
+        return (cursor.equals(NumberConstants.FIRST_CURSOR))
+                ? postRepository.findBySearchWordOrderByIdDesc(searchWord, pageable)
+                : postRepository.findBySearchWordOrderByIdDescWithCursor(searchWord, cursor, pageable);
+    }
+
+    @Override
+    public List<Post> findBySearchWordOrderByLikeCountDesc(String searchWord, Long cursor, int lastLikeCount) {
+        var pageable = PageRequest.of(0, NumberConstants.POST_PAGINATION_SIZE);
+        return (cursor.equals(NumberConstants.FIRST_CURSOR))
+                ? postRepository.findBySearchWordOrderByLikeCountDesc(searchWord, pageable)
+                : postRepository.findBySearchWordOrderByLikeCountDescWithCursor(searchWord, cursor, lastLikeCount, pageable);
     }
 
     @Override

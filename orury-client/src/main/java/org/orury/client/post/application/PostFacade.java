@@ -2,7 +2,6 @@ package org.orury.client.post.application;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.BooleanUtils;
 import org.orury.client.post.interfaces.request.PostRequest;
 import org.orury.client.post.interfaces.response.PostResponse;
 import org.orury.client.post.interfaces.response.PostsResponse;
@@ -14,7 +13,6 @@ import org.orury.domain.post.domain.entity.PostLikePK;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -61,11 +59,8 @@ public class PostFacade {
                 .toList();
     }
 
-    public List<PostsResponse> getPostsBySearchWord(String searchWord, Long cursor, Boolean isLiked) {
-        var pageRequest = BooleanUtils.isTrue(isLiked) ?
-                PageRequest.of(cursor.intValue(), POST_PAGINATION_SIZE, Sort.by(Sort.Order.desc("likeCount"), Sort.Order.desc("createdAt")))
-                : PageRequest.of(cursor.intValue(), POST_PAGINATION_SIZE, Sort.by(Sort.Order.desc("createdAt")));
-        return postService.getPostDtosBySearchWord(searchWord, pageRequest, isLiked)
+    public List<PostsResponse> getPostsBySearchWord(String searchWord, Long cursor, Integer lastLikeCount) {
+        return postService.getPostDtosBySearchWord(searchWord, cursor, lastLikeCount)
                 .stream()
                 .map(PostsResponse::of)
                 .toList();
