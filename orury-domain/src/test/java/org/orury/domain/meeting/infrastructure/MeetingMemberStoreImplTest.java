@@ -62,16 +62,15 @@ class MeetingMemberStoreImplTest {
     @Test
     void removeMember() {
         // given
-        MeetingMember meetingMember = mock(MeetingMember.class);
-        given(meetingMember.getMeetingMemberPK())
-                .willReturn(mock(MeetingMemberPK.class));
+        MeetingMember meetingMember = createMeetingMember().build().get();
+        ;
 
         // when
-        meetingMemberStore.removeMember(meetingMember);
+        meetingMemberStore.removeMember(meetingMember.getMeetingMemberPK().getUserId(), meetingMember.getMeetingMemberPK().getMeetingId());
 
         // then
         then(meetingMemberRepository).should(only())
-                .delete(any());
+                .deleteByMeetingMemberPK_UserIdAndMeetingMemberPK_MeetingId(anyLong(), anyLong());
         then(meetingRepository).should(only())
                 .decreaseMemberCount(anyLong());
     }

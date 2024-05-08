@@ -74,6 +74,13 @@ public class MeetingServiceImpl implements MeetingService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<MeetingDto> getUpcomingMeetingDtosByUserId(Long userId) {
+        return meetingReader.getUpcomingMeetingsByUserId(userId)
+                .stream().map(MeetingDto::from).toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<String> getUserImagesByMeeting(MeetingDto meetingDto) {
         UserDto meetingCreator = meetingDto.userDto();
         List<MeetingMember> otherMembers = meetingMemberReader.getOtherMeetingMembersByMeetingIdMaximum(meetingDto.id(), meetingDto.userDto().id(), NumberConstants.MAXIMUM_OF_MEETING_THUMBNAILS - 1);
@@ -123,8 +130,7 @@ public class MeetingServiceImpl implements MeetingService {
             throw new BusinessException(MeetingErrorCode.MEETING_CREATOR);
         if (!meetingMemberReader.existsByMeetingIdAndUserId(meetingDto.id(), userId))
             throw new BusinessException(MeetingErrorCode.NOT_JOINED_MEETING);
-        MeetingMemberDto meetingMemberDto = MeetingMemberDto.of(MeetingMemberPK.of(userId, meetingDto.id()));
-        meetingMemberStore.removeMember(meetingMemberDto.toEntity());
+        meetingMemberStore.removeMember(userId, meetingDto.id());
     }
 
     @Override

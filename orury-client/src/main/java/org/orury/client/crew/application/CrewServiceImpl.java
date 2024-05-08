@@ -1,7 +1,6 @@
 package org.orury.client.crew.application;
 
-import static org.orury.common.util.S3Folder.CREW;
-
+import lombok.RequiredArgsConstructor;
 import org.orury.client.crew.application.policy.CrewApplicationPolicy;
 import org.orury.client.crew.application.policy.CrewCreatePolicy;
 import org.orury.client.crew.application.policy.CrewPolicy;
@@ -10,17 +9,11 @@ import org.orury.client.crew.interfaces.message.CrewMessage;
 import org.orury.common.error.code.CrewErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.common.util.AgeUtils;
-import org.orury.domain.crew.domain.CrewApplicationReader;
-import org.orury.domain.crew.domain.CrewApplicationStore;
-import org.orury.domain.crew.domain.CrewMemberReader;
-import org.orury.domain.crew.domain.CrewMemberStore;
-import org.orury.domain.crew.domain.CrewReader;
-import org.orury.domain.crew.domain.CrewStore;
-import org.orury.domain.crew.domain.CrewTagReader;
-import org.orury.domain.crew.domain.CrewTagStore;
+import org.orury.domain.crew.domain.*;
 import org.orury.domain.crew.domain.dto.CrewApplicationDto;
 import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.crew.domain.dto.CrewGender;
+import org.orury.domain.crew.domain.dto.CrewMemberDto;
 import org.orury.domain.crew.domain.entity.Crew;
 import org.orury.domain.crew.domain.entity.CrewMember;
 import org.orury.domain.image.domain.ImageStore;
@@ -41,7 +34,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import lombok.RequiredArgsConstructor;
+import static org.orury.common.util.S3Folder.CREW;
 
 @Service
 @RequiredArgsConstructor
@@ -260,6 +253,19 @@ public class CrewServiceImpl implements CrewService {
                     User user = userReader.getUserById(crewApplication.getCrewApplicationPK().getUserId());
                     return CrewApplicationDto.from(crewApplication, UserDto.from(user));
                 }).toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public CrewMember getCrewMemberByCrewIdAndUserId(Long crewId, Long userId) {
+        return crewMemberReader.getCrewMemberByCrewIdAndUserId(crewId, userId);
+    }
+
+    @Override
+    @Transactional
+    public void updateMeetingViewed(CrewMemberDto crewMemberDto) {
+        crewPolicy.validateCrewMember(crewMemberDto.crewMemberPK().getCrewId(), crewMemberDto.crewMemberPK().getUserId());
+        crewMemberStore.updateMeetingViewed(crewMemberDto.toEntity());
     }
 
     private void removeMember(Long crewId, Long memberId) {

@@ -193,7 +193,7 @@ public abstract class InfrastructureTest {
         gymReader = new GymReaderImpl(gymRepository, gymLikeRepository);
         gymStore = new GymStoreImpl(gymRepository, gymLikeRepository);
         //meeting
-        meetingReader = new MeetingReaderImpl(meetingRepository);
+        meetingReader = new MeetingReaderImpl(meetingRepository, meetingMemberRepository, crewMemberRepository);
         meetingStore = new MeetingStoreImpl(meetingRepository);
         meetingMemberReader = new MeetingMemberReaderImpl(meetingMemberRepository, userRepository);
         meetingMemberStore = new MeetingMemberStoreImpl(meetingMemberRepository, meetingRepository);

@@ -585,7 +585,7 @@ class MeetingServiceImplTest extends ServiceTest {
         then(meetingMemberReader).should(only())
                 .existsByMeetingIdAndUserId(anyLong(), anyLong());
         then(meetingMemberStore).should(only())
-                .removeMember(any(MeetingMember.class));
+                .removeMember(anyLong(), anyLong());
     }
 
     @DisplayName("[removeMeetingMember] 크루원이 아니면, NotCrewMember 예외를 반환한다.")
@@ -608,7 +608,7 @@ class MeetingServiceImplTest extends ServiceTest {
         then(meetingMemberReader).should(never())
                 .existsByMeetingIdAndUserId(anyLong(), anyLong());
         then(meetingMemberStore).should(never())
-                .removeMember(any(MeetingMember.class));
+                .removeMember(anyLong(), anyLong());
     }
 
     @DisplayName("[removeMeetingMember] 제거하려는 멤버가 일정 주최자면, MeetingCreator 예외를 반환한다.")
@@ -629,7 +629,7 @@ class MeetingServiceImplTest extends ServiceTest {
         then(meetingMemberReader).should(never())
                 .existsByMeetingIdAndUserId(anyLong(), anyLong());
         then(meetingMemberStore).should(never())
-                .removeMember(any(MeetingMember.class));
+                .removeMember(anyLong(), anyLong());
     }
 
     @DisplayName("[removeMeetingMember] 제거하려는 멤버가 일정에 존재하지 않으면, NotJoinedMeeting 예외를 반환한다.")
@@ -653,7 +653,7 @@ class MeetingServiceImplTest extends ServiceTest {
         then(meetingMemberReader).should(only())
                 .existsByMeetingIdAndUserId(anyLong(), anyLong());
         then(meetingMemberStore).should(never())
-                .removeMember(any(MeetingMember.class));
+                .removeMember(anyLong(), anyLong());
     }
 
     @DisplayName("[getUserDtosByMeeting] 일정dto와 유저id를 받아, 일정에 참여하는 유저Dto 리스트를 반환한다.")

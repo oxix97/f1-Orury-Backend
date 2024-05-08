@@ -21,9 +21,9 @@ public class MeetingMemberStoreImpl implements MeetingMemberStore {
     }
 
     @Override
-    public void removeMember(MeetingMember meetingMember) {
-        meetingMemberRepository.delete(meetingMember);
-        meetingRepository.decreaseMemberCount(meetingMember.getMeetingMemberPK().getMeetingId());
+    public void removeMember(Long userId, Long meetingId) {
+        meetingMemberRepository.deleteByMeetingMemberPK_UserIdAndMeetingMemberPK_MeetingId(userId, meetingId);
+        meetingRepository.decreaseMemberCount(meetingId);
     }
 
     @Override

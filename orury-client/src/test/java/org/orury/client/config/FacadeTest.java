@@ -59,7 +59,7 @@ public abstract class FacadeTest {
         meetingService = mock(MeetingService.class);
         notificationService = mock(NotificationService.class);
 
-        userFacade = new UserFacade(userService, postService, reviewService, commentService);
+        userFacade = new UserFacade(userService, postService, reviewService, commentService, meetingService, crewService);
         gymFacade = new GymFacade(gymService, reviewService);
         commentFacade = new CommentFacade(commentService, postService, userService, notificationService);
         crewFacade = new CrewFacade(crewService, userService);

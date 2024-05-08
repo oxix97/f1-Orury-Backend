@@ -35,7 +35,7 @@ public class CrewApplicationStoreImpl implements CrewApplicationStore {
 
         Long userId = crewApplicationPK.getUserId();
         Long crewId = crewApplicationPK.getCrewId();
-        CrewMember crewMember = CrewMember.of(CrewMemberPK.of(userId, crewId), null, null);
+        CrewMember crewMember = CrewMember.of(CrewMemberPK.of(userId, crewId), true, null, null);
         crewMemberRepository.save(crewMember);
         crewRepository.increaseMemberCount(crewId);
     }
