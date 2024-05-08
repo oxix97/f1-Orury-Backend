@@ -13,11 +13,13 @@ import org.orury.common.error.code.AuthErrorCode;
 import org.orury.common.error.code.UserErrorCode;
 import org.orury.common.error.exception.AuthException;
 import org.orury.common.error.exception.BusinessException;
+import org.orury.common.util.S3Folder;
 import org.orury.domain.auth.domain.dto.LoginDto;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.orury.domain.user.domain.dto.UserStatus;
 import org.orury.domain.user.domain.entity.User;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
@@ -48,9 +50,11 @@ class AuthServiceImplTest extends ServiceTest {
                 .willReturn(Optional.of(user));
 
         // when
-        authService.signUp(userDto);
+        authService.signUp(userDto, mock(MultipartFile.class));
 
         // then
+        then(imageStore).should(only())
+                .upload(any(S3Folder.class), any(MultipartFile.class));
         then(userStore).should(only())
                 .saveAndFlush(any());
         then(userReader).should(times(1))
@@ -72,10 +76,12 @@ class AuthServiceImplTest extends ServiceTest {
 
         // when & then
         Exception exception = assertThrows(BusinessException.class,
-                () -> authService.signUp(userDto));
+                () -> authService.signUp(userDto, mock(MultipartFile.class)));
 
         assertEquals(UserErrorCode.DUPLICATED_USER.getMessage(), exception.getMessage());
 
+        then(imageStore).should(only())
+                .upload(any(S3Folder.class), any(MultipartFile.class));
         then(userStore).should(only())
                 .saveAndFlush(any());
         then(userReader).should(never())
@@ -97,10 +103,12 @@ class AuthServiceImplTest extends ServiceTest {
 
         // when & then
         Exception exception = assertThrows(AuthException.class,
-                () -> authService.signUp(userDto));
+                () -> authService.signUp(userDto, mock(MultipartFile.class)));
 
         assertEquals(AuthErrorCode.NOT_EXISTING_USER_ACCOUNT.getMessage(), exception.getMessage());
 
+        then(imageStore).should(only())
+                .upload(any(S3Folder.class), any(MultipartFile.class));
         then(userStore).should(times(1))
                 .saveAndFlush(any());
         then(userReader).should(times(1))

@@ -48,6 +48,8 @@ import org.orury.domain.post.domain.PostStore;
 import org.orury.domain.post.infrastructure.PostLikeRepository;
 import org.orury.domain.review.domain.ReviewReader;
 import org.orury.domain.review.domain.ReviewStore;
+import org.orury.domain.user.domain.ReportReader;
+import org.orury.domain.user.domain.ReportStore;
 import org.orury.domain.user.domain.UserReader;
 import org.orury.domain.user.domain.UserStore;
 import org.springframework.test.context.ActiveProfiles;
@@ -102,6 +104,8 @@ public abstract class ServiceTest {
     protected MeetingReader meetingReader;
     protected MeetingMemberReader meetingMemberReader;
     protected MeetingService meetingService;
+    protected ReportStore reportStore;
+    protected ReportReader reportReader;
 
     protected static final int KAKAO_SIGN_UP_TYPE = 1;
 
@@ -155,6 +159,8 @@ public abstract class ServiceTest {
         //user
         userReader = mock(UserReader.class);
         userStore = mock(UserStore.class);
+        reportStore = mock(ReportStore.class);
+        reportReader = mock(ReportReader.class);
 
         //gym
         gymReader = mock(GymReader.class);
@@ -165,14 +171,14 @@ public abstract class ServiceTest {
         reviewStore = mock(ReviewStore.class);
 
         //services
-        authService = new AuthServiceImpl(userReader, userStore, jwtTokenService, oAuthServiceManager);
+        authService = new AuthServiceImpl(userReader, userStore, jwtTokenService, oAuthServiceManager, imageStore);
         commentService = new CommentServiceImpl(commentReader, commentStore);
         postService = new PostServiceImpl(postReader, postStore, imageStore);
         crewService = new CrewServiceImpl(crewReader, crewStore, crewTagReader, crewTagStore, crewMemberReader, crewMemberStore, crewApplicationReader, crewApplicationStore, meetingStore, meetingMemberStore, userReader, imageStore, crewPolicy, crewCreatePolicy, crewUpdatePolicy, crewApplicationPolicy);
         oAuthService = new KakaoOAuthService(kakaoAuthClient, kakaoKapiClient);
         gymService = new GymServiceImpl(gymReader, gymStore);
         reviewService = new ReviewServiceImpl(reviewReader, reviewStore, gymStore, imageStore);
-        userService = new UserServiceImpl(userReader, userStore, imageStore, postStore, commentStore, reviewStore, gymStore);
+        userService = new UserServiceImpl(userReader, userStore, imageStore, postStore, commentStore, reviewStore, gymStore, reportStore, reportReader, postReader, commentReader);
         meetingService = new MeetingServiceImpl(meetingReader, meetingStore, meetingMemberReader, meetingMemberStore, crewMemberReader, userReader);
     }
 }

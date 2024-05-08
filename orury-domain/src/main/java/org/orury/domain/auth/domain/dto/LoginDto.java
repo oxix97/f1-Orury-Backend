@@ -38,6 +38,7 @@ public record LoginDto(
                         null,
                         null,
                         UserStatus.ENABLE,
+                        null,
                         null
                 ),
                 jwtToken,

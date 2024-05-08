@@ -1,31 +1,24 @@
 package org.orury.client.user.interfaces;
 
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.orury.client.global.WithCursorResponse;
 import org.orury.client.user.application.UserFacade;
 import org.orury.client.user.interfaces.message.UserMessage;
+import org.orury.client.user.interfaces.request.MeetingViewedRequest;
 import org.orury.client.user.interfaces.request.UserInfoRequest;
-import org.orury.client.user.interfaces.response.MyCommentResponse;
-import org.orury.client.user.interfaces.response.MyPostResponse;
-import org.orury.client.user.interfaces.response.MyReviewResponse;
-import org.orury.client.user.interfaces.response.MypageResponse;
+import org.orury.client.user.interfaces.request.UserReportRequest;
+import org.orury.client.user.interfaces.response.*;
 import org.orury.domain.base.converter.ApiResponse;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.orury.domain.user.domain.dto.UserPrincipal;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import io.swagger.v3.oas.annotations.Operation;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -57,7 +50,7 @@ public class UserController {
     @PatchMapping
     public ApiResponse updateUserInfo(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
-            @RequestBody UserInfoRequest userInfoRequest
+            @RequestBody @Valid UserInfoRequest userInfoRequest
     ) {
         userFacade.updateUserInfo(userPrincipal.id(), userInfoRequest);
 
@@ -88,11 +81,45 @@ public class UserController {
         return ApiResponse.of(UserMessage.USER_COMMENTS_READ.getMessage(), cursorResponse);
     }
 
+    @Operation(summary = "다가오는 크루일정 조회", description = "user_id로 다가오는 크루일정 목록을 조회한다.")
+    @GetMapping("/meetings")
+    public ApiResponse getMeetingsByUserId(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        List<MyMeetingResponse> response = userFacade.getMeetingsByUserId(userPrincipal.id());
+
+        return ApiResponse.of(UserMessage.USER_MEETINGS_READ.getMessage(), response);
+    }
+
+    @Operation(summary = "크루일정 조회여부 조회", description = "user_id로 가입된 크루들과 각각의 크루일정 조회여부를 조회한다.")
+    @GetMapping("/meetings/view-settings")
+    public ApiResponse getCrewMembersByUserId(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        List<MyCrewMemberResponse> responses = userFacade.getCrewMembersByUserId(userPrincipal.id());
+
+        return ApiResponse.of(UserMessage.USER_CREW_MEMBERS_READ.getMessage(), responses);
+    }
+
+    @Operation(summary = "크루일정 조회여부 수정", description = "가입된 크루들 각각의 크루일정 조회여부를 수정한다.")
+    @PatchMapping("/meetings/view-settings")
+    public ApiResponse updateMeetingViewed(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody List<MeetingViewedRequest> requests) {
+        userFacade.updateMeetingViewed(userPrincipal.id(), requests);
+
+        return ApiResponse.of(UserMessage.USER_MEETING_VIEWED_UPDATED.getMessage());
+    }
+
     @Operation(summary = "회원 탈퇴", description = "id에 해당하는 회원을 탈퇴합니다. ")
     @DeleteMapping
     public ApiResponse deleteUser(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         userFacade.deleteUser(userPrincipal.id());
 
         return ApiResponse.of(UserMessage.USER_DELETED.getMessage());
+    }
+
+    @Operation(summary = "유저 신고", description = "신고 게시글/댓글 유형과 유저id를 받아 신고 처리한다.")
+    @PostMapping("/report")
+    public ApiResponse createReport(
+            @Valid @RequestBody UserReportRequest request,
+            @AuthenticationPrincipal UserPrincipal userPrincipal
+    ) {
+        userFacade.createReport(request, userPrincipal.id());
+        return ApiResponse.of(UserMessage.USER_REPORTED.getMessage());
     }
 }

@@ -10,16 +10,19 @@ import java.time.LocalDateTime;
  */
 public record CrewMemberDto(
         CrewMemberPK crewMemberPK,
+        Boolean meetingViewed,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
     public static CrewMemberDto of(
             CrewMemberPK crewMemberPK,
+            Boolean meetingViewed,
             LocalDateTime createdAt,
             LocalDateTime updatedAt
     ) {
         return new CrewMemberDto(
                 crewMemberPK,
+                meetingViewed,
                 createdAt,
                 updatedAt
         );
@@ -28,6 +31,7 @@ public record CrewMemberDto(
     public static CrewMemberDto from(CrewMember crewMember) {
         return CrewMemberDto.of(
                 crewMember.getCrewMemberPK(),
+                crewMember.getMeetingViewed(),
                 crewMember.getCreatedAt(),
                 crewMember.getUpdatedAt()
         );
@@ -36,6 +40,7 @@ public record CrewMemberDto(
     public CrewMember toEntity() {
         return CrewMember.of(
                 crewMemberPK,
+                meetingViewed,
                 createdAt,
                 updatedAt
         );

@@ -11,12 +11,14 @@ import org.orury.domain.auth.domain.dto.LoginDto;
 import org.orury.domain.auth.domain.dto.SignUpDto;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.web.multipart.MultipartFile;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.orury.client.ClientFixtureFactory.TestLoginRequest.createLoginRequest;
 import static org.orury.domain.AuthDomainFixture.TestLoginDto.createLoginDto;
@@ -32,16 +34,17 @@ class AuthFacadeTest extends FacadeTest {
         // given
         UserDto userDto = createUserDto().build().get();
         SignUpDto signUpDto = createSignUpDto().build().get();
+        MultipartFile image = mock(MultipartFile.class);
 
-        given(authService.signUp(userDto))
+        given(authService.signUp(userDto, image))
                 .willReturn(signUpDto);
 
         // when
-        authFacade.signUp(userDto);
+        authFacade.signUp(userDto, image);
 
         // then
         then(authService).should(times(1))
-                .signUp(userDto);
+                .signUp(any(UserDto.class), any(MultipartFile.class));
     }
 
     @DisplayName("정상 회원에 대해 LoginRequest를 받아 로그인하고, LoginResponse를 반환한다.")

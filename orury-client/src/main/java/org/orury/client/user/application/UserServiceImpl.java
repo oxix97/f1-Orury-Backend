@@ -4,13 +4,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.orury.common.error.code.UserErrorCode;
 import org.orury.common.error.exception.BusinessException;
+import org.orury.domain.comment.domain.CommentReader;
 import org.orury.domain.comment.domain.CommentStore;
 import org.orury.domain.gym.domain.GymStore;
 import org.orury.domain.image.domain.ImageStore;
+import org.orury.domain.post.domain.PostReader;
 import org.orury.domain.post.domain.PostStore;
 import org.orury.domain.review.domain.ReviewStore;
+import org.orury.domain.user.domain.ReportReader;
+import org.orury.domain.user.domain.ReportStore;
 import org.orury.domain.user.domain.UserReader;
 import org.orury.domain.user.domain.UserStore;
+import org.orury.domain.user.domain.dto.ReportDto;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.orury.domain.user.domain.dto.UserStatus;
 import org.orury.domain.user.domain.entity.User;
@@ -31,6 +36,10 @@ public class UserServiceImpl implements UserService {
     private final CommentStore commentStore;
     private final ReviewStore reviewStore;
     private final GymStore gymStore;
+    private final ReportStore reportStore;
+    private final ReportReader reportReader;
+    private final PostReader postReader;
+    private final CommentReader commentReader;
 
     @Override
     @Transactional(readOnly = true)
@@ -67,6 +76,16 @@ public class UserServiceImpl implements UserService {
         user.setProfileImage(null);
         imageStore.delete(USER, userDto.profileImage());
         userStore.save(user);
+    }
+
+    @Override
+    @Transactional
+    public void reportUser(ReportDto reportDto) {
+        reportDto.reportType().checkReportTarget(reportDto.targetId(), postReader, commentReader);
+        if (reportReader.checkDuplicateReport(reportDto)) {
+            throw new BusinessException(UserErrorCode.DUPLICATED_REPORT);
+        }
+        reportStore.save(reportDto.toEntity());
     }
 
     /**
